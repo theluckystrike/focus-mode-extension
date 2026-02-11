@@ -180,7 +180,7 @@ describe('Timer Component', () => {
 
       render(<Timer timerState={stateWithPomodoros} {...mockHandlers} />);
 
-      expect(screen.getByText('2 sessions')).toBeInTheDocument();
+      expect(screen.getByText('2 completed')).toBeInTheDocument();
     });
   });
 

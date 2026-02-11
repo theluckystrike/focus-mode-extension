@@ -23,6 +23,7 @@ const Options: React.FC = () => {
   const [isRegex, setIsRegex] = useState(false);
   const [removePasswordInput, setRemovePasswordInput] = useState('');
   const [removePasswordError, setRemovePasswordError] = useState<string | null>(null);
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     loadData();
@@ -116,6 +117,18 @@ const Options: React.FC = () => {
   const handleRemoveFromWhitelist = async (id: string) => {
     await messaging.send('REMOVE_FROM_WHITELIST', { id });
     await loadData();
+  };
+
+  const toggleCategoryExpand = (categoryId: string) => {
+    setExpandedCategories(prev => {
+      const next = new Set(prev);
+      if (next.has(categoryId)) {
+        next.delete(categoryId);
+      } else {
+        next.add(categoryId);
+      }
+      return next;
+    });
   };
 
   const handleToggleCategory = async (categoryId: string) => {
@@ -217,6 +230,17 @@ const Options: React.FC = () => {
             <h1 className="text-2xl font-semibold">Focus Mode Pro</h1>
             <p className="text-zovo-text-secondary">Settings & Configuration</p>
           </div>
+          <button
+            onClick={() => chrome.tabs.create({ url: 'help.html' })}
+            className="ml-auto w-8 h-8 flex items-center justify-center rounded-full border border-zovo-border text-zovo-text-muted hover:text-zovo-violet hover:border-zovo-violet transition-colors"
+            title="Tips & Tricks"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+          </button>
         </div>
 
         {/* Tab Navigation */}
@@ -400,30 +424,62 @@ const Options: React.FC = () => {
                 <p className="text-sm text-zovo-text-secondary mb-4">
                   Enable categories to block groups of common distracting sites.
                 </p>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-3">
                   {settings.categories.map((category) => (
-                    <label
-                      key={category.id}
-                      className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
-                        category.enabled
-                          ? 'border-zovo-violet bg-zovo-violet/10'
-                          : 'border-zovo-border bg-zovo-bg-secondary hover:border-zovo-border-light'
-                      }`}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={category.enabled}
-                        onChange={() => handleToggleCategory(category.id)}
-                        className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
-                      />
-                      <span className="text-lg">{category.icon}</span>
-                      <div>
-                        <div className="text-sm font-medium">{category.name}</div>
-                        <div className="text-xs text-zovo-text-muted">
-                          {category.patterns.length} sites
+                    <div key={category.id} className={`rounded-lg border transition-all ${
+                      category.enabled
+                        ? 'border-zovo-violet bg-zovo-violet/10'
+                        : 'border-zovo-border bg-zovo-bg-secondary'
+                    }`}>
+                      <div className="flex items-center gap-3 p-3">
+                        <input
+                          type="checkbox"
+                          checked={category.enabled}
+                          onChange={() => handleToggleCategory(category.id)}
+                          className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
+                        />
+                        <span className="text-lg">{category.icon}</span>
+                        <div className="flex-1">
+                          <div className="text-sm font-medium">{category.name}</div>
+                          <div className="text-xs text-zovo-text-muted">
+                            {category.patterns.length} sites
+                          </div>
                         </div>
+                        <button
+                          onClick={() => toggleCategoryExpand(category.id)}
+                          className="text-zovo-text-muted hover:text-zovo-text-primary transition-colors p-1"
+                          title={expandedCategories.has(category.id) ? 'Hide sites' : 'Show sites'}
+                        >
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            className={`transition-transform ${expandedCategories.has(category.id) ? 'rotate-180' : ''}`}
+                          >
+                            <path d="M6 9l6 6 6-6" />
+                          </svg>
+                        </button>
                       </div>
-                    </label>
+                      {expandedCategories.has(category.id) && (
+                        <div className="px-3 pb-3 pt-0">
+                          <div className="border-t border-zovo-border pt-2 mt-1">
+                            <div className="flex flex-wrap gap-2">
+                              {category.patterns.map((pattern) => (
+                                <span
+                                  key={pattern}
+                                  className="text-xs px-2 py-1 rounded bg-zovo-bg-tertiary text-zovo-text-secondary"
+                                >
+                                  {pattern}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>
@@ -683,9 +739,24 @@ const Options: React.FC = () => {
               {/* Recent Sessions */}
               <div className="zovo-card">
                 <h2 className="text-lg font-semibold mb-4">Recent Sessions</h2>
-                {stats.sessions.length > 0 ? (
-                  <div className="space-y-2">
-                    {stats.sessions.slice(0, 10).map((session) => (
+                <div className="space-y-2">
+                  {/* Active session */}
+                  {settings.focusMode.enabled && settings.focusMode.status !== 'idle' && (
+                    <div className="flex items-center justify-between p-3 bg-zovo-bg-tertiary rounded border border-zovo-violet/30">
+                      <div>
+                        <div className="text-sm font-medium">Current session</div>
+                        <div className="text-xs text-zovo-text-muted">
+                          {settings.focusMode.timerMode} mode - in progress
+                        </div>
+                      </div>
+                      <span className="text-xs px-2 py-1 rounded bg-focus-green/20 text-focus-green animate-pulse">
+                        Active
+                      </span>
+                    </div>
+                  )}
+                  {/* Past sessions */}
+                  {stats.sessions.length > 0 ? (
+                    stats.sessions.slice(0, 10).map((session) => (
                       <div
                         key={session.id}
                         className="flex items-center justify-between p-3 bg-zovo-bg-tertiary rounded"
@@ -712,11 +783,13 @@ const Options: React.FC = () => {
                           {session.completed ? 'Completed' : 'Stopped'}
                         </span>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-zovo-text-muted">No sessions recorded yet.</p>
-                )}
+                    ))
+                  ) : (
+                    !(settings.focusMode.enabled && settings.focusMode.status !== 'idle') && (
+                      <p className="text-sm text-zovo-text-muted">No sessions recorded yet. Start a focus session to see your history here.</p>
+                    )
+                  )}
+                </div>
               </div>
             </>
           )}

@@ -123,7 +123,9 @@ const Timer: React.FC<TimerProps> = ({
             />
           ))}
           <span className="ml-2 text-xs text-zovo-text-muted">
-            {pomodoroCount} sessions
+            {status === 'focusing' || status === 'paused' || status === 'break'
+              ? `${pomodoroCount > 0 ? pomodoroCount + ' done, ' : ''}1 active`
+              : `${pomodoroCount} completed`}
           </span>
         </div>
       )}

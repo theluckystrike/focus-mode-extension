@@ -11,12 +11,19 @@ const QuickStats: React.FC<QuickStatsProps> = ({ stats }) => {
   const todayStats = stats.dailyStats.find(d => d.date === today);
 
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-4 gap-2">
       <div className="zovo-card text-center py-3">
         <div className="text-lg font-bold text-focus-green">
           {formatMinutes(todayStats?.totalFocusTime ?? 0)}
         </div>
         <div className="text-xs text-zovo-text-muted">Today</div>
+      </div>
+
+      <div className="zovo-card text-center py-3">
+        <div className="text-lg font-bold text-zovo-text-primary">
+          {todayStats?.sessionsCompleted ?? 0}
+        </div>
+        <div className="text-xs text-zovo-text-muted">Sessions</div>
       </div>
 
       <div className="zovo-card text-center py-3">

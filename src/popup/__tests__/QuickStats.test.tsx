@@ -13,9 +13,10 @@ describe('QuickStats Component', () => {
       render(<QuickStats stats={DEFAULT_USAGE_STATS} />);
 
       expect(screen.getByText('0m')).toBeInTheDocument();
-      // Both "Blocked" and "Day Streak" show 0, so use getAllByText
-      expect(screen.getAllByText('0')).toHaveLength(2);
+      // Sessions, Blocked, and Day Streak all show 0
+      expect(screen.getAllByText('0')).toHaveLength(3);
       expect(screen.getByText('Today')).toBeInTheDocument();
+      expect(screen.getByText('Sessions')).toBeInTheDocument();
       expect(screen.getByText('Blocked')).toBeInTheDocument();
       expect(screen.getByText('Day Streak')).toBeInTheDocument();
     });
@@ -97,6 +98,7 @@ describe('QuickStats Component', () => {
       render(<QuickStats stats={DEFAULT_USAGE_STATS} />);
 
       expect(screen.getByText('Today')).toBeInTheDocument();
+      expect(screen.getByText('Sessions')).toBeInTheDocument();
       expect(screen.getByText('Blocked')).toBeInTheDocument();
       expect(screen.getByText('Day Streak')).toBeInTheDocument();
     });

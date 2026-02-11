@@ -14,6 +14,7 @@ module.exports = (env, argv) => {
       popup: './src/popup/index.tsx',
       options: './src/options/index.tsx',
       blocked: './src/blocked/index.tsx',
+      help: './src/help/index.tsx',
     },
     output: {
       path: path.resolve(__dirname, 'dist'),
@@ -83,6 +84,12 @@ module.exports = (env, argv) => {
         chunks: ['vendor', 'styles', 'blocked'],
         chunksSortMode: 'manual',
       }),
+      new HtmlWebpackPlugin({
+        template: './src/help/index.html',
+        filename: 'help.html',
+        chunks: ['vendor', 'styles', 'help'],
+        chunksSortMode: 'manual',
+      }),
     ],
     optimization: {
       minimize: isProduction,
@@ -111,7 +118,7 @@ module.exports = (env, argv) => {
             name: 'styles',
             type: 'css/mini-extract',
             chunks: (chunk) => {
-              return chunk.name === 'popup' || chunk.name === 'options' || chunk.name === 'blocked';
+              return chunk.name === 'popup' || chunk.name === 'options' || chunk.name === 'blocked' || chunk.name === 'help';
             },
             enforce: true,
           },
@@ -119,7 +126,7 @@ module.exports = (env, argv) => {
             test: /[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/,
             name: 'vendor',
             chunks: (chunk) => {
-              return chunk.name === 'popup' || chunk.name === 'options' || chunk.name === 'blocked';
+              return chunk.name === 'popup' || chunk.name === 'options' || chunk.name === 'blocked' || chunk.name === 'help';
             },
             priority: 10,
             reuseExistingChunk: true,
