@@ -589,8 +589,8 @@ async function checkSchedule(): Promise<void> {
   if (isScheduledDay && isWithinTime && focusState.status === 'idle') {
     await startFocus(settings.focusMode.timerMode);
   } else if ((!isScheduledDay || !isWithinTime) && focusState.status === 'focusing') {
-    // Only auto-stop if in schedule mode
-    // await stopFocus(false);
+    // Auto-stop when outside scheduled hours
+    await stopFocus(false);
   }
 }
 

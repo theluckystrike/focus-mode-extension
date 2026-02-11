@@ -14,6 +14,12 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Password modal state
+  const [passwordModalVisible, setPasswordModalVisible] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [passwordAction, setPasswordAction] = useState<'stop' | 'pause' | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+
   const loadData = useCallback(async () => {
     try {
       const [settingsRes, timerRes, statsRes] = await Promise.all([
@@ -67,6 +73,17 @@ const App: React.FC = () => {
   };
 
   const handleStopFocus = async () => {
+    if (settings?.passwordProtection.enabled && settings.passwordProtection.passwordHash) {
+      setPasswordAction('stop');
+      setPasswordInput('');
+      setPasswordError(null);
+      setPasswordModalVisible(true);
+      return;
+    }
+    await executeStopFocus();
+  };
+
+  const executeStopFocus = async () => {
     const response = await messaging.send<void, TimerState>('STOP_FOCUS');
     if (response.success && response.data) {
       setTimerState(response.data);
@@ -79,10 +96,55 @@ const App: React.FC = () => {
   };
 
   const handlePauseFocus = async () => {
+    if (settings?.passwordProtection.enabled && settings.passwordProtection.passwordHash) {
+      setPasswordAction('pause');
+      setPasswordInput('');
+      setPasswordError(null);
+      setPasswordModalVisible(true);
+      return;
+    }
+    await executePauseFocus();
+  };
+
+  const executePauseFocus = async () => {
     const response = await messaging.send<void, TimerState>('PAUSE_FOCUS');
     if (response.success && response.data) {
       setTimerState(response.data);
     }
+  };
+
+  const handlePasswordSubmit = async () => {
+    if (!passwordInput.trim()) {
+      setPasswordError('Please enter your password');
+      return;
+    }
+
+    const response = await messaging.send<{ password: string }, { valid: boolean }>(
+      'VERIFY_PASSWORD',
+      { password: passwordInput }
+    );
+
+    if (response.success && response.data?.valid) {
+      setPasswordModalVisible(false);
+      setPasswordInput('');
+      setPasswordError(null);
+
+      if (passwordAction === 'stop') {
+        await executeStopFocus();
+      } else if (passwordAction === 'pause') {
+        await executePauseFocus();
+      }
+      setPasswordAction(null);
+    } else {
+      setPasswordError('Incorrect password');
+    }
+  };
+
+  const handlePasswordCancel = () => {
+    setPasswordModalVisible(false);
+    setPasswordInput('');
+    setPasswordError(null);
+    setPasswordAction(null);
   };
 
   const handleResumeFocus = async () => {
@@ -206,6 +268,55 @@ const App: React.FC = () => {
       </main>
 
       <Footer version={chrome.runtime.getManifest().version} />
+
+      {/* Password Verification Modal */}
+      {passwordModalVisible && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="mx-4 w-full max-w-sm rounded-xl border border-zovo-border bg-zovo-bg-secondary p-5 shadow-xl">
+            <h3 className="mb-1 text-lg font-semibold text-zovo-text-primary">
+              Password Required
+            </h3>
+            <p className="mb-4 text-sm text-zovo-text-secondary">
+              Enter your password to {passwordAction === 'stop' ? 'stop' : 'pause'} the focus session.
+            </p>
+
+            <input
+              type="password"
+              value={passwordInput}
+              onChange={(e) => {
+                setPasswordInput(e.target.value);
+                setPasswordError(null);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handlePasswordSubmit();
+                if (e.key === 'Escape') handlePasswordCancel();
+              }}
+              placeholder="Enter password"
+              autoFocus
+              className="mb-2 w-full rounded-lg border border-zovo-border bg-zovo-bg-primary px-3 py-2 text-sm text-zovo-text-primary placeholder-zovo-text-muted outline-none focus:border-zovo-violet focus:ring-1 focus:ring-zovo-violet"
+            />
+
+            {passwordError && (
+              <p className="mb-2 text-xs text-zovo-error">{passwordError}</p>
+            )}
+
+            <div className="mt-3 flex gap-2">
+              <button
+                onClick={handlePasswordCancel}
+                className="zovo-btn zovo-btn-secondary flex-1 text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handlePasswordSubmit}
+                className="zovo-btn zovo-btn-primary flex-1 text-sm"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import type { TimerState, Settings } from '../../lib/types';
 
 // Mock the modules before importing the component
 jest.mock('../../lib/messaging', () => ({
@@ -17,6 +18,16 @@ import { messaging } from '../../lib/messaging';
 
 // We need to test the component behavior, so let's create a simplified version
 // since the actual component has complex initialization
+
+interface EmergencyUnlockResult {
+  allowed: boolean;
+  reason?: string;
+}
+
+interface QuoteResult {
+  text: string;
+  author: string;
+}
 
 describe('BlockedPage behavior', () => {
   beforeEach(() => {
@@ -75,7 +86,7 @@ describe('BlockedPage behavior', () => {
         data: mockTimerState,
       });
 
-      const result = await messaging.send('GET_TIMER_STATE');
+      const result = await messaging.send<undefined, TimerState>('GET_TIMER_STATE');
 
       expect(result.success).toBe(true);
       expect(result.data).toEqual(mockTimerState);
@@ -96,7 +107,7 @@ describe('BlockedPage behavior', () => {
         data: mockTimerState,
       });
 
-      const result = await messaging.send('GET_TIMER_STATE');
+      const result = await messaging.send<undefined, TimerState>('GET_TIMER_STATE');
 
       expect(result.data?.status).toBe('idle');
     });
@@ -109,7 +120,7 @@ describe('BlockedPage behavior', () => {
         data: { allowed: true },
       });
 
-      const result = await messaging.send('EMERGENCY_UNLOCK');
+      const result = await messaging.send<undefined, EmergencyUnlockResult>('EMERGENCY_UNLOCK');
 
       expect(result.data?.allowed).toBe(true);
     });
@@ -120,7 +131,7 @@ describe('BlockedPage behavior', () => {
         data: { allowed: false, reason: 'Cooldown: 10 minutes remaining' },
       });
 
-      const result = await messaging.send('EMERGENCY_UNLOCK');
+      const result = await messaging.send<undefined, EmergencyUnlockResult>('EMERGENCY_UNLOCK');
 
       expect(result.data?.allowed).toBe(false);
       expect(result.data?.reason).toContain('Cooldown');
@@ -132,7 +143,7 @@ describe('BlockedPage behavior', () => {
         data: { allowed: false, reason: 'Emergency unlock disabled' },
       });
 
-      const result = await messaging.send('EMERGENCY_UNLOCK');
+      const result = await messaging.send<undefined, EmergencyUnlockResult>('EMERGENCY_UNLOCK');
 
       expect(result.data?.reason).toBe('Emergency unlock disabled');
     });
@@ -150,7 +161,7 @@ describe('BlockedPage behavior', () => {
         data: mockQuote,
       });
 
-      const result = await messaging.send('GET_QUOTE');
+      const result = await messaging.send<undefined, QuoteResult>('GET_QUOTE');
 
       expect(result.data?.text).toBe('Stay focused!');
       expect(result.data?.author).toBe('Test Author');
@@ -173,9 +184,9 @@ describe('BlockedPage behavior', () => {
         data: mockSettings,
       });
 
-      const result = await messaging.send('GET_SETTINGS');
+      const result = await messaging.send<undefined, Partial<Settings>>('GET_SETTINGS');
 
-      expect(result.data?.blockedPage.showTimer).toBe(true);
+      expect(result.data?.blockedPage?.showTimer).toBe(true);
     });
 
     it('should respect showTimer setting', async () => {
@@ -193,9 +204,9 @@ describe('BlockedPage behavior', () => {
         data: mockSettings,
       });
 
-      const result = await messaging.send('GET_SETTINGS');
+      const result = await messaging.send<undefined, Partial<Settings>>('GET_SETTINGS');
 
-      expect(result.data?.blockedPage.showTimer).toBe(false);
+      expect(result.data?.blockedPage?.showTimer).toBe(false);
     });
   });
 

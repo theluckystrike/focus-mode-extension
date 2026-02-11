@@ -20,6 +20,7 @@ const Options: React.FC = () => {
   const [newWhitelistPattern, setNewWhitelistPattern] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isRegex, setIsRegex] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -77,12 +78,13 @@ const Options: React.FC = () => {
 
     const response = await messaging.send<{ pattern: string; isRegex: boolean }, BlockRule>(
       'ADD_TO_BLOCKLIST',
-      { pattern: newBlockPattern.trim(), isRegex: false }
+      { pattern: newBlockPattern.trim(), isRegex }
     );
 
     if (response.success) {
       await loadData();
       setNewBlockPattern('');
+      setIsRegex(false);
       setMessage({ type: 'success', text: 'Site added to blocklist' });
       setTimeout(() => setMessage(null), 3000);
     }
@@ -409,15 +411,24 @@ const Options: React.FC = () => {
               {/* Custom Blocklist */}
               <div className="zovo-card">
                 <h2 className="text-lg font-semibold mb-4">Custom Blocklist</h2>
-                <div className="flex gap-2 mb-4">
+                <div className="flex gap-2 mb-4 items-center">
                   <input
                     type="text"
                     value={newBlockPattern}
                     onChange={(e) => setNewBlockPattern(e.target.value)}
-                    placeholder="e.g., facebook.com or *.reddit.com"
+                    placeholder={isRegex ? 'e.g., ^https?://(www\\.)?facebook\\.com' : 'e.g., facebook.com or *.reddit.com'}
                     className="zovo-input flex-1"
                     onKeyDown={(e) => e.key === 'Enter' && handleAddToBlocklist()}
                   />
+                  <label className={`flex items-center gap-1.5 cursor-pointer select-none px-2 py-1 rounded border text-xs ${isRegex ? 'border-zovo-violet text-zovo-violet bg-zovo-violet/10' : 'border-zovo-border text-zovo-text-muted'}`}>
+                    <input
+                      type="checkbox"
+                      checked={isRegex}
+                      onChange={(e) => setIsRegex(e.target.checked)}
+                      className="w-3 h-3 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
+                    />
+                    Regex
+                  </label>
                   <button
                     onClick={handleAddToBlocklist}
                     className="zovo-btn zovo-btn-primary"
@@ -432,7 +443,12 @@ const Options: React.FC = () => {
                         key={rule.id}
                         className="flex items-center justify-between p-2 bg-zovo-bg-tertiary rounded"
                       >
-                        <span className="text-sm">{rule.pattern}</span>
+                        <span className="text-sm flex items-center gap-2">
+                          {rule.pattern}
+                          {rule.isRegex && (
+                            <span className="text-xs text-zovo-text-muted border border-zovo-border rounded px-1">regex</span>
+                          )}
+                        </span>
                         <button
                           onClick={() => handleRemoveFromBlocklist(rule.id)}
                           className="text-zovo-error text-sm hover:underline"

@@ -13,7 +13,8 @@ describe('QuickStats Component', () => {
       render(<QuickStats stats={DEFAULT_USAGE_STATS} />);
 
       expect(screen.getByText('0m')).toBeInTheDocument();
-      expect(screen.getByText('0')).toBeInTheDocument();
+      // Both "Blocked" and "Day Streak" show 0, so use getAllByText
+      expect(screen.getAllByText('0')).toHaveLength(2);
       expect(screen.getByText('Today')).toBeInTheDocument();
       expect(screen.getByText('Blocked')).toBeInTheDocument();
       expect(screen.getByText('Day Streak')).toBeInTheDocument();

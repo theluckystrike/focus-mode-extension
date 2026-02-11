@@ -75,7 +75,7 @@ const mockChrome = {
   },
 };
 
-(global as unknown as { chrome: typeof mockChrome }).chrome = mockChrome;
+(globalThis as unknown as { chrome: typeof mockChrome }).chrome = mockChrome;
 
 // Reset mocks between tests
 beforeEach(() => {

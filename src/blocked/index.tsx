@@ -17,6 +17,9 @@ const BlockedPage: React.FC = () => {
   const [blockedUrl, setBlockedUrl] = useState<string>('');
   const [unlockStatus, setUnlockStatus] = useState<string | null>(null);
   const [showUnlockConfirm, setShowUnlockConfirm] = useState(false);
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
     try {
@@ -76,6 +79,18 @@ const BlockedPage: React.FC = () => {
       return;
     }
 
+    // If password protection is enabled, require password before unlocking
+    if (settings?.passwordProtection.enabled && settings.passwordProtection.passwordHash) {
+      setShowPasswordPrompt(true);
+      setPasswordInput('');
+      setPasswordError(null);
+      return;
+    }
+
+    await executeEmergencyUnlock();
+  };
+
+  const executeEmergencyUnlock = async () => {
     const response = await messaging.send<void, { allowed: boolean; reason?: string }>(
       'EMERGENCY_UNLOCK'
     );
@@ -91,7 +106,29 @@ const BlockedPage: React.FC = () => {
       } else {
         setUnlockStatus(response.data.reason ?? 'Unable to unlock');
         setShowUnlockConfirm(false);
+        setShowPasswordPrompt(false);
       }
+    }
+  };
+
+  const handleUnlockPasswordSubmit = async () => {
+    if (!passwordInput.trim()) {
+      setPasswordError('Please enter your password');
+      return;
+    }
+
+    const response = await messaging.send<{ password: string }, { valid: boolean }>(
+      'VERIFY_PASSWORD',
+      { password: passwordInput }
+    );
+
+    if (response.success && response.data?.valid) {
+      setShowPasswordPrompt(false);
+      setPasswordInput('');
+      setPasswordError(null);
+      await executeEmergencyUnlock();
+    } else {
+      setPasswordError('Incorrect password');
     }
   };
 
@@ -183,6 +220,56 @@ const BlockedPage: React.FC = () => {
             >
               Need access? Emergency unlock
             </button>
+          ) : showPasswordPrompt ? (
+            <div className="p-5 bg-zovo-bg-secondary rounded-xl border border-zovo-border max-w-md">
+              <h3 className="text-lg font-semibold text-zovo-text-primary mb-1">
+                Password Required
+              </h3>
+              <p className="text-sm text-zovo-text-secondary mb-4">
+                Enter your password to unlock this page.
+              </p>
+
+              <input
+                type="password"
+                value={passwordInput}
+                onChange={(e) => {
+                  setPasswordInput(e.target.value);
+                  setPasswordError(null);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleUnlockPasswordSubmit();
+                  if (e.key === 'Escape') {
+                    setShowPasswordPrompt(false);
+                    setShowUnlockConfirm(false);
+                  }
+                }}
+                placeholder="Enter password"
+                autoFocus
+                className="mb-2 w-full rounded-lg border border-zovo-border bg-zovo-bg-primary px-3 py-2 text-sm text-zovo-text-primary placeholder-zovo-text-muted outline-none focus:border-zovo-violet focus:ring-1 focus:ring-zovo-violet"
+              />
+
+              {passwordError && (
+                <p className="mb-2 text-xs text-zovo-error">{passwordError}</p>
+              )}
+
+              <div className="mt-3 flex gap-2 justify-center">
+                <button
+                  onClick={() => {
+                    setShowPasswordPrompt(false);
+                    setShowUnlockConfirm(false);
+                  }}
+                  className="zovo-btn zovo-btn-secondary text-sm"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleUnlockPasswordSubmit}
+                  className="zovo-btn zovo-btn-primary text-sm"
+                >
+                  Unlock
+                </button>
+              </div>
+            </div>
           ) : (
             <div className="p-4 bg-zovo-bg-secondary rounded-lg border border-zovo-border max-w-md">
               <p className="text-sm text-zovo-text-secondary mb-4">
