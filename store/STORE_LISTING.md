@@ -79,7 +79,7 @@ Press Alt+Shift+F to instantly toggle focus mode on/off from any tab!
 ---
 
 Part of the Zovo extension family: simple tools that respect your privacy.
-Built by a solo developer who listens. hello@zovo.one
+Built by a solo developer who listens. support@zovo.one
 ```
 
 ---
@@ -180,7 +180,7 @@ https://zovo.one/privacy/focus-mode-pro
 ## Support URL
 
 ```
-mailto:hello@zovo.one
+mailto:support@zovo.one
 ```
 
 ---

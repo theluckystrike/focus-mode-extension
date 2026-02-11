@@ -112,4 +112,4 @@ MIT
 
 ## Contact
 
-For questions, feedback, or support: [hello@zovo.one](mailto:hello@zovo.one)
+For questions, feedback, or support: [support@zovo.one](mailto:support@zovo.one)

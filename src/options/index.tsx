@@ -886,10 +886,10 @@ const Options: React.FC = () => {
                   <p>
                     <span className="text-zovo-text-muted">Support:</span>{' '}
                     <a
-                      href="mailto:hello@zovo.one"
+                      href="mailto:support@zovo.one"
                       className="text-zovo-violet hover:underline"
                     >
-                      hello@zovo.one
+                      support@zovo.one
                     </a>
                   </p>
                 </div>
