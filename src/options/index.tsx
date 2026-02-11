@@ -5,7 +5,7 @@ import { hashPassword, formatMinutes, getTodayString } from '../lib/types';
 import type { Settings, UsageStats, BlockRule, WhitelistRule, CategoryPreset } from '../lib/types';
 import '../popup/styles.css';
 
-type Tab = 'general' | 'blocking' | 'schedule' | 'stats' | 'advanced';
+type Tab = 'general' | 'blocking' | 'schedule' | 'stats' | 'advanced' | 'account';
 
 const Options: React.FC = () => {
   const [settings, setSettings] = useState<Settings | null>(null);
@@ -24,13 +24,19 @@ const Options: React.FC = () => {
   const [removePasswordInput, setRemovePasswordInput] = useState('');
   const [removePasswordError, setRemovePasswordError] = useState<string | null>(null);
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+  const [licenseKey, setLicenseKey] = useState('');
+  const [licenseStatus, setLicenseStatus] = useState<'idle' | 'verifying' | 'success' | 'error'>('idle');
+  const [licenseError, setLicenseError] = useState<string | null>(null);
+  const [currentTier, setCurrentTier] = useState<string>('free');
+  const [licenseEmail, setLicenseEmail] = useState<string | null>(null);
 
   useEffect(() => {
     loadData();
+    loadLicenseStatus();
 
     // Check URL hash for initial tab
     const hash = window.location.hash.replace('#', '');
-    if (['general', 'blocking', 'schedule', 'stats', 'advanced'].includes(hash)) {
+    if (['general', 'blocking', 'schedule', 'stats', 'advanced', 'account'].includes(hash)) {
       setActiveTab(hash as Tab);
     }
   }, []);
@@ -167,6 +173,74 @@ const Options: React.FC = () => {
     setConfirmPassword('');
   };
 
+  const loadLicenseStatus = async () => {
+    try {
+      const tierRes = await messaging.send<void, { tier: string }>('GET_TIER' as any);
+      if (tierRes.success && tierRes.data) {
+        setCurrentTier(tierRes.data.tier);
+      }
+    } catch {
+      // Stay on free tier
+    }
+  };
+
+  const handleActivateLicense = async () => {
+    if (!licenseKey.trim()) {
+      setLicenseError('Please enter a license key');
+      return;
+    }
+
+    setLicenseStatus('verifying');
+    setLicenseError(null);
+
+    try {
+      const res = await messaging.send<{ licenseKey: string }, { success: boolean; data?: { tier: string; email: string | null }; error?: string }>(
+        'STORE_LICENSE' as any,
+        { licenseKey: licenseKey.trim() }
+      );
+
+      if (res.success && res.data?.success) {
+        setLicenseStatus('success');
+        setCurrentTier(res.data.data?.tier || 'pro');
+        setLicenseEmail(res.data.data?.email || null);
+        setLicenseKey('');
+        setMessage({ type: 'success', text: 'License activated successfully!' });
+        setTimeout(() => setMessage(null), 3000);
+      } else {
+        setLicenseStatus('error');
+        setLicenseError(res.data?.error || 'Failed to verify license key');
+      }
+    } catch {
+      setLicenseStatus('error');
+      setLicenseError('Failed to connect. Please try again.');
+    }
+  };
+
+  const handleRemoveLicense = async () => {
+    try {
+      await messaging.send('REMOVE_LICENSE' as any);
+      setCurrentTier('free');
+      setLicenseEmail(null);
+      setLicenseStatus('idle');
+      setLicenseKey('');
+      setMessage({ type: 'success', text: 'License removed' });
+      setTimeout(() => setMessage(null), 3000);
+    } catch {
+      setMessage({ type: 'error', text: 'Failed to remove license' });
+      setTimeout(() => setMessage(null), 3000);
+    }
+  };
+
+  const formatLicenseKey = (value: string): string => {
+    const clean = value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+    if (clean.length <= 4) return clean;
+    const parts = ['ZOVO'];
+    for (let i = 0; i < clean.replace(/^ZOVO/i, '').length && parts.length < 5; i += 4) {
+      parts.push(clean.replace(/^ZOVO/i, '').slice(i, i + 4));
+    }
+    return parts.join('-');
+  };
+
   const handleRemovePassword = async () => {
     if (!settings) return;
 
@@ -245,7 +319,7 @@ const Options: React.FC = () => {
 
         {/* Tab Navigation */}
         <div className="flex gap-2 mb-8 border-b border-zovo-border">
-          {(['general', 'blocking', 'schedule', 'stats', 'advanced'] as Tab[]).map((tab) => (
+          {(['general', 'blocking', 'schedule', 'stats', 'advanced', 'account'] as Tab[]).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -966,6 +1040,119 @@ const Options: React.FC = () => {
                     </a>
                   </p>
                 </div>
+              </div>
+            </>
+          )}
+
+          {/* Account Tab */}
+          {activeTab === 'account' && (
+            <>
+              {/* Current Status */}
+              <div className="zovo-card">
+                <h2 className="text-lg font-semibold mb-4">License Status</h2>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className={`w-3 h-3 rounded-full ${currentTier !== 'free' ? 'bg-focus-green' : 'bg-zovo-text-muted'}`} />
+                  <span className="text-sm font-medium">
+                    {currentTier !== 'free' ? (
+                      <span className="text-focus-green">
+                        Pro {currentTier === 'lifetime' ? '(Lifetime)' : currentTier === 'team' ? '(Team)' : ''} - Active
+                      </span>
+                    ) : (
+                      <span className="text-zovo-text-secondary">Free Plan</span>
+                    )}
+                  </span>
+                </div>
+                {licenseEmail && (
+                  <p className="text-sm text-zovo-text-muted mb-4">
+                    Licensed to: {licenseEmail}
+                  </p>
+                )}
+                {currentTier !== 'free' && (
+                  <button
+                    onClick={handleRemoveLicense}
+                    className="zovo-btn zovo-btn-secondary text-zovo-error text-sm"
+                  >
+                    Remove License
+                  </button>
+                )}
+              </div>
+
+              {/* Activate License */}
+              {currentTier === 'free' && (
+                <div className="zovo-card">
+                  <h2 className="text-lg font-semibold mb-2">Activate License</h2>
+                  <p className="text-sm text-zovo-text-secondary mb-4">
+                    Enter your license key to unlock Pro features.
+                  </p>
+                  <div className="flex gap-2 mb-2">
+                    <input
+                      type="text"
+                      value={licenseKey}
+                      onChange={(e) => {
+                        setLicenseKey(formatLicenseKey(e.target.value));
+                        setLicenseError(null);
+                        setLicenseStatus('idle');
+                      }}
+                      placeholder="ZOVO-XXXX-XXXX-XXXX-XXXX"
+                      className="zovo-input flex-1 font-mono tracking-wider"
+                      onKeyDown={(e) => e.key === 'Enter' && handleActivateLicense()}
+                    />
+                    <button
+                      onClick={handleActivateLicense}
+                      className="zovo-btn zovo-btn-primary"
+                      disabled={licenseStatus === 'verifying'}
+                    >
+                      {licenseStatus === 'verifying' ? 'Verifying...' : 'Activate'}
+                    </button>
+                  </div>
+                  {licenseError && (
+                    <p className="text-sm text-zovo-error mt-1">{licenseError}</p>
+                  )}
+                  {licenseStatus === 'success' && (
+                    <p className="text-sm text-focus-green mt-1">License activated!</p>
+                  )}
+                </div>
+              )}
+
+              {/* Pro Features */}
+              <div className="zovo-card">
+                <h2 className="text-lg font-semibold mb-4">Pro Features</h2>
+                <ul className="space-y-3">
+                  {[
+                    { name: 'Unlimited custom block rules', free: false },
+                    { name: 'Advanced regex patterns', free: false },
+                    { name: 'Detailed analytics & reports', free: false },
+                    { name: 'Schedule mode', free: false },
+                    { name: 'Password protection', free: false },
+                    { name: 'Priority support', free: false },
+                  ].map((feature) => (
+                    <li key={feature.name} className="flex items-center gap-3 text-sm">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke={currentTier !== 'free' ? '#22c55e' : '#6b7280'}
+                        strokeWidth="2"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      <span className={currentTier !== 'free' ? 'text-zovo-text-primary' : 'text-zovo-text-secondary'}>
+                        {feature.name}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                {currentTier === 'free' && (
+                  <div className="mt-6">
+                    <button
+                      onClick={() => chrome.tabs.create({ url: 'https://zovo.one/upgrade?ext=focus_mode_blocker&ref=settings' })}
+                      className="zovo-btn zovo-btn-primary w-full bg-gradient-to-r from-violet-500 to-purple-600"
+                    >
+                      Upgrade to Pro
+                    </button>
+                  </div>
+                )}
               </div>
             </>
           )}

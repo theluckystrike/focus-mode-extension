@@ -201,7 +201,12 @@ export type MessageAction =
   | 'EMERGENCY_UNLOCK'
   | 'VERIFY_PASSWORD'
   | 'GET_TIMER_STATE'
-  | 'GET_QUOTE';
+  | 'GET_QUOTE'
+  | 'STORE_LICENSE'
+  | 'REMOVE_LICENSE'
+  | 'CHECK_PRO_STATUS'
+  | 'GET_TIER'
+  | 'CHECK_FEATURE';
 
 /** Base message structure */
 export interface Message<T = unknown> {

@@ -13,6 +13,7 @@ const App: React.FC = () => {
   const [stats, setStats] = useState<UsageStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [tier, setTier] = useState<string>('free');
 
   // Password modal state
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
@@ -36,6 +37,16 @@ const App: React.FC = () => {
       }
       if (statsRes.success && statsRes.data) {
         setStats(statsRes.data);
+      }
+
+      // Load license tier
+      try {
+        const tierRes = await messaging.send<void, { tier: string }>('GET_TIER');
+        if (tierRes.success && tierRes.data) {
+          setTier(tierRes.data.tier);
+        }
+      } catch {
+        // Stay on free tier
       }
     } catch (e) {
       setError('Failed to connect to extension');
@@ -171,11 +182,11 @@ const App: React.FC = () => {
   if (loading) {
     return (
       <div className="zovo-popup">
-        <Header title="Focus Mode" onSettingsClick={handleSettingsClick} />
+        <Header title="Focus Mode" onSettingsClick={handleSettingsClick} tier={tier} />
         <main className="flex-1 flex items-center justify-center p-4">
           <div className="text-zovo-text-secondary">Loading...</div>
         </main>
-        <Footer />
+        <Footer tier={tier} />
       </div>
     );
   }
@@ -183,12 +194,12 @@ const App: React.FC = () => {
   if (error) {
     return (
       <div className="zovo-popup">
-        <Header title="Focus Mode" onSettingsClick={handleSettingsClick} />
+        <Header title="Focus Mode" onSettingsClick={handleSettingsClick} tier={tier} />
         <main className="flex-1 flex flex-col items-center justify-center p-4">
           <div className="text-zovo-error mb-2">Error</div>
           <div className="text-zovo-text-secondary text-sm">{error}</div>
         </main>
-        <Footer />
+        <Footer tier={tier} />
       </div>
     );
   }
@@ -202,6 +213,7 @@ const App: React.FC = () => {
         title="Focus Mode"
         onSettingsClick={handleSettingsClick}
         badge={isActive ? 'ACTIVE' : undefined}
+        tier={tier}
       />
 
       <main className="flex-1 p-4 space-y-4">
@@ -267,7 +279,7 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      <Footer version={chrome.runtime.getManifest().version} />
+      <Footer version={chrome.runtime.getManifest().version} tier={tier} />
 
       {/* Password Verification Modal */}
       {passwordModalVisible && (

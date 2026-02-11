@@ -2,10 +2,22 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import '../popup/styles.css';
 
+const Icon: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-zovo-violet/20 text-zovo-violet shrink-0">
+    {children}
+  </span>
+);
+
 const tips = [
   {
     title: 'Getting Started',
-    icon: '\u{1F680}',
+    icon: (
+      <Icon>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+        </svg>
+      </Icon>
+    ),
     items: [
       'Click the Focus Mode Pro icon in your toolbar to open the popup',
       'Choose a timer mode: Pomodoro (intervals with breaks), Custom (your own duration), or Indefinite (until you stop)',
@@ -15,7 +27,13 @@ const tips = [
   },
   {
     title: 'Blocking Websites',
-    icon: '\u{1F6E1}\uFE0F',
+    icon: (
+      <Icon>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+      </Icon>
+    ),
     items: [
       'Go to Settings > Blocking to manage your blocked sites',
       'Toggle category presets (Social Media, News, Entertainment, Shopping, Gaming) for quick setup',
@@ -26,7 +44,14 @@ const tips = [
   },
   {
     title: 'The Pomodoro Technique',
-    icon: '\u{1F345}',
+    icon: (
+      <Icon>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
+      </Icon>
+    ),
     items: [
       'Work in focused 25-minute intervals, then take a 5-minute break',
       'After 4 sessions, reward yourself with a longer 15-minute break',
@@ -37,7 +62,14 @@ const tips = [
   },
   {
     title: 'Keyboard Shortcuts',
-    icon: '\u2328\uFE0F',
+    icon: (
+      <Icon>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2" ry="2" />
+          <path d="M6 8h.001M10 8h.001M14 8h.001M18 8h.001M8 12h.001M12 12h.001M16 12h.001M7 16h10" />
+        </svg>
+      </Icon>
+    ),
     items: [
       'Press Alt+Shift+F to instantly toggle focus mode from any tab',
       'No need to open the popup. Perfect for quickly entering focus mode',
@@ -46,7 +78,16 @@ const tips = [
   },
   {
     title: 'Schedule Mode',
-    icon: '\u{1F4C5}',
+    icon: (
+      <Icon>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+      </Icon>
+    ),
     items: [
       'Set up automatic focus hours in Settings > Schedule',
       'Choose which days of the week to activate (Monday through Friday by default)',
@@ -57,7 +98,14 @@ const tips = [
   },
   {
     title: 'Password Protection',
-    icon: '\u{1F512}',
+    icon: (
+      <Icon>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+          <path d="M7 11V7a5 5 0 0110 0v4" />
+        </svg>
+      </Icon>
+    ),
     items: [
       'Lock your focus session so you cannot easily quit early',
       'Set a password in Settings > Advanced > Password Protection',
@@ -68,7 +116,13 @@ const tips = [
   },
   {
     title: 'Building Better Habits',
-    icon: '\u{1F4C8}',
+    icon: (
+      <Icon>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+        </svg>
+      </Icon>
+    ),
     items: [
       'Start small with 25-minute sessions before trying longer durations',
       'Block your biggest time-wasters first. Social media and news are common culprits',
@@ -80,7 +134,13 @@ const tips = [
   },
   {
     title: 'Troubleshooting',
-    icon: '\u{1F527}',
+    icon: (
+      <Icon>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
+        </svg>
+      </Icon>
+    ),
     items: [
       'Site not being blocked? Make sure focus mode is active AND the site is in your blocklist or an enabled category',
       'Site blocked that should not be? Add it to the Whitelist in Settings > Blocking',
@@ -131,11 +191,11 @@ const HelpPage: React.FC = () => {
         <div className="space-y-4">
           {tips.map((section) => (
             <div key={section.title} className="zovo-card">
-              <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                <span className="text-xl">{section.icon}</span>
+              <h2 className="text-lg font-semibold mb-3 flex items-center gap-3">
+                {section.icon}
                 {section.title}
               </h2>
-              <ul className="space-y-2">
+              <ul className="space-y-2 ml-11">
                 {section.items.map((item, i) => (
                   <li key={i} className="flex gap-3 text-sm text-zovo-text-secondary">
                     <span className="text-zovo-violet mt-0.5 shrink-0">&#8226;</span>

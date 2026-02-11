@@ -7,6 +7,18 @@ import { storage } from '../lib/storage';
 import { messaging } from '../lib/messaging';
 import { analytics } from '../lib/analytics';
 import {
+  verifyLicense,
+  getLicenseKey,
+  isPro,
+  hasFeature,
+  getTier,
+  getFeatures,
+  storeLicenseKey,
+  removeLicense,
+  flushAnalyticsQueue,
+  trackEvent,
+} from '../lib/payments';
+import {
   Settings,
   FocusStatus,
   TimerMode,
@@ -603,6 +615,17 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     }
   }
 
+  if (alarm.name === 'licenseCheck') {
+    const key = await getLicenseKey();
+    if (key) {
+      await verifyLicense(key, true);
+    }
+  }
+
+  if (alarm.name === 'analyticsFlush') {
+    await flushAnalyticsQueue();
+  }
+
   if (alarm.name === 'scheduleCheck') {
     await checkSchedule();
   }
@@ -637,6 +660,12 @@ async function checkSchedule(): Promise<void> {
 
 // Set up schedule checking every minute
 chrome.alarms.create('scheduleCheck', { periodInMinutes: 1 });
+
+// License re-verification every 60 minutes
+chrome.alarms.create('licenseCheck', { periodInMinutes: 60 });
+
+// Analytics queue flush every 5 minutes
+chrome.alarms.create('analyticsFlush', { periodInMinutes: 5 });
 
 // Invalidate settings cache when storage changes externally (e.g., from options page)
 chrome.storage.onChanged.addListener((changes, areaName) => {
@@ -803,6 +832,32 @@ messaging.createListener({
   GET_QUOTE: async () => {
     const randomIndex = Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length);
     return MOTIVATIONAL_QUOTES[randomIndex];
+  },
+
+  STORE_LICENSE: async (payload: unknown) => {
+    const { licenseKey } = payload as { licenseKey: string };
+    return storeLicenseKey(licenseKey);
+  },
+
+  REMOVE_LICENSE: async () => {
+    await removeLicense();
+    return { success: true };
+  },
+
+  CHECK_PRO_STATUS: async () => {
+    const pro = await isPro();
+    return { isPro: pro };
+  },
+
+  GET_TIER: async () => {
+    const tier = await getTier();
+    return { tier };
+  },
+
+  CHECK_FEATURE: async (payload: unknown) => {
+    const { feature } = payload as { feature: string };
+    const has = await hasFeature(feature);
+    return { hasFeature: has };
   },
 
   PING: async () => {

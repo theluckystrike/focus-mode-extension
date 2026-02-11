@@ -4,9 +4,10 @@ interface HeaderProps {
   title: string;
   onSettingsClick?: () => void;
   badge?: string;
+  tier?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ title, onSettingsClick, badge }) => {
+const Header: React.FC<HeaderProps> = ({ title, onSettingsClick, badge, tier }) => {
   return (
     <header className="zovo-header">
       <div className="zovo-header-brand">
@@ -26,6 +27,13 @@ const Header: React.FC<HeaderProps> = ({ title, onSettingsClick, badge }) => {
         {badge && (
           <span className="text-[10px] font-semibold px-2 py-0.5 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full uppercase tracking-wide animate-pulse">
             {badge}
+          </span>
+        )}
+
+        {/* Pro Badge */}
+        {tier && tier !== 'free' && (
+          <span className="text-[10px] font-semibold px-2 py-0.5 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-full uppercase tracking-wide">
+            PRO
           </span>
         )}
       </div>
