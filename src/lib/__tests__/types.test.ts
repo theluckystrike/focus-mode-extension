@@ -8,6 +8,8 @@ import {
   formatMinutes,
   urlMatchesPattern,
   getTodayString,
+  hashPassword,
+  verifyPassword,
   DEFAULT_SETTINGS,
   DEFAULT_USAGE_STATS,
   DEFAULT_CATEGORIES,
@@ -210,5 +212,41 @@ describe('MOTIVATIONAL_QUOTES', () => {
       expect(quote.text).toBeTruthy();
       expect(quote.author).toBeTruthy();
     });
+  });
+});
+
+describe('hashPassword', () => {
+  it('should return salt:hash format', async () => {
+    const hash = await hashPassword('testpassword');
+    expect(hash).toContain(':');
+    const [salt, hashValue] = hash.split(':');
+    expect(salt).toHaveLength(32); // 16 bytes = 32 hex chars
+    expect(hashValue).toHaveLength(64); // 256 bits = 32 bytes = 64 hex chars
+  });
+
+  it('should produce different hashes for same password (random salt)', async () => {
+    const hash1 = await hashPassword('testpassword');
+    const hash2 = await hashPassword('testpassword');
+    expect(hash1).not.toBe(hash2);
+  });
+});
+
+describe('verifyPassword', () => {
+  it('should verify correct password', async () => {
+    const hash = await hashPassword('mypassword');
+    const result = await verifyPassword('mypassword', hash);
+    expect(result).toBe(true);
+  });
+
+  it('should reject wrong password', async () => {
+    const hash = await hashPassword('mypassword');
+    const result = await verifyPassword('wrongpassword', hash);
+    expect(result).toBe(false);
+  });
+
+  it('should reject legacy SHA-256 hash format', async () => {
+    const legacyHash = 'a'.repeat(64); // Old SHA-256 format, no colon
+    const result = await verifyPassword('anything', legacyHash);
+    expect(result).toBe(false);
   });
 });

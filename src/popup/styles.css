@@ -3,9 +3,6 @@
    Based on Zovo Extension Template
    ========================================================================== */
 
-/* Import brand font */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
 /* Tailwind directives */
 @tailwind base;
 @tailwind components;

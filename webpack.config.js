@@ -68,19 +68,19 @@ module.exports = (env, argv) => {
       new HtmlWebpackPlugin({
         template: './src/popup/index.html',
         filename: 'popup.html',
-        chunks: ['vendor', 'popup'],
+        chunks: ['vendor', 'styles', 'popup'],
         chunksSortMode: 'manual',
       }),
       new HtmlWebpackPlugin({
         template: './src/options/index.html',
         filename: 'options.html',
-        chunks: ['vendor', 'options'],
+        chunks: ['vendor', 'styles', 'options'],
         chunksSortMode: 'manual',
       }),
       new HtmlWebpackPlugin({
         template: './src/blocked/index.html',
         filename: 'blocked.html',
-        chunks: ['vendor', 'blocked'],
+        chunks: ['vendor', 'styles', 'blocked'],
         chunksSortMode: 'manual',
       }),
     ],
@@ -107,6 +107,14 @@ module.exports = (env, argv) => {
       sideEffects: true,
       splitChunks: {
         cacheGroups: {
+          styles: {
+            name: 'styles',
+            type: 'css/mini-extract',
+            chunks: (chunk) => {
+              return chunk.name === 'popup' || chunk.name === 'options' || chunk.name === 'blocked';
+            },
+            enforce: true,
+          },
           vendor: {
             test: /[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/,
             name: 'vendor',

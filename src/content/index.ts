@@ -1,123 +1,94 @@
 /**
  * Focus Mode Pro - Content Script
- * Handles page-level blocking and overlay display
+ * Handles SPA route changes and focus state broadcasts.
+ * Traditional navigation blocking is handled by the background service worker.
  */
 
-import type { Message, MessageResponse, TimerState, UrlCheckResult } from '../lib/types';
+interface Message {
+  action: string;
+  payload?: unknown;
+}
 
-// ============================================================================
-// State
-// ============================================================================
+interface MessageResponse<T = unknown> {
+  success: boolean;
+  data?: T;
+  error?: string;
+}
 
-let overlayElement: HTMLDivElement | null = null;
-let isBlocked = false;
+interface UrlCheckResult {
+  blocked: boolean;
+  reason?: string;
+  matchedRule?: string;
+}
 
-// ============================================================================
-// Message Handler
-// ============================================================================
+// Track URL for SPA change detection
+let lastUrl = location.href;
 
-chrome.runtime.onMessage.addListener(
-  (
-    message: Message,
-    _sender: chrome.runtime.MessageSender,
-    sendResponse: (response: MessageResponse) => void
-  ) => {
-    handleMessage(message)
-      .then(sendResponse)
-      .catch((error: Error) => {
-        console.error('Content script error:', error);
-        sendResponse({ success: false, error: error.message });
+/**
+ * Check if the current URL is blocked and redirect if so
+ */
+async function checkAndRedirect(): Promise<void> {
+  try {
+    const response = await chrome.runtime.sendMessage({
+      action: 'CHECK_URL',
+      payload: { url: location.href },
+    }) as MessageResponse<UrlCheckResult>;
+
+    if (response?.success && response.data?.blocked) {
+      const blockedUrl = chrome.runtime.getURL('blocked.html');
+      const params = new URLSearchParams({
+        url: encodeURIComponent(location.href),
+        reason: response.data.reason ?? '',
+        rule: response.data.matchedRule ?? '',
       });
+      location.href = `${blockedUrl}?${params.toString()}`;
+    }
+  } catch {
+    // Extension context may be invalidated, ignore
+  }
+}
 
-    // Return true to keep the message channel open
-    return true;
+// Listen for messages from the background (e.g., focus mode started)
+chrome.runtime.onMessage.addListener(
+  (message: Message, _sender: chrome.runtime.MessageSender, sendResponse: (response: MessageResponse) => void) => {
+    if (message.action === 'GET_FOCUS_STATE') {
+      checkAndRedirect()
+        .then(() => sendResponse({ success: true }))
+        .catch(() => sendResponse({ success: false }));
+      return true; // async response
+    }
+    if (message.action === 'PING') {
+      sendResponse({ success: true, data: 'pong' });
+      return false;
+    }
+    return false;
   }
 );
 
-/**
- * Handle incoming messages
- */
-async function handleMessage(message: Message): Promise<MessageResponse> {
-  const { action } = message;
+// Intercept History API for SPA route changes
+const originalPushState = history.pushState.bind(history);
+const originalReplaceState = history.replaceState.bind(history);
 
-  switch (action) {
-    case 'PING':
-      return { success: true, data: 'pong' };
-
-    case 'GET_FOCUS_STATE':
-      // Recheck if current URL should be blocked
-      await checkCurrentPage();
-      return { success: true };
-
-    default:
-      return { success: false, error: `Unknown action: ${action}` };
+history.pushState = function (...args: Parameters<typeof history.pushState>) {
+  originalPushState(...args);
+  if (location.href !== lastUrl) {
+    lastUrl = location.href;
+    checkAndRedirect();
   }
-}
+};
 
-// ============================================================================
-// Page Blocking
-// ============================================================================
-
-/**
- * Check if current page should be blocked
- */
-async function checkCurrentPage(): Promise<void> {
-  try {
-    const response = await chrome.runtime.sendMessage<Message, MessageResponse<UrlCheckResult>>({
-      action: 'CHECK_URL',
-      payload: { url: window.location.href },
-    });
-
-    if (response.success && response.data?.blocked) {
-      showBlockedOverlay();
-    } else {
-      hideBlockedOverlay();
-    }
-  } catch (error) {
-    // Extension might not be ready yet
-    console.debug('Could not check URL:', error);
+history.replaceState = function (...args: Parameters<typeof history.replaceState>) {
+  originalReplaceState(...args);
+  if (location.href !== lastUrl) {
+    lastUrl = location.href;
+    checkAndRedirect();
   }
-}
+};
 
-/**
- * Show blocked page overlay
- */
-function showBlockedOverlay(): void {
-  if (overlayElement) return;
-  isBlocked = true;
-
-  // Redirect to blocked page instead of overlay
-  const blockedUrl = chrome.runtime.getURL('blocked.html');
-  const params = new URLSearchParams({
-    url: encodeURIComponent(window.location.href),
-    reason: 'content_script',
-  });
-
-  window.location.href = `${blockedUrl}?${params.toString()}`;
-}
-
-/**
- * Hide blocked overlay
- */
-function hideBlockedOverlay(): void {
-  if (!overlayElement) return;
-
-  overlayElement.remove();
-  overlayElement = null;
-  isBlocked = false;
-}
-
-// ============================================================================
-// Initialization
-// ============================================================================
-
-// Check page on load
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', checkCurrentPage);
-} else {
-  checkCurrentPage();
-}
-
-// Log when content script loads
-console.debug('Focus Mode Pro content script loaded');
-
+// Handle back/forward navigation in SPAs
+window.addEventListener('popstate', () => {
+  if (location.href !== lastUrl) {
+    lastUrl = location.href;
+    checkAndRedirect();
+  }
+});

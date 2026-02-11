@@ -788,7 +788,15 @@ const Options: React.FC = () => {
                 </p>
                 {settings.passwordProtection.enabled ? (
                   <div>
-                    <p className="text-sm text-focus-green mb-4">Password protection is enabled.</p>
+                    {settings.passwordProtection.passwordHash && !settings.passwordProtection.passwordHash.includes(':') ? (
+                      <div>
+                        <p className="text-sm text-zovo-warning mb-4">
+                          Your password uses an outdated format. Please remove it and set a new one.
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-focus-green mb-4">Password protection is enabled.</p>
+                    )}
                     <div className="flex gap-2 items-center">
                       <input
                         type="password"

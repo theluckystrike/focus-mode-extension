@@ -1,9 +1,25 @@
+/// <reference types="node" />
 /**
  * Jest setup file
  * Add global mocks and configuration here
  */
 
 import '@testing-library/jest-dom';
+
+// Polyfill TextEncoder/TextDecoder for jsdom
+if (typeof globalThis.TextEncoder === 'undefined') {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { TextEncoder: TE, TextDecoder: TD } = require('util');
+  (globalThis as unknown as Record<string, unknown>).TextEncoder = TE;
+  (globalThis as unknown as Record<string, unknown>).TextDecoder = TD;
+}
+
+// Polyfill crypto.subtle for jsdom
+if (typeof globalThis.crypto?.subtle === 'undefined') {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { webcrypto } = require('crypto');
+  Object.defineProperty(globalThis, 'crypto', { value: webcrypto });
+}
 
 // Mock chrome API
 const mockChrome = {

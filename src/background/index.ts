@@ -17,7 +17,22 @@ import {
   urlMatchesPattern,
   generateId,
   hashPassword,
+  verifyPassword,
 } from '../lib/types';
+
+// Settings cache to avoid redundant chrome.storage.local reads
+let settingsCache: Settings | null = null;
+
+async function getCachedSettings(): Promise<Settings> {
+  if (!settingsCache) {
+    settingsCache = await storage.getSettings();
+  }
+  return settingsCache;
+}
+
+function invalidateSettingsCache(): void {
+  settingsCache = null;
+}
 
 // ============================================================================
 // State Management
@@ -44,9 +59,6 @@ let focusState: FocusState = {
   pomodoroCount: 0,
   sitesBlockedThisSession: 0,
 };
-
-// Emergency unlock cooldowns per tab
-const emergencyUnlockCooldowns: Map<number, number> = new Map();
 
 // ============================================================================
 // Extension Lifecycle
@@ -130,7 +142,7 @@ async function startFocus(mode: TimerMode, customDuration?: number): Promise<voi
     return;
   }
 
-  const settings = await storage.getSettings();
+  const settings = await getCachedSettings();
 
   let duration: number;
   if (mode === 'pomodoro') {
@@ -184,6 +196,8 @@ async function startFocus(mode: TimerMode, customDuration?: number): Promise<voi
   // Track
   await analytics.track('focus_started', { mode, duration: duration / 60 });
 
+  await persistVolatileState();
+
   // Notify all tabs to recheck blocking
   messaging.broadcast('GET_FOCUS_STATE');
 }
@@ -192,7 +206,7 @@ async function startFocus(mode: TimerMode, customDuration?: number): Promise<voi
  * Stop focus session
  */
 async function stopFocus(completed = false): Promise<void> {
-  const settings = await storage.getSettings();
+  const settings = await getCachedSettings();
 
   // Record session
   if (focusState.currentSessionId) {
@@ -263,7 +277,7 @@ async function pauseFocus(): Promise<void> {
   // Clear timer alarm (will recreate on resume)
   await chrome.alarms.clear('focusTimer');
 
-  const settings = await storage.getSettings();
+  const settings = await getCachedSettings();
   await storage.updateSettings({
     focusMode: {
       ...settings.focusMode,
@@ -273,6 +287,7 @@ async function pauseFocus(): Promise<void> {
 
   updateBadge();
   await analytics.track('focus_paused');
+  await persistVolatileState();
 }
 
 /**
@@ -295,7 +310,7 @@ async function resumeFocus(): Promise<void> {
     });
   }
 
-  const settings = await storage.getSettings();
+  const settings = await getCachedSettings();
   await storage.updateSettings({
     focusMode: {
       ...settings.focusMode,
@@ -305,13 +320,14 @@ async function resumeFocus(): Promise<void> {
 
   updateBadge();
   await analytics.track('focus_resumed');
+  await persistVolatileState();
 }
 
 /**
  * Start a break
  */
 async function startBreak(): Promise<void> {
-  const settings = await storage.getSettings();
+  const settings = await getCachedSettings();
 
   const isLongBreak = focusState.pomodoroCount > 0 &&
     focusState.pomodoroCount % settings.pomodoro.sessionsUntilLongBreak === 0;
@@ -329,7 +345,7 @@ async function startBreak(): Promise<void> {
     delayInMinutes: duration / 60,
   });
 
-  const settingsUpdate = await storage.getSettings();
+  const settingsUpdate = await getCachedSettings();
   await storage.updateSettings({
     focusMode: {
       ...settingsUpdate.focusMode,
@@ -358,7 +374,7 @@ async function startBreak(): Promise<void> {
 async function endBreak(startNewFocus = false): Promise<void> {
   await chrome.alarms.clear('breakTimer');
 
-  const settings = await storage.getSettings();
+  const settings = await getCachedSettings();
 
   if (settings.notifications.breakComplete) {
     chrome.notifications.create({
@@ -416,6 +432,22 @@ function updateBadge(): void {
 // Update badge every minute
 setInterval(updateBadge, 60000);
 
+/**
+ * Persist volatile in-memory state to storage so it survives SW restarts
+ */
+async function persistVolatileState(): Promise<void> {
+  const settings = await getCachedSettings();
+  await storage.updateSettings({
+    focusMode: {
+      ...settings.focusMode,
+      pausedAt: focusState.pausedAt,
+      pausedDuration: focusState.pausedDuration,
+      currentSessionId: focusState.currentSessionId,
+      sitesBlockedThisSession: focusState.sitesBlockedThisSession,
+    },
+  });
+}
+
 // ============================================================================
 // URL Blocking Logic
 // ============================================================================
@@ -429,7 +461,7 @@ async function checkUrl(url: string): Promise<UrlCheckResult> {
     return { blocked: false };
   }
 
-  const settings = await storage.getSettings();
+  const settings = await getCachedSettings();
 
   // Skip checking extension pages
   if (url.startsWith('chrome://') ||
@@ -502,6 +534,8 @@ async function handleNavigation(tabId: number, url: string): Promise<void> {
       reason: result.reason,
       rule: result.matchedRule,
     });
+
+    await persistVolatileState();
   }
 }
 
@@ -540,7 +574,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === 'focusTimer') {
-    const settings = await storage.getSettings();
+    const settings = await getCachedSettings();
 
     // Focus session complete
     if (focusState.mode === 'pomodoro') {
@@ -558,7 +592,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   }
 
   if (alarm.name === 'breakReminder') {
-    const settings = await storage.getSettings();
+    const settings = await getCachedSettings();
     if (settings.breakReminders.showNotification && focusState.status === 'focusing') {
       chrome.notifications.create({
         type: 'basic',
@@ -579,7 +613,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 // ============================================================================
 
 async function checkSchedule(): Promise<void> {
-  const settings = await storage.getSettings();
+  const settings = await getCachedSettings();
 
   if (!settings.schedule.enabled) return;
 
@@ -604,6 +638,13 @@ async function checkSchedule(): Promise<void> {
 // Set up schedule checking every minute
 chrome.alarms.create('scheduleCheck', { periodInMinutes: 1 });
 
+// Invalidate settings cache when storage changes externally (e.g., from options page)
+chrome.storage.onChanged.addListener((changes, areaName) => {
+  if (areaName === 'local') {
+    invalidateSettingsCache();
+  }
+});
+
 // ============================================================================
 // Keyboard Shortcut Handler
 // ============================================================================
@@ -611,7 +652,7 @@ chrome.alarms.create('scheduleCheck', { periodInMinutes: 1 });
 chrome.commands.onCommand.addListener(async (command) => {
   if (command === 'toggle-focus') {
     if (focusState.status === 'idle') {
-      const settings = await storage.getSettings();
+      const settings = await getCachedSettings();
       await startFocus(settings.focusMode.timerMode);
     } else {
       await stopFocus(false);
@@ -625,11 +666,12 @@ chrome.commands.onCommand.addListener(async (command) => {
 
 messaging.createListener({
   GET_SETTINGS: async () => {
-    return storage.getSettings();
+    return getCachedSettings();
   },
 
   UPDATE_SETTINGS: async (payload: unknown) => {
     await storage.updateSettings(payload as Partial<Settings>);
+    invalidateSettingsCache();
     return { success: true };
   },
 
@@ -713,19 +755,14 @@ messaging.createListener({
   },
 
   EMERGENCY_UNLOCK: async (payload: unknown, sender) => {
-    const settings = await storage.getSettings();
+    const settings = await getCachedSettings();
 
     if (!settings.blockedPage.allowEmergencyUnlock) {
       return { allowed: false, reason: 'Emergency unlock disabled' };
     }
 
-    const tabId = sender.tab?.id;
-    if (!tabId) {
-      return { allowed: false, reason: 'Invalid tab' };
-    }
-
-    // Check cooldown
-    const lastUnlock = emergencyUnlockCooldowns.get(tabId);
+    // Check GLOBAL cooldown (persisted, survives new tabs + SW restart)
+    const lastUnlock = settings.blockedPage.lastEmergencyUnlockTime;
     const cooldownMs = settings.blockedPage.emergencyCooldownMinutes * 60 * 1000;
 
     if (lastUnlock && Date.now() - lastUnlock < cooldownMs) {
@@ -733,12 +770,15 @@ messaging.createListener({
       return { allowed: false, reason: `Cooldown: ${remainingMinutes} minutes remaining` };
     }
 
-    // Set cooldown
-    emergencyUnlockCooldowns.set(tabId, Date.now());
+    // Set global cooldown in storage
+    await storage.updateSettings({
+      blockedPage: {
+        ...settings.blockedPage,
+        lastEmergencyUnlockTime: Date.now(),
+      },
+    });
 
-    // Temporarily stop focus for 5 minutes
     await stopFocus(false);
-
     await analytics.track('emergency_unlock');
 
     return { allowed: true };
@@ -746,14 +786,18 @@ messaging.createListener({
 
   VERIFY_PASSWORD: async (payload: unknown) => {
     const { password } = payload as { password: string };
-    const settings = await storage.getSettings();
+    const settings = await getCachedSettings();
 
     if (!settings.passwordProtection.enabled || !settings.passwordProtection.passwordHash) {
       return { valid: true };
     }
 
-    const hash = await hashPassword(password);
-    return { valid: hash === settings.passwordProtection.passwordHash };
+    if (!settings.passwordProtection.passwordHash.includes(':')) {
+      return { valid: false, legacyHash: true };
+    }
+
+    const valid = await verifyPassword(password, settings.passwordProtection.passwordHash);
+    return { valid };
   },
 
   GET_QUOTE: async () => {
@@ -772,7 +816,8 @@ messaging.createListener({
 
 // Restore state from storage on startup
 async function initializeState(): Promise<void> {
-  const settings = await storage.getSettings();
+  settingsCache = await storage.getSettings();
+  const settings = settingsCache;
 
   if (settings.focusMode.enabled && settings.focusMode.currentSessionStart) {
     // Restore focus state
@@ -780,6 +825,12 @@ async function initializeState(): Promise<void> {
     focusState.mode = settings.focusMode.timerMode;
     focusState.startTime = settings.focusMode.currentSessionStart;
     focusState.pomodoroCount = settings.focusMode.pomodoroCount;
+
+    // Restore volatile fields
+    focusState.pausedAt = settings.focusMode.pausedAt;
+    focusState.pausedDuration = settings.focusMode.pausedDuration ?? 0;
+    focusState.currentSessionId = settings.focusMode.currentSessionId;
+    focusState.sitesBlockedThisSession = settings.focusMode.sitesBlockedThisSession ?? 0;
 
     // Calculate target duration
     if (focusState.mode === 'pomodoro') {
