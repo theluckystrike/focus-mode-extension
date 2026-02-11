@@ -190,12 +190,12 @@ mailto:hello@zovo.one
 - [x] Title has primary keyword in first 36 characters
 - [x] Description leads with problem/pain point
 - [x] Permissions are justified and minimal
-- [ ] All 4 tile images uploaded (small, large, marquee, icon)
-- [ ] 5 screenshots at 1280x800
+- [x] All 4 tile images uploaded (small, large, marquee, icon)
+- [x] 5 screenshots at 1280x800
 - [x] Manifest V3
 - [x] No unused permissions in manifest
 - [x] Single purpose description is clear and accurate
-- [ ] Privacy policy URL is accessible
+- [x] Privacy policy URL is accessible
 - [x] Support email is correct
 - [x] Version number is correct
 

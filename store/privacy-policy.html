@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy - Focus Mode Pro | Zovo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #0A0A0B;
+      color: #E4E4E7;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 48px;
+    }
+
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      background-color: #7C3AED;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .brand-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #A1A1AA;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    h1 {
+      font-size: 40px;
+      font-weight: 700;
+      color: #FAFAFA;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: #71717A;
+      margin-bottom: 12px;
+    }
+
+    .effective-date {
+      font-size: 14px;
+      color: #52525B;
+      margin-bottom: 48px;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, #7C3AED, transparent);
+      margin-bottom: 48px;
+    }
+
+    .summary-box {
+      background-color: #111113;
+      border: 1px solid #1E1E22;
+      border-left: 3px solid #7C3AED;
+      border-radius: 8px;
+      padding: 24px 28px;
+      margin-bottom: 48px;
+    }
+
+    .summary-box p {
+      font-size: 15px;
+      color: #A1A1AA;
+      line-height: 1.7;
+    }
+
+    .summary-box strong {
+      color: #E4E4E7;
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #FAFAFA;
+      margin-top: 48px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #1E1E22;
+    }
+
+    h2 .section-number {
+      color: #7C3AED;
+      margin-right: 8px;
+    }
+
+    h3 {
+      font-size: 17px;
+      font-weight: 600;
+      color: #D4D4D8;
+      margin-top: 24px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      margin-bottom: 16px;
+      color: #A1A1AA;
+    }
+
+    ul {
+      list-style: none;
+      margin-bottom: 16px;
+      padding-left: 0;
+    }
+
+    ul li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 10px;
+      color: #A1A1AA;
+    }
+
+    ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 6px;
+      height: 6px;
+      background-color: #7C3AED;
+      border-radius: 50%;
+    }
+
+    .permission-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 16px;
+      margin-bottom: 16px;
+    }
+
+    .permission-card {
+      background-color: #111113;
+      border: 1px solid #1E1E22;
+      border-radius: 8px;
+      padding: 20px 24px;
+    }
+
+    .permission-name {
+      font-family: 'Inter', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: #7C3AED;
+      background-color: rgba(124, 58, 237, 0.1);
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+
+    .permission-card p {
+      font-size: 15px;
+      margin-bottom: 0;
+    }
+
+    a {
+      color: #7C3AED;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    a:hover {
+      color: #8B5CF6;
+      text-decoration: underline;
+    }
+
+    .contact-box {
+      background-color: #111113;
+      border: 1px solid #1E1E22;
+      border-radius: 8px;
+      padding: 24px 28px;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .contact-box a {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .contact-box p {
+      margin-bottom: 0;
+    }
+
+    .footer {
+      margin-top: 64px;
+      padding-top: 24px;
+      border-top: 1px solid #1E1E22;
+      text-align: center;
+    }
+
+    .footer p {
+      font-size: 13px;
+      color: #52525B;
+    }
+
+    .footer a {
+      color: #71717A;
+    }
+
+    .footer a:hover {
+      color: #7C3AED;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 40px 20px 60px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <span class="brand-name">Zovo</span>
+    </div>
+
+    <h1>Privacy Policy</h1>
+    <p class="subtitle">Focus Mode: Block Distractions &amp; Stay Productive</p>
+    <p class="effective-date">Effective Date: February 11, 2026</p>
+
+    <div class="divider"></div>
+
+    <div class="summary-box">
+      <p>
+        <strong>The short version:</strong> Focus Mode Pro collects no personal data, makes no external network requests,
+        and stores everything locally on your device. Your privacy is not just respected — it is architecturally guaranteed.
+      </p>
+    </div>
+
+    <!-- 1. Data Collection -->
+    <h2><span class="section-number">1.</span> Data Collection</h2>
+    <p>
+      Focus Mode Pro collects <strong>no personal data whatsoever</strong>. The extension does not collect, process,
+      or transmit any personally identifiable information, browsing history, or usage data.
+    </p>
+    <p>
+      All data generated by the extension — including your settings, focus session statistics, blocked site lists,
+      and whitelist rules — is stored exclusively on your local device using Chrome's built-in storage API.
+      This data never leaves your browser.
+    </p>
+
+    <!-- 2. No External Requests -->
+    <h2><span class="section-number">2.</span> No External Requests</h2>
+    <p>
+      Focus Mode Pro makes <strong>zero external network requests</strong>. Specifically, the extension includes:
+    </p>
+    <ul>
+      <li>No analytics or usage tracking</li>
+      <li>No telemetry or crash reporting</li>
+      <li>No remote configuration or feature flags</li>
+      <li>No advertisement networks</li>
+      <li>No connections to external servers of any kind</li>
+    </ul>
+    <p>
+      The extension operates entirely offline once installed. It requires no internet connection to function.
+    </p>
+
+    <!-- 3. Permissions -->
+    <h2><span class="section-number">3.</span> Permissions Explained</h2>
+    <p>
+      Focus Mode Pro requests only the permissions strictly necessary for its core functionality.
+      Below is a full explanation of each permission and why it is required.
+    </p>
+
+    <div class="permission-grid">
+      <div class="permission-card">
+        <span class="permission-name">storage</span>
+        <p>
+          Used to save your preferences, blocklist rules, whitelist rules, and focus session statistics
+          locally on your device. No data is transmitted externally.
+        </p>
+      </div>
+
+      <div class="permission-card">
+        <span class="permission-name">tabs</span>
+        <p>
+          Required to detect when you navigate to a blocked site and redirect you to the blocked page.
+          Tab information is processed locally and never transmitted externally.
+        </p>
+      </div>
+
+      <div class="permission-card">
+        <span class="permission-name">webNavigation</span>
+        <p>
+          Required to intercept navigation to blocked websites before the page loads, providing instant
+          blocking without loading the distracting content first.
+        </p>
+      </div>
+
+      <div class="permission-card">
+        <span class="permission-name">alarms</span>
+        <p>
+          Used to manage focus session timers, break reminders, and scheduled focus mode activation.
+          Runs entirely locally with no external communication.
+        </p>
+      </div>
+
+      <div class="permission-card">
+        <span class="permission-name">notifications</span>
+        <p>
+          Used to notify you when focus sessions complete, breaks end, or when it is time to take a break.
+          All notifications are generated locally on your device.
+        </p>
+      </div>
+
+      <div class="permission-card">
+        <span class="permission-name">host_permissions (&lt;all_urls&gt;)</span>
+        <p>
+          Required to block distracting websites on any domain you configure in your blocklist.
+          This permission only activates during focus mode and only applies to sites you have explicitly added
+          to your blocklist or enabled via category toggles.
+        </p>
+      </div>
+    </div>
+
+    <!-- 4. Data Storage -->
+    <h2><span class="section-number">4.</span> Data Storage</h2>
+    <p>
+      All extension data is stored locally on your device via <strong>chrome.storage.local</strong>.
+      This includes:
+    </p>
+    <ul>
+      <li>Focus mode settings and preferences</li>
+      <li>Blocked site and whitelist rules</li>
+      <li>Category toggle states</li>
+      <li>Focus session statistics and streak data</li>
+      <li>Timer mode and duration preferences</li>
+      <li>Schedule configuration</li>
+    </ul>
+    <p>
+      You have full control over your data at all times. You can clear all stored data from the extension's
+      options page, or by removing the extension from Chrome. No data persists on any external server
+      because no data is ever sent to one.
+    </p>
+
+    <!-- 5. Third Parties -->
+    <h2><span class="section-number">5.</span> Third Parties</h2>
+    <p>
+      Focus Mode Pro does <strong>not share any data with third parties</strong>. Since no data is collected
+      or transmitted, there is nothing to share.
+    </p>
+    <p>
+      The extension contains no third-party SDKs, analytics libraries, advertising frameworks, or external
+      service integrations.
+    </p>
+
+    <!-- 6. Updates to This Policy -->
+    <h2><span class="section-number">6.</span> Updates to This Policy</h2>
+    <p>
+      This privacy policy may be updated from time to time to reflect changes in the extension or to
+      clarify existing practices. Any changes will be reflected on this page with an updated effective date.
+    </p>
+    <p>
+      We encourage you to review this policy periodically. Continued use of the extension after changes
+      constitutes acceptance of the updated policy.
+    </p>
+
+    <!-- 7. Contact -->
+    <h2><span class="section-number">7.</span> Contact</h2>
+    <p>
+      If you have any questions, concerns, or feedback regarding this privacy policy or the Focus Mode Pro
+      extension, please reach out:
+    </p>
+
+    <div class="contact-box">
+      <p><a href="mailto:hello@zovo.one">hello@zovo.one</a></p>
+    </div>
+
+    <div class="footer">
+      <p>&copy; 2026 Zovo. All rights reserved.</p>
+      <p><a href="https://zovo.one">zovo.one</a></p>
+    </div>
+  </div>
+</body>
+</html>
