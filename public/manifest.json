@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Focus Mode: Block Distractions & Stay Productive | Zovo",
+  "name": "Focus Mode Pro - Block Distractions | Zovo",
   "version": "1.0.0",
-  "description": "Block distracting websites, set focus timers, and boost productivity. Pomodoro timer built-in. Whitelist work sites and blacklist time-wasters.",
+  "description": "Block distracting websites and boost productivity with focus timers. Built-in Pomodoro timer. Whitelist your work sites.",
 
   "permissions": [
     "storage",

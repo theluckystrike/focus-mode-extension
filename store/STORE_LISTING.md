@@ -5,7 +5,7 @@
 ## Title (Max 45 characters)
 
 ```
-Focus Mode: Block Distractions & Stay Productive | Zovo
+Focus Mode Pro - Block Distractions | Zovo
 ```
 
 ---
@@ -13,7 +13,7 @@ Focus Mode: Block Distractions & Stay Productive | Zovo
 ## Short Description (Max 132 characters)
 
 ```
-Block distracting websites, set focus timers, and boost productivity. Pomodoro timer built-in. Whitelist work sites and blacklist time-wasters.
+Block distracting websites and boost productivity with focus timers. Built-in Pomodoro timer. Whitelist your work sites.
 ```
 
 ---

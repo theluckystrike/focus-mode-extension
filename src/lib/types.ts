@@ -474,8 +474,31 @@ export function urlMatchesPattern(url: string, pattern: string, isRegex: boolean
       return regex.test(fullUrl) || regex.test(hostname);
     } else {
       const normalizedPattern = pattern.replace(/^www\./, '').toLowerCase();
-      return hostname.toLowerCase().includes(normalizedPattern) ||
-             fullUrl.toLowerCase().includes(normalizedPattern);
+      const lowerHostname = hostname.toLowerCase();
+      const lowerFullUrl = fullUrl.toLowerCase();
+
+      // Handle wildcard patterns like "*.reddit.com"
+      if (normalizedPattern.startsWith('*.')) {
+        const baseDomain = normalizedPattern.slice(2);
+        return lowerHostname === baseDomain ||
+               lowerHostname.endsWith('.' + baseDomain);
+      }
+
+      // Domain-boundary matching: exact match or subdomain match
+      const domainMatches = lowerHostname === normalizedPattern ||
+                            lowerHostname.endsWith('.' + normalizedPattern);
+
+      if (!domainMatches) {
+        return false;
+      }
+
+      // If pattern includes a path component, check that too
+      if (normalizedPattern.includes('/')) {
+        return lowerFullUrl.startsWith(normalizedPattern) ||
+               lowerFullUrl.includes('.' + normalizedPattern);
+      }
+
+      return true;
     }
   } catch {
     return false;

@@ -21,6 +21,8 @@ const Options: React.FC = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isRegex, setIsRegex] = useState(false);
+  const [removePasswordInput, setRemovePasswordInput] = useState('');
+  const [removePasswordError, setRemovePasswordError] = useState<string | null>(null);
 
   useEffect(() => {
     loadData();
@@ -155,6 +157,21 @@ const Options: React.FC = () => {
   const handleRemovePassword = async () => {
     if (!settings) return;
 
+    if (!removePasswordInput.trim()) {
+      setRemovePasswordError('Enter your current password');
+      return;
+    }
+
+    const response = await messaging.send<{ password: string }, { valid: boolean }>(
+      'VERIFY_PASSWORD',
+      { password: removePasswordInput }
+    );
+
+    if (!response.success || !response.data?.valid) {
+      setRemovePasswordError('Incorrect password');
+      return;
+    }
+
     await saveSettings({
       passwordProtection: {
         ...settings.passwordProtection,
@@ -162,6 +179,9 @@ const Options: React.FC = () => {
         passwordHash: undefined,
       },
     });
+
+    setRemovePasswordInput('');
+    setRemovePasswordError(null);
   };
 
   if (loading) {
@@ -769,12 +789,28 @@ const Options: React.FC = () => {
                 {settings.passwordProtection.enabled ? (
                   <div>
                     <p className="text-sm text-focus-green mb-4">Password protection is enabled.</p>
-                    <button
-                      onClick={handleRemovePassword}
-                      className="zovo-btn zovo-btn-secondary text-zovo-error"
-                    >
-                      Remove Password
-                    </button>
+                    <div className="flex gap-2 items-center">
+                      <input
+                        type="password"
+                        value={removePasswordInput}
+                        onChange={(e) => {
+                          setRemovePasswordInput(e.target.value);
+                          setRemovePasswordError(null);
+                        }}
+                        placeholder="Enter current password"
+                        className="zovo-input w-64"
+                      />
+                      <button
+                        onClick={handleRemovePassword}
+                        className="zovo-btn zovo-btn-secondary text-zovo-error"
+                        disabled={!removePasswordInput.trim()}
+                      >
+                        Remove Password
+                      </button>
+                    </div>
+                    {removePasswordError && (
+                      <p className="mt-2 text-sm text-zovo-error">{removePasswordError}</p>
+                    )}
                   </div>
                 ) : (
                   <div className="space-y-4">

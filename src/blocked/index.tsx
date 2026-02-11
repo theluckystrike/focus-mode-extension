@@ -64,7 +64,7 @@ const BlockedPage: React.FC = () => {
         setTimerState(timerRes.data);
 
         // If focus mode ended, redirect back
-        if (timerRes.data.status === 'idle' && blockedUrl) {
+        if (timerRes.data.status === 'idle' && blockedUrl && isSafeUrl(blockedUrl)) {
           window.location.href = blockedUrl;
         }
       }
@@ -90,6 +90,15 @@ const BlockedPage: React.FC = () => {
     await executeEmergencyUnlock();
   };
 
+  const isSafeUrl = (url: string): boolean => {
+    try {
+      const parsed = new URL(url);
+      return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  };
+
   const executeEmergencyUnlock = async () => {
     const response = await messaging.send<void, { allowed: boolean; reason?: string }>(
       'EMERGENCY_UNLOCK'
@@ -99,7 +108,7 @@ const BlockedPage: React.FC = () => {
       if (response.data.allowed) {
         setUnlockStatus('Unlocking... Redirecting...');
         setTimeout(() => {
-          if (blockedUrl) {
+          if (blockedUrl && isSafeUrl(blockedUrl)) {
             window.location.href = blockedUrl;
           }
         }, 1000);

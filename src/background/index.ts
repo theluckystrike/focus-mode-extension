@@ -125,6 +125,11 @@ function getTimerState(): TimerState {
  * Start a focus session
  */
 async function startFocus(mode: TimerMode, customDuration?: number): Promise<void> {
+  // Guard against double-calls while already focusing
+  if (focusState.status === 'focusing' || focusState.status === 'paused') {
+    return;
+  }
+
   const settings = await storage.getSettings();
 
   let duration: number;
@@ -583,8 +588,10 @@ async function checkSchedule(): Promise<void> {
   const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
 
   const isScheduledDay = settings.schedule.days.includes(dayOfWeek);
-  const isWithinTime = currentTime >= settings.schedule.startTime &&
-                       currentTime < settings.schedule.endTime;
+  // Handle midnight-crossing schedules (e.g., 22:00 to 06:00)
+  const isWithinTime = settings.schedule.startTime <= settings.schedule.endTime
+    ? (currentTime >= settings.schedule.startTime && currentTime < settings.schedule.endTime)
+    : (currentTime >= settings.schedule.startTime || currentTime < settings.schedule.endTime);
 
   if (isScheduledDay && isWithinTime && focusState.status === 'idle') {
     await startFocus(settings.focusMode.timerMode);
