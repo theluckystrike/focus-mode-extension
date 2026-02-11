@@ -5,3 +5,6 @@ Language: English
 Homepage URL: https://zovo.one/tools/focus-mode-blocker
 Support URL: https://zovo.one/support
 Privacy Policy URL: https://zovo.one/privacy/focus-mode-blocker
+Pricing Model: Free with optional paid upgrade (Zovo Pro)
+Pro Upgrade: License key activation via Account tab in Settings
+Pro Features: Unlimited blocklist, extended Nuclear Option (24h), Pro badge, Account management

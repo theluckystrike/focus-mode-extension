@@ -22,6 +22,22 @@
 - [ ] No console.log statements in production
 - [ ] Version number matches manifest.json (1.0.0)
 
+### License / Payment Integration
+- [ ] API connectivity: Verify extension can reach `https://xggdjlurppfcytxqoozs.supabase.co/functions/v1`
+- [ ] License activation: Enter a valid Pro license key and confirm it activates successfully
+- [ ] License verification: Confirm `/verify-extension-license` returns correct tier and status
+- [ ] License rejection: Enter an invalid license key and confirm it is rejected gracefully
+- [ ] License persistence: License key persists in `chrome.storage.sync` across browser restarts
+- [ ] License cache: Cached validation stored in `chrome.storage.local` to reduce API calls
+- [ ] Offline behavior: Extension works correctly when offline (uses cached license status)
+- [ ] Account tab: Settings page shows the new "Account" tab with license status and email
+- [ ] Pro badge: Popup displays "Pro" badge when a valid Pro license is active
+- [ ] Pro features: Confirm Pro-only features unlock after license activation
+- [ ] Free tier: All free features work without a license key (no API calls required)
+- [ ] Analytics tracking: Confirm `/track-event` endpoint receives events (event name, extension ID, session ID, timestamp, version)
+- [ ] Analytics offline queue: Events are queued locally when offline and sent when back online
+- [ ] Analytics privacy: Verify analytics events do NOT include browsing history, personal info, or blocked sites
+
 ### Store Listing Assets
 - [ ] Description written (2000-4000 chars) — `docs/store-assets/text/description.txt`
 - [ ] Short description under 132 chars — `docs/store-assets/text/short-description.txt`
@@ -48,11 +64,14 @@
 - [ ] Single purpose description — `docs/store-assets/privacy/privacy-single-purpose.txt`
 - [ ] All permissions justified individually — `docs/store-assets/privacy/privacy-permissions.txt`
 - [ ] "No remote code" declaration — `docs/store-assets/privacy/privacy-remote-code.txt`
-- [ ] All 9 data type categories marked NOT COLLECTED — `docs/store-assets/privacy/privacy-data-usage.txt`
+- [ ] Data usage declarations updated — `docs/store-assets/privacy/privacy-data-usage.txt`
+- [ ] Data usage accurately reflects license verification and analytics network requests
 - [ ] All three CWS certifications checked (no selling data, no unrelated transfers, no creditworthiness)
 - [ ] Privacy policy URL works: https://zovo.one/privacy/focus-mode-blocker
 - [ ] Privacy policy mentions "Focus Mode - Blocker" by name
+- [ ] Privacy policy discloses Zovo API connections for license verification and analytics
 - [ ] Privacy policy page written — `docs/store-assets/privacy/privacy-policy-page.md`
+- [ ] Host permission for Zovo API (`https://xggdjlurppfcytxqoozs.supabase.co/*`) declared in manifest
 
 ### Links
 - [ ] Homepage URL: https://zovo.one/tools/focus-mode-blocker
@@ -143,6 +162,11 @@ unzip -l focus-mode-blocker-v1.0.0.zip
 - [ ] Check extension appears in search for "focus blocker", "website blocker", "pomodoro"
 - [ ] Verify screenshots display correctly on store page
 - [ ] Test install/uninstall cycle
+- [ ] Verify license activation works on fresh install from the store
+- [ ] Verify Pro badge appears in popup after activating a license
+- [ ] Verify Account tab displays correct license info (email, tier, expiry)
+- [ ] Verify analytics events are being received by the Zovo API
+- [ ] Confirm free tier works correctly without entering a license key
 - [ ] Monitor reviews and respond within 24 hours
 - [ ] Check for first-day crash reports
 - [ ] Announce launch on relevant channels

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=440, initial-scale=1.0">
+<title>Focus Mode Pro - Small Tile</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 440px;
+    height: 280px;
+    overflow: hidden;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(160deg, #0A0A0B 0%, #1a1a2e 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%);
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.25) 0%, rgba(124, 58, 237, 0.08) 40%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .logo-container {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 18px;
+  }
+
+  .logo {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.35);
+    position: relative;
+  }
+
+  .logo svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  .title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #F5F5F5;
+    letter-spacing: -0.3px;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .tagline {
+    font-size: 14px;
+    color: #A1A1AA;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .branding {
+    position: absolute;
+    bottom: 16px;
+    font-size: 11px;
+    color: #71717A;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+  <div class="glow"></div>
+
+  <div class="logo-container">
+    <div class="logo">
+      <svg viewBox="0 0 36 36" fill="none">
+        <circle cx="18" cy="18" r="14" stroke="white" stroke-width="2.5" fill="none" opacity="0.9"/>
+        <circle cx="18" cy="18" r="9" stroke="white" stroke-width="2" fill="none" opacity="0.7"/>
+        <circle cx="18" cy="18" r="4" fill="white" opacity="0.95"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="title">Focus Mode Pro</div>
+  <div class="tagline">Block Distractions. Stay Focused.</div>
+
+  <div class="branding">by Zovo</div>
+</body>
+</html>

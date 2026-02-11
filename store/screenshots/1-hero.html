@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280, height=800">
+<title>Focus Mode Pro - Hero Screenshot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1280px;
+    height: 800px;
+    overflow: hidden;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: #0A0A0B;
+    position: relative;
+  }
+
+  /* Background gradient effects */
+  .bg-gradient {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 900px 500px at 75% 50%, rgba(124, 58, 237, 0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 600px 400px at 25% 60%, rgba(124, 58, 237, 0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 400px 300px at 80% 20%, rgba(124, 58, 237, 0.05) 0%, transparent 70%);
+  }
+
+  .bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  /* Left side text */
+  .hero-text {
+    position: absolute;
+    left: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 440px;
+    z-index: 2;
+  }
+
+  .hero-text h1 {
+    font-size: 48px;
+    font-weight: 800;
+    color: #F5F5F5;
+    line-height: 1.15;
+    letter-spacing: -1.5px;
+    margin-bottom: 20px;
+  }
+
+  .hero-text h1 span {
+    background: linear-gradient(135deg, #7C3AED, #A78BFA);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-text p {
+    font-size: 18px;
+    color: #A1A1AA;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+  }
+
+  .hero-text .feature-pills {
+    display: flex;
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  .hero-text .pill {
+    background: rgba(124, 58, 237, 0.12);
+    border: 1px solid rgba(124, 58, 237, 0.25);
+    color: #C4B5FD;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 100px;
+  }
+
+  /* Popup card */
+  .popup-wrapper {
+    position: absolute;
+    right: 120px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+
+  .popup {
+    width: 350px;
+    background: #141415;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.04),
+      0 25px 60px rgba(0,0,0,0.5),
+      0 0 120px rgba(124, 58, 237, 0.1);
+    overflow: hidden;
+  }
+
+  /* Header */
+  .popup-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .logo {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #7C3AED, #6D28D9);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .logo-circle {
+    width: 14px;
+    height: 14px;
+    background: white;
+    border-radius: 50%;
+  }
+
+  .header-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #F5F5F5;
+    letter-spacing: -0.3px;
+  }
+
+  .header-subtitle {
+    font-size: 11px;
+    color: #A1A1AA;
+    font-weight: 400;
+    margin-top: 1px;
+  }
+
+  /* Timer section */
+  .timer-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px 24px;
+  }
+
+  .timer-ring {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: rgba(124, 58, 237, 0.06);
+    border: 3px solid rgba(124, 58, 237, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .timer-display {
+    font-size: 52px;
+    font-weight: 700;
+    color: #F5F5F5;
+    letter-spacing: -2px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .timer-label {
+    font-size: 12px;
+    color: #A1A1AA;
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+  }
+
+  /* Start button */
+  .start-btn {
+    width: calc(100% - 40px);
+    margin: 0 20px;
+    padding: 14px;
+    background: linear-gradient(135deg, #7C3AED, #6D28D9);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.35);
+  }
+
+  /* Mode selector */
+  .mode-selector {
+    display: flex;
+    gap: 6px;
+    padding: 16px 20px 0;
+    margin-top: 4px;
+  }
+
+  .mode-btn {
+    flex: 1;
+    padding: 10px 0;
+    border-radius: 10px;
+    font-size: 12.5px;
+    font-weight: 500;
+    text-align: center;
+    color: #A1A1AA;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .mode-btn.active {
+    background: rgba(124, 58, 237, 0.15);
+    border-color: rgba(124, 58, 237, 0.4);
+    color: #C4B5FD;
+    font-weight: 600;
+  }
+
+  /* Stats */
+  .stats {
+    display: flex;
+    padding: 18px 20px;
+    margin-top: 4px;
+    gap: 0;
+  }
+
+  .stat {
+    flex: 1;
+    text-align: center;
+    position: relative;
+  }
+
+  .stat:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 4px;
+    bottom: 4px;
+    width: 1px;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .stat-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: #F5F5F5;
+  }
+
+  .stat-label {
+    font-size: 10.5px;
+    color: #71717A;
+    margin-top: 3px;
+    font-weight: 400;
+  }
+
+  /* Footer */
+  .popup-footer {
+    text-align: center;
+    padding: 12px 20px 16px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .popup-footer span {
+    font-size: 10.5px;
+    color: #52525B;
+    font-weight: 400;
+  }
+
+  .popup-footer span strong {
+    font-weight: 600;
+    color: #71717A;
+  }
+
+  /* Glow behind popup */
+  .popup-glow {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    filter: blur(40px);
+  }
+</style>
+</head>
+<body>
+  <div class="bg-gradient"></div>
+  <div class="bg-grid"></div>
+
+  <!-- Left side hero text -->
+  <div class="hero-text">
+    <h1>Block Distractions.<br><span>Stay Focused.</span></h1>
+    <p>Take control of your attention and get more done with the smartest focus tool for your browser.</p>
+    <div class="feature-pills">
+      <div class="pill">Pomodoro Timer</div>
+      <div class="pill">Website Blocker</div>
+      <div class="pill">Statistics</div>
+    </div>
+  </div>
+
+  <!-- Extension popup mockup -->
+  <div class="popup-wrapper">
+    <div class="popup-glow"></div>
+    <div class="popup">
+      <!-- Header -->
+      <div class="popup-header">
+        <div class="logo">
+          <div class="logo-circle"></div>
+        </div>
+        <div>
+          <div class="header-title">Focus Mode Pro</div>
+          <div class="header-subtitle">Ready to focus</div>
+        </div>
+      </div>
+
+      <!-- Timer -->
+      <div class="timer-section">
+        <div class="timer-ring">
+          <div style="text-align:center;">
+            <div class="timer-display">25:00</div>
+            <div class="timer-label">Minutes</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Start button -->
+      <div class="start-btn" style="text-align:center;">Start Focus</div>
+
+      <!-- Mode selector -->
+      <div class="mode-selector">
+        <div class="mode-btn active">Pomodoro</div>
+        <div class="mode-btn">Custom</div>
+        <div class="mode-btn">Indefinite</div>
+      </div>
+
+      <!-- Quick stats -->
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-value">2h 15m</div>
+          <div class="stat-label">Focus Today</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">5</div>
+          <div class="stat-label">Sessions</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">12</div>
+          <div class="stat-label">Blocked</div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="popup-footer">
+        <span>Built by <strong>Zovo</strong></span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

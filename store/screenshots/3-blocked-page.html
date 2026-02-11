@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280, height=800">
+<title>Focus Mode Pro - Blocked Page Screenshot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  @keyframes shimmer {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+  }
+
+  body {
+    width: 1280px;
+    height: 800px;
+    overflow: hidden;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: #0A0A0B;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* Background effects */
+  .bg-gradient {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 700px 500px at 50% 40%, rgba(124, 58, 237, 0.1) 0%, transparent 70%),
+      radial-gradient(ellipse 400px 300px at 30% 70%, rgba(124, 58, 237, 0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 400px 300px at 70% 20%, rgba(124, 58, 237, 0.04) 0%, transparent 70%);
+  }
+
+  /* Subtle pattern */
+  .bg-pattern {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+
+  /* Content wrapper */
+  .content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: -30px;
+  }
+
+  /* Shield icon */
+  .shield {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 32px;
+    animation: float 4s ease-in-out infinite;
+    position: relative;
+  }
+
+  .shield svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 10px 30px rgba(124, 58, 237, 0.3));
+  }
+
+  /* Main heading */
+  .heading {
+    font-size: 44px;
+    font-weight: 800;
+    color: #F5F5F5;
+    letter-spacing: -1.5px;
+    margin-bottom: 12px;
+  }
+
+  /* Subdomain text */
+  .subdomain {
+    font-size: 18px;
+    color: #71717A;
+    font-weight: 400;
+    margin-bottom: 44px;
+  }
+
+  .subdomain strong {
+    color: #A1A1AA;
+    font-weight: 600;
+  }
+
+  /* Quote card */
+  .quote-card {
+    max-width: 560px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
+    padding: 28px 36px;
+    margin-bottom: 36px;
+    position: relative;
+  }
+
+  .quote-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 16px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), transparent, rgba(124, 58, 237, 0.1));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  .quote-icon {
+    font-size: 32px;
+    color: rgba(124, 58, 237, 0.4);
+    margin-bottom: 12px;
+    font-family: Georgia, serif;
+    line-height: 1;
+  }
+
+  .quote-text {
+    font-size: 18px;
+    color: #D4D4D8;
+    font-weight: 400;
+    line-height: 1.6;
+    font-style: italic;
+    margin-bottom: 12px;
+  }
+
+  .quote-author {
+    font-size: 14px;
+    color: #71717A;
+    font-weight: 500;
+  }
+
+  .quote-author span {
+    color: #A1A1AA;
+  }
+
+  /* Timer remaining */
+  .timer-remaining {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+
+  .timer-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(124, 58, 237, 0.1);
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .timer-icon svg {
+    width: 20px;
+    height: 20px;
+    color: #A78BFA;
+  }
+
+  .timer-info {
+    text-align: left;
+  }
+
+  .timer-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #F5F5F5;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.5px;
+  }
+
+  .timer-label {
+    font-size: 12px;
+    color: #71717A;
+    font-weight: 400;
+    margin-top: 1px;
+  }
+
+  /* Emergency unlock */
+  .emergency-btn {
+    padding: 10px 24px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #52525B;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    margin-bottom: 48px;
+    transition: all 0.2s;
+  }
+
+  /* Branding footer */
+  .branding {
+    position: absolute;
+    bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 2;
+  }
+
+  .branding-logo {
+    width: 26px;
+    height: 26px;
+    background: linear-gradient(135deg, #7C3AED, #6D28D9);
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .branding-logo-circle {
+    width: 10px;
+    height: 10px;
+    background: white;
+    border-radius: 50%;
+  }
+
+  .branding-text {
+    font-size: 13px;
+    color: #52525B;
+    font-weight: 500;
+  }
+
+  .branding-text strong {
+    color: #71717A;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+  <div class="bg-gradient"></div>
+  <div class="bg-pattern"></div>
+
+  <div class="content">
+    <!-- Shield icon -->
+    <div class="shield">
+      <svg viewBox="0 0 100 100" fill="none">
+        <defs>
+          <linearGradient id="shield-grad" x1="20" y1="10" x2="80" y2="90">
+            <stop offset="0%" style="stop-color:#7C3AED"/>
+            <stop offset="100%" style="stop-color:#6D28D9"/>
+          </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <!-- Shield body -->
+        <path d="M50 8 L88 24 L88 50 C88 72 72 88 50 96 C28 88 12 72 12 50 L12 24 Z"
+              fill="url(#shield-grad)" opacity="0.9" filter="url(#glow)"/>
+        <!-- Shield highlight -->
+        <path d="M50 14 L82 28 L82 50 C82 68 68 82 50 90 C32 82 18 68 18 50 L18 28 Z"
+              fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+        <!-- Checkmark / X mark -->
+        <line x1="38" y1="42" x2="50" y2="58" stroke="white" stroke-width="4" stroke-linecap="round"/>
+        <line x1="50" y1="58" x2="66" y2="38" stroke="white" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <!-- Main text -->
+    <div class="heading">This site is blocked</div>
+    <div class="subdomain"><strong>facebook.com</strong> is on your blocklist</div>
+
+    <!-- Quote card -->
+    <div class="quote-card">
+      <div class="quote-icon">"</div>
+      <div class="quote-text">The secret of getting ahead is getting started.</div>
+      <div class="quote-author">-- <span>Mark Twain</span></div>
+    </div>
+
+    <!-- Timer -->
+    <div class="timer-remaining">
+      <div class="timer-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+      <div class="timer-info">
+        <div class="timer-value">18:42</div>
+        <div class="timer-label">remaining in focus session</div>
+      </div>
+    </div>
+
+    <!-- Emergency unlock -->
+    <div class="emergency-btn">Emergency Unlock</div>
+  </div>
+
+  <!-- Branding -->
+  <div class="branding">
+    <div class="branding-logo">
+      <div class="branding-logo-circle"></div>
+    </div>
+    <div class="branding-text"><strong>Focus Mode Pro</strong></div>
+  </div>
+</body>
+</html>

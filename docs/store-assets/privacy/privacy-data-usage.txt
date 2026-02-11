@@ -4,18 +4,39 @@ Chrome Web Store Privacy Tab — Data Usage Section
 ================================================================================
 
 This document specifies the data usage declarations for the Chrome Web Store
-submission. Focus Mode - Blocker does NOT collect or transmit any user data
-to external servers. All data is stored locally on the user's device via
-chrome.storage.local.
+submission. Focus Mode - Blocker transmits limited data to the Zovo API
+(https://xggdjlurppfcytxqoozs.supabase.co/functions/v1) for license
+verification and anonymous analytics tracking. All user-generated content
+(settings, blocked sites, focus stats) is stored locally on the user's device.
+
+NETWORK REQUESTS MADE:
+  - /verify-extension-license — License key validation (Pro tier only)
+  - /track-event — Anonymous analytics events
+
+DATA THAT IS TRANSMITTED:
+  - License key, extension ID (for license verification)
+  - Email address associated with the license (returned from server)
+  - Event name, extension ID, session ID, timestamp, version (for analytics)
+
+DATA THAT IS NOT TRANSMITTED:
+  - Browsing history or URLs visited
+  - Blocked site lists or whitelist rules
+  - Focus session statistics, scores, or streaks
+  - Personal data (name, location, communications)
+  - Any website content
 
 ================================================================================
-DATA USAGE CATEGORIES (All 9 Categories: NOT COLLECTED)
+DATA USAGE CATEGORIES
 ================================================================================
 
 1. Personally identifiable information
-   Collection: NOT COLLECTED
-   The extension does not collect names, addresses, email addresses, age,
-   identification numbers, or any other personally identifiable information.
+   Collection: COLLECTED (limited)
+   Usage: The email address associated with a Pro license key is received from
+   the Zovo API during license verification and displayed in the Account tab.
+   This email is not collected by the extension itself — it is returned by the
+   server as part of the license response. It is stored locally and not
+   transmitted elsewhere. No names, addresses, age, or identification numbers
+   are collected.
 
 2. Health information
    Collection: NOT COLLECTED
@@ -24,15 +45,15 @@ DATA USAGE CATEGORIES (All 9 Categories: NOT COLLECTED)
 3. Financial and payment information
    Collection: NOT COLLECTED
    The extension does not collect credit card numbers, bank account numbers,
-   or any financial data. Pro license verification (if applicable) is handled
-   entirely through Chrome Web Store's payment infrastructure.
+   or any financial data. License keys are purchased externally and entered
+   by the user. No payment processing occurs within the extension.
 
 4. Authentication information
-   Collection: NOT COLLECTED
-   The extension does not collect passwords, credentials, security questions,
-   or personal identification numbers. The optional identity permission (Pro
-   tier only) uses Chrome's built-in OAuth flow and does not expose or store
-   authentication credentials.
+   Collection: COLLECTED (limited)
+   Usage: The user's Pro license key is stored in chrome.storage.sync and
+   transmitted to the Zovo API for verification. This is not a password or
+   credential — it is a product license key. No passwords, security questions,
+   or personal identification numbers are collected.
 
 5. Personal communications
    Collection: NOT COLLECTED
@@ -50,12 +71,15 @@ DATA USAGE CATEGORIES (All 9 Categories: NOT COLLECTED)
    While the extension checks the active tab URL against the user's blocklist,
    this comparison happens locally in real-time and no URL history is recorded
    or transmitted. The locally-stored sessionHistory tracks only focus session
-   durations and scores, not URLs visited.
+   durations and scores, not URLs visited. Analytics events do NOT include
+   any URLs or browsing data.
 
 8. User activity
-   Collection: NOT COLLECTED
-   The extension does not collect network monitoring data, clicks, mouse
-   position, scroll data, or keystroke logging. Focus statistics (Focus Score,
+   Collection: COLLECTED (limited)
+   Usage: Anonymous analytics events are sent to the Zovo API. Each event
+   contains: event name, extension ID, session ID (random, not tied to user
+   identity), timestamp, and extension version. No clicks, mouse positions,
+   scroll data, or keystroke data is collected. Focus statistics (Focus Score,
    streaks) are computed locally and never transmitted.
 
 9. Website content
@@ -69,9 +93,10 @@ DATA USAGE CATEGORIES (All 9 Categories: NOT COLLECTED)
 LOCAL STORAGE DISCLOSURE
 ================================================================================
 
-While no data is collected or transmitted externally, the extension does store
-the following data LOCALLY on the user's device via chrome.storage.local:
+The extension stores data locally on the user's device using Chrome's storage
+APIs:
 
+  chrome.storage.local (device only):
   - blocklist: User-specified list of websites to block during focus sessions
   - settings: User preferences (timer durations, theme, notification settings)
   - focusScore: Numerical score (0-100) reflecting recent focus consistency
@@ -80,11 +105,15 @@ the following data LOCALLY on the user's device via chrome.storage.local:
   - timerState: Current Pomodoro timer state for session persistence
   - soundPreferences: Selected ambient sounds and volume settings
   - schedules: User-configured automatic blocking schedules
-  - proLicense: Pro tier license status (boolean)
+  - licenseCache: Cached license validation result (to reduce API calls)
+  - analyticsQueue: Queued analytics events awaiting network connectivity
 
-NONE of this locally-stored data is transmitted to external servers, shared
-with third parties, or used for any purpose other than providing the
-extension's core functionality to the user.
+  chrome.storage.sync (synced across signed-in Chrome devices):
+  - licenseKey: The user's Pro license key
+
+The blocklist, settings, focus statistics, and session data are NEVER
+transmitted to external servers. Only the license key and anonymous analytics
+events (described above) are transmitted to the Zovo API.
 
 
 ================================================================================
@@ -108,15 +137,19 @@ SUMMARY
 
 Focus Mode - Blocker is a privacy-first extension. It:
 
-  - Collects ZERO data in all 9 Chrome Web Store data categories
-  - Stores all user data exclusively on the local device
-  - Never transmits browsing data, focus statistics, or personal information
-    to any external server
-  - Does not use analytics, telemetry, or tracking of any kind
+  - Makes network requests ONLY to the Zovo API for license verification
+    and anonymous analytics — no other external connections
+  - Stores all user-generated data (blocklists, settings, focus stats)
+    exclusively on the local device
+  - Never transmits browsing history, blocked site lists, focus statistics,
+    or personal information to any external server
+  - Does not use third-party analytics services, telemetry, or crash reporting
   - Does not contain ads or integrate with advertising networks
   - Does not sell, share, or transfer any user data to third parties
+  - Analytics events contain only: event name, extension ID, session ID,
+    timestamp, and version — no personally identifiable information
 
 Users can verify this by:
   1. Inspecting the source code: https://github.com/theluckystrike/focus-mode-blocker
-  2. Monitoring network traffic (the extension makes zero external requests)
-  3. Reviewing chrome.storage.local contents via Chrome DevTools
+  2. Monitoring network traffic (only requests to xggdjlurppfcytxqoozs.supabase.co)
+  3. Reviewing chrome.storage.local and chrome.storage.sync via Chrome DevTools

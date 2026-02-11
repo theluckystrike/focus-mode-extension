@@ -2,7 +2,7 @@ Distractions cost the average knowledge worker $608 per week in lost productivit
 
 Block distractions. Build focus. Track your streak.
 
-Focus Mode - Blocker is a free Chrome extension that combines website blocking, gamification, and a built-in Pomodoro timer to help you take back your attention.
+Focus Mode - Blocker is a free Chrome extension that combines website blocking, gamification, and a built-in Pomodoro timer to help you take back your attention. Optional Pro upgrade available for power users who need more.
 
 
 WHY FOCUS MODE - BLOCKER?
@@ -26,7 +26,7 @@ FEATURES
 
   Streak Tracking — Build daily focus streaks and watch your consistency grow. Don't break the chain.
 
-  Nuclear Option — Lock yourself out of distractions for up to 1 hour (24 hours with Pro). No undo. No workarounds. When you need serious focus, this is it.
+  Nuclear Option — Lock yourself out of distractions for up to 1 hour (24 hours with Pro upgrade). No undo. No workarounds. When you need serious focus, this is it.
 
   Motivational Block Page — Every blocked page shows your current stats, streaks, and an encouraging quote to keep you on track instead of showing a dead end.
 
@@ -54,6 +54,19 @@ KEYBOARD SHORTCUTS
 
   Alt+Shift+F — Toggle Focus Mode on/off
   Alt+Shift+Q — Quick Focus (25-minute session)
+
+
+OPTIONAL PRO UPGRADE (Zovo Pro)
+
+For power users who want more, the Pro upgrade unlocks:
+
+  Unlimited blocklist — No cap on the number of sites you can block
+  Extended Nuclear Option — Lock out distractions for up to 24 hours
+  Pro badge in popup — Visual confirmation that your license is active
+  Account tab in Settings — Manage your license key and subscription in one place
+  License key activation — Simple one-time setup, no recurring sign-ins
+
+Upgrade through the Account tab in Settings. Enter your Zovo Pro license key and you're all set. All free features remain fully functional without a license.
 
 
 PRIVACY & TRUST

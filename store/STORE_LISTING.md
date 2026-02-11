@@ -23,7 +23,7 @@ Block distracting websites and boost productivity with focus timers. Built-in Po
 ```markdown
 **TAKE CONTROL OF YOUR FOCUS**
 
-Struggling with constant distractions while working? Focus Mode Pro helps you stay productive by blocking distracting websites and managing your time with a built-in Pomodoro timer.
+Struggling with constant distractions while working? Focus Mode Pro helps you stay productive by blocking distracting websites and managing your time with a built-in Pomodoro timer. Free to use with an optional Pro upgrade for power users who want even more control.
 
 **POWERFUL FEATURES**
 
@@ -41,13 +41,23 @@ Struggling with constant distractions while working? Focus Mode Pro helps you st
 - **Motivational Quotes** - Stay inspired with quotes on blocked pages
 - **Keyboard Shortcut** - Alt+Shift+F to toggle focus mode instantly
 
+**OPTIONAL PRO UPGRADE (Zovo Pro)**
+
+- **Unlimited Blocklist** - Block as many sites as you need
+- **Extended Nuclear Option** - Lock yourself out for up to 24 hours
+- **Pro Badge** - Displayed in the popup so you know your license is active
+- **Account Tab** - Manage your license key and subscription from Settings
+- **License Key Activation** - Simple one-time setup with your Zovo Pro license key
+- **Priority Support** - Get help faster from the developer
+
 **WHY FOCUS MODE PRO?**
 
-- No accounts required - works offline
+- Free to use with optional Pro upgrade
 - Zero data collection - 100% privacy-first
 - Lightweight and fast - won't slow down your browser
 - Beautiful dark theme interface
-- Free forever - no premium features locked
+- No accounts required for free features - works offline
+- Pro license managed locally via the Account tab in Settings
 
 **HOW IT WORKS**
 
@@ -56,6 +66,7 @@ Struggling with constant distractions while working? Focus Mode Pro helps you st
 3. Start focusing! Distracting sites will be blocked
 4. Take breaks when prompted
 5. View your productivity statistics
+6. (Optional) Upgrade to Pro via the Account tab in Settings with a license key
 
 **BLOCKED PAGE**
 
@@ -79,7 +90,7 @@ Press Alt+Shift+F to instantly toggle focus mode on/off from any tab!
 ---
 
 Part of the Zovo extension family: simple tools that respect your privacy.
-Built by a solo developer who listens. support@zovo.one
+Free to use with optional Pro upgrade. Built by a solo developer who listens. support@zovo.one
 ```
 
 ---
@@ -134,11 +145,14 @@ Required to block distracting websites on any domain the user configures. Only a
 
 ## Screenshots (5 required, 1280x800 PNG)
 
-1. **Main Popup** - Show the timer interface with start button and mode selection
+1. **Hero / Main Popup** - Timer interface with start button and mode selection (see `store/screenshots/1-hero.html`)
 2. **Active Focus** - Timer counting down with pause/stop controls
 3. **Blocked Page** - Full-screen blocked page with timer and motivational quote
 4. **Options - Blocking** - Category toggles and custom blocklist management
-5. **Statistics** - Daily and all-time productivity stats with streak counter
+5. **Account / Pro** - Account tab showing license key activation and Pro badge
+6. **Statistics** - Daily and all-time productivity stats with streak counter
+
+> **Note:** HTML mockup files in `store/screenshots/` can be opened in a browser and screenshotted at 1280x800 for pixel-perfect results.
 
 ### Screenshot Text Overlay Guidelines
 
@@ -213,3 +227,7 @@ mailto:support@zovo.one
 - stay focused
 - work mode
 - concentration tool
+- license key
+- pro upgrade
+- premium features
+- focus mode pro

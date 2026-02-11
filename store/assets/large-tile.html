@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=920, initial-scale=1.0">
+<title>Focus Mode Pro - Large Tile</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 920px;
+    height: 680px;
+    overflow: hidden;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0A0A0B 0%, #12121f 50%, #16162a 100%);
+    display: flex;
+    position: relative;
+  }
+
+  /* Subtle background accents */
+  body::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -50px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.06) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  body::after {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    left: 200px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(109, 40, 217, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .left-side {
+    width: 60%;
+    padding: 60px 50px 40px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .logo-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+
+  .logo {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 14px rgba(124, 58, 237, 0.3);
+    flex-shrink: 0;
+  }
+
+  .logo svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #F5F5F5;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+
+  .subtitle {
+    font-size: 18px;
+    color: #A1A1AA;
+    font-weight: 400;
+    margin-bottom: 36px;
+    line-height: 1.4;
+  }
+
+  .features {
+    list-style: none;
+    margin-bottom: 40px;
+  }
+
+  .features li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    font-size: 15px;
+    color: #E4E4E7;
+    font-weight: 400;
+  }
+
+  .check-icon {
+    width: 22px;
+    height: 22px;
+    background: rgba(124, 58, 237, 0.15);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .check-icon svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.35);
+    letter-spacing: 0.2px;
+    width: fit-content;
+  }
+
+  .branding {
+    position: absolute;
+    bottom: 28px;
+    left: 60px;
+    font-size: 12px;
+    color: #52525B;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  .right-side {
+    width: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .mockup-glow {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .popup-mockup {
+    width: 280px;
+    background: #18181B;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(124, 58, 237, 0.1);
+    transform: rotate(-3deg);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .popup-header {
+    padding: 18px 20px 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .popup-logo {
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .popup-logo svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .popup-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #F5F5F5;
+  }
+
+  .popup-body {
+    padding: 24px 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .timer-ring {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 4px solid #27272A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .timer-ring::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 4px solid transparent;
+    border-top-color: #7C3AED;
+    border-right-color: #7C3AED;
+    transform: rotate(-45deg);
+  }
+
+  .timer-text {
+    font-size: 32px;
+    font-weight: 700;
+    color: #F5F5F5;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 1px;
+  }
+
+  .timer-label {
+    font-size: 11px;
+    color: #A1A1AA;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+
+  .start-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+
+  .mode-tabs {
+    display: flex;
+    gap: 2px;
+    background: #27272A;
+    border-radius: 8px;
+    padding: 3px;
+    width: 100%;
+  }
+
+  .mode-tab {
+    flex: 1;
+    text-align: center;
+    padding: 7px 4px;
+    font-size: 11px;
+    color: #A1A1AA;
+    border-radius: 6px;
+    font-weight: 500;
+  }
+
+  .mode-tab.active {
+    background: #3F3F46;
+    color: #F5F5F5;
+  }
+</style>
+</head>
+<body>
+  <div class="left-side">
+    <div class="logo-row">
+      <div class="logo">
+        <svg viewBox="0 0 26 26" fill="none">
+          <circle cx="13" cy="13" r="10" stroke="white" stroke-width="2" fill="none" opacity="0.9"/>
+          <circle cx="13" cy="13" r="6" stroke="white" stroke-width="1.5" fill="none" opacity="0.7"/>
+          <circle cx="13" cy="13" r="2.5" fill="white" opacity="0.95"/>
+        </svg>
+      </div>
+      <div class="title">Focus Mode Pro</div>
+    </div>
+    <div class="subtitle">Take control of your productivity</div>
+
+    <ul class="features">
+      <li>
+        <div class="check-icon">
+          <svg viewBox="0 0 13 13" fill="none">
+            <path d="M2.5 6.5L5.5 9.5L10.5 3.5" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        Block distracting websites
+      </li>
+      <li>
+        <div class="check-icon">
+          <svg viewBox="0 0 13 13" fill="none">
+            <path d="M2.5 6.5L5.5 9.5L10.5 3.5" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        Built-in Pomodoro timer
+      </li>
+      <li>
+        <div class="check-icon">
+          <svg viewBox="0 0 13 13" fill="none">
+            <path d="M2.5 6.5L5.5 9.5L10.5 3.5" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        Track focus stats &amp; streaks
+      </li>
+      <li>
+        <div class="check-icon">
+          <svg viewBox="0 0 13 13" fill="none">
+            <path d="M2.5 6.5L5.5 9.5L10.5 3.5" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        100% free &amp; privacy-first
+      </li>
+    </ul>
+
+    <div class="cta-button">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M8 1L14 4.5V11.5L8 15L2 11.5V4.5L8 1Z" stroke="white" stroke-width="1.5" fill="none"/>
+      </svg>
+      Add to Chrome &mdash; It's Free
+    </div>
+  </div>
+
+  <div class="right-side">
+    <div class="mockup-glow"></div>
+    <div class="popup-mockup">
+      <div class="popup-header">
+        <div class="popup-logo">
+          <svg viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="6" stroke="white" stroke-width="1.5" fill="none" opacity="0.9"/>
+            <circle cx="8" cy="8" r="3.5" stroke="white" stroke-width="1" fill="none" opacity="0.7"/>
+            <circle cx="8" cy="8" r="1.5" fill="white" opacity="0.95"/>
+          </svg>
+        </div>
+        <div class="popup-title">Focus Mode Pro</div>
+      </div>
+      <div class="popup-body">
+        <div class="timer-ring">
+          <div style="text-align: center;">
+            <div class="timer-text">25:00</div>
+            <div class="timer-label">Focus</div>
+          </div>
+        </div>
+        <div class="start-btn">Start Focus</div>
+        <div class="mode-tabs">
+          <div class="mode-tab active">Pomodoro</div>
+          <div class="mode-tab">Custom</div>
+          <div class="mode-tab">Indefinite</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="branding">by Zovo</div>
+</body>
+</html>

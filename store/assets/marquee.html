@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1400, initial-scale=1.0">
+<title>Focus Mode Pro - Marquee</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1400px;
+    height: 560px;
+    overflow: hidden;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0A0A0B 0%, #111120 40%, #14142b 70%, #0f0f1a 100%);
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  /* Violet accent glows */
+  body::before {
+    content: '';
+    position: absolute;
+    top: -120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 700px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(124, 58, 237, 0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  body::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    right: 100px;
+    width: 500px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(109, 40, 217, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Subtle grid pattern overlay */
+  .grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(124, 58, 237, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124, 58, 237, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .left-section {
+    width: 33%;
+    padding: 60px 30px 60px 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .logo-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .logo {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 14px rgba(124, 58, 237, 0.3);
+    flex-shrink: 0;
+  }
+
+  .logo svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .title {
+    font-size: 40px;
+    font-weight: 700;
+    color: #F5F5F5;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: #A1A1AA;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-bottom: 32px;
+  }
+
+  .feature-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: rgba(124, 58, 237, 0.1);
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    border-radius: 20px;
+    font-size: 12px;
+    color: #D4D4D8;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .pill-dot {
+    width: 6px;
+    height: 6px;
+    background: #7C3AED;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Center section */
+  .center-section {
+    width: 34%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .center-glow {
+    position: absolute;
+    width: 380px;
+    height: 380px;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, rgba(124, 58, 237, 0.04) 40%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .popup-mockup {
+    width: 300px;
+    background: #18181B;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5), 0 0 50px rgba(124, 58, 237, 0.1);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .popup-header {
+    padding: 16px 20px 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .popup-logo {
+    width: 26px;
+    height: 26px;
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .popup-logo svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .popup-title-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #F5F5F5;
+  }
+
+  .popup-body {
+    padding: 22px 20px 18px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .timer-ring {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 4px solid #27272A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .timer-ring::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 4px solid transparent;
+    border-top-color: #7C3AED;
+    border-right-color: #7C3AED;
+    transform: rotate(-45deg);
+  }
+
+  .timer-text {
+    font-size: 34px;
+    font-weight: 700;
+    color: #F5F5F5;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 1px;
+  }
+
+  .timer-label {
+    font-size: 11px;
+    color: #A1A1AA;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+
+  .start-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .mode-tabs {
+    display: flex;
+    gap: 2px;
+    background: #27272A;
+    border-radius: 8px;
+    padding: 3px;
+    width: 100%;
+  }
+
+  .mode-tab {
+    flex: 1;
+    text-align: center;
+    padding: 7px 4px;
+    font-size: 11px;
+    color: #A1A1AA;
+    border-radius: 6px;
+    font-weight: 500;
+  }
+
+  .mode-tab.active {
+    background: #3F3F46;
+    color: #F5F5F5;
+  }
+
+  /* Right section */
+  .right-section {
+    width: 33%;
+    padding: 50px 70px 50px 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Blocked page mini mockup */
+  .blocked-mockup {
+    width: 260px;
+    background: #18181B;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .browser-bar {
+    background: #27272A;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .browser-dots {
+    display: flex;
+    gap: 4px;
+  }
+
+  .browser-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #3F3F46;
+  }
+
+  .browser-dot.red { background: #EF4444; opacity: 0.7; }
+  .browser-dot.yellow { background: #F59E0B; opacity: 0.7; }
+  .browser-dot.green { background: #22C55E; opacity: 0.7; }
+
+  .browser-url {
+    flex: 1;
+    background: #1a1a1d;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 9px;
+    color: #71717A;
+  }
+
+  .blocked-content {
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .shield-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+  }
+
+  .blocked-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #F5F5F5;
+    margin-bottom: 4px;
+  }
+
+  .blocked-subtitle {
+    font-size: 10px;
+    color: #71717A;
+  }
+
+  /* Stats mini mockup */
+  .stats-mockup {
+    width: 260px;
+    background: #18181B;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .streak-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(34, 197, 94, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .streak-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .streak-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .streak-label {
+    font-size: 11px;
+    color: #A1A1AA;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+
+  .streak-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #F5F5F5;
+    line-height: 1;
+  }
+
+  .streak-unit {
+    font-size: 13px;
+    font-weight: 500;
+    color: #22C55E;
+    margin-top: 2px;
+  }
+
+  /* Bottom branding */
+  .bottom-branding {
+    position: absolute;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #52525B;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .branding-separator {
+    width: 3px;
+    height: 3px;
+    background: #3F3F46;
+    border-radius: 50%;
+  }
+</style>
+</head>
+<body>
+  <div class="grid-overlay"></div>
+
+  <!-- Left section -->
+  <div class="left-section">
+    <div class="logo-row">
+      <div class="logo">
+        <svg viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="9" stroke="white" stroke-width="2" fill="none" opacity="0.9"/>
+          <circle cx="12" cy="12" r="5.5" stroke="white" stroke-width="1.5" fill="none" opacity="0.7"/>
+          <circle cx="12" cy="12" r="2.5" fill="white" opacity="0.95"/>
+        </svg>
+      </div>
+    </div>
+    <div class="title">Focus Mode<br>Pro</div>
+    <div class="subtitle">The distraction blocker that<br>respects your privacy</div>
+
+    <div class="feature-pills">
+      <div class="pill"><span class="pill-dot"></span>Website Blocker</div>
+      <div class="pill"><span class="pill-dot"></span>Pomodoro Timer</div>
+      <div class="pill"><span class="pill-dot"></span>Focus Stats</div>
+    </div>
+  </div>
+
+  <!-- Center section -->
+  <div class="center-section">
+    <div class="center-glow"></div>
+    <div class="popup-mockup">
+      <div class="popup-header">
+        <div class="popup-logo">
+          <svg viewBox="0 0 15 15" fill="none">
+            <circle cx="7.5" cy="7.5" r="5.5" stroke="white" stroke-width="1.5" fill="none" opacity="0.9"/>
+            <circle cx="7.5" cy="7.5" r="3" stroke="white" stroke-width="1" fill="none" opacity="0.7"/>
+            <circle cx="7.5" cy="7.5" r="1.2" fill="white" opacity="0.95"/>
+          </svg>
+        </div>
+        <div class="popup-title-text">Focus Mode Pro</div>
+      </div>
+      <div class="popup-body">
+        <div class="timer-ring">
+          <div style="text-align: center;">
+            <div class="timer-text">25:00</div>
+            <div class="timer-label">Focus</div>
+          </div>
+        </div>
+        <div class="start-btn">Start Focus</div>
+        <div class="mode-tabs">
+          <div class="mode-tab active">Pomodoro</div>
+          <div class="mode-tab">Custom</div>
+          <div class="mode-tab">Indefinite</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right section -->
+  <div class="right-section">
+    <!-- Blocked page mockup -->
+    <div class="blocked-mockup">
+      <div class="browser-bar">
+        <div class="browser-dots">
+          <div class="browser-dot red"></div>
+          <div class="browser-dot yellow"></div>
+          <div class="browser-dot green"></div>
+        </div>
+        <div class="browser-url">twitter.com</div>
+      </div>
+      <div class="blocked-content">
+        <svg class="shield-icon" viewBox="0 0 40 40" fill="none">
+          <path d="M20 4L6 10V19C6 28.5 12.2 37.3 20 39C27.8 37.3 34 28.5 34 19V10L20 4Z"
+                fill="rgba(124, 58, 237, 0.15)" stroke="#7C3AED" stroke-width="2"/>
+          <path d="M16 20L19 23L25 17" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="blocked-title">Site Blocked</div>
+        <div class="blocked-subtitle">Stay focused on what matters</div>
+      </div>
+    </div>
+
+    <!-- Stats mockup -->
+    <div class="stats-mockup">
+      <div class="streak-icon">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M12 2C12 2 7 8 7 13C7 16.866 9.239 19 12 19C14.761 19 17 16.866 17 13C17 8 12 2 12 2Z"
+                fill="rgba(34, 197, 94, 0.2)" stroke="#22C55E" stroke-width="1.5"/>
+          <path d="M12 10C12 10 10 13 10 15C10 16.657 10.895 17.5 12 17.5C13.105 17.5 14 16.657 14 15C14 13 12 10 12 10Z"
+                fill="#22C55E" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="streak-info">
+        <div class="streak-label">Current Streak</div>
+        <div class="streak-value">7 <span class="streak-unit">days</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-branding">
+    <span>Free &amp; Privacy-First</span>
+    <span class="branding-separator"></span>
+    <span>by Zovo</span>
+  </div>
+</body>
+</html>
