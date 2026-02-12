@@ -99,10 +99,15 @@ function freeTierData(): LicenseData {
 // Fetch with Retry (Exponential Backoff)
 // =============================================================================
 
+const FETCH_TIMEOUT_MS = 15000; // 15 seconds per attempt
+
 async function fetchWithRetry(url: string, options: RequestInit, maxRetries = 3): Promise<Response> {
   for (let i = 0; i < maxRetries; i++) {
     try {
-      const response = await fetch(url, options);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+      const response = await fetch(url, { ...options, signal: controller.signal });
+      clearTimeout(timeoutId);
 
       if (response.status === 429) {
         const retryAfter = response.headers.get('Retry-After');
@@ -521,11 +526,15 @@ export async function flushAnalyticsQueue(): Promise<{ sent: number; failed: num
 
   for (const event of queue) {
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
       const response = await fetch(`${ZOVO_API_BASE}/track-event`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(event),
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
 
       if (response.ok || response.status === 400) {
         sent++;

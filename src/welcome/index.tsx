@@ -114,6 +114,9 @@ const WelcomePage: React.FC = () => {
 
   const handleStartUsing = () => {
     chrome.storage.local.set({ welcomeSeen: true }, () => {
+      if (chrome.runtime.lastError) {
+        console.error('Failed to save welcome state:', chrome.runtime.lastError.message);
+      }
       window.close();
     });
   };
@@ -125,18 +128,8 @@ const WelcomePage: React.FC = () => {
           ================================================================ */}
       <section className="relative overflow-hidden">
         {/* Gradient background */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124, 58, 237, 0.25) 0%, rgba(124, 58, 237, 0.08) 40%, transparent 70%)',
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background: 'linear-gradient(180deg, rgba(124, 58, 237, 0.06) 0%, transparent 60%)',
-          }}
-        />
+        <div className="absolute inset-0 zovo-hero-gradient" />
+        <div className="absolute inset-0 zovo-hero-gradient-overlay" />
 
         <div className="relative max-w-4xl mx-auto px-8 pt-20 pb-16 text-center">
           <div className="flex justify-center mb-6">
@@ -271,13 +264,7 @@ const WelcomePage: React.FC = () => {
           FINAL CTA SECTION
           ================================================================ */}
       <section className="max-w-4xl mx-auto px-8 pb-16">
-        <div
-          className="relative overflow-hidden rounded-xl p-10 text-center"
-          style={{
-            background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(124, 58, 237, 0.05) 100%)',
-            border: '1px solid rgba(124, 58, 237, 0.25)',
-          }}
-        >
+        <div className="relative overflow-hidden rounded-xl p-10 text-center zovo-cta-gradient">
           <h2 className="text-2xl font-bold mb-3">{t('welCtaTitle')}</h2>
           <p className="text-zovo-text-secondary mb-6">
             {t('welCtaDesc')}

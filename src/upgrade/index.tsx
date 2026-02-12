@@ -321,18 +321,8 @@ const UpgradePage: React.FC = () => {
           ================================================================ */}
       <section className="relative overflow-hidden">
         {/* Gradient background */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124, 58, 237, 0.25) 0%, rgba(124, 58, 237, 0.08) 40%, transparent 70%)',
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background: 'linear-gradient(180deg, rgba(124, 58, 237, 0.06) 0%, transparent 60%)',
-          }}
-        />
+        <div className="absolute inset-0 zovo-hero-gradient" />
+        <div className="absolute inset-0 zovo-hero-gradient-overlay" />
 
         <div className="relative max-w-4xl mx-auto px-8 pt-16 pb-10 text-center">
           <div className="flex items-center justify-center gap-3 mb-5">

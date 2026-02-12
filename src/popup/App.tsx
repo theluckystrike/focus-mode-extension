@@ -61,9 +61,13 @@ const App: React.FC = () => {
 
     // Poll timer state every second when active
     const interval = setInterval(async () => {
-      const timerRes = await messaging.send<void, TimerState>('GET_TIMER_STATE');
-      if (timerRes.success && timerRes.data) {
-        setTimerState(timerRes.data);
+      try {
+        const timerRes = await messaging.send<void, TimerState>('GET_TIMER_STATE');
+        if (timerRes.success && timerRes.data) {
+          setTimerState(timerRes.data);
+        }
+      } catch {
+        // Extension context may be invalidated, ignore
       }
     }, 1000);
 
@@ -283,6 +287,7 @@ const App: React.FC = () => {
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
+              aria-hidden="true"
             >
               <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
               <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
@@ -300,6 +305,7 @@ const App: React.FC = () => {
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
+              aria-hidden="true"
             >
               <path d="M18 20V10M12 20V4M6 20v-6" />
             </svg>
@@ -346,6 +352,7 @@ const App: React.FC = () => {
                 if (e.key === 'Escape') handlePasswordCancel();
               }}
               placeholder={t('plhEnterPassword')}
+              aria-label={t('plhEnterPassword')}
               autoFocus
               className="mb-2 w-full rounded-lg border border-zovo-border bg-zovo-bg-primary px-3 py-2 text-sm text-zovo-text-primary placeholder-zovo-text-muted outline-none focus:border-zovo-violet focus:ring-1 focus:ring-zovo-violet"
             />

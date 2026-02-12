@@ -72,8 +72,8 @@ const Timer: React.FC<TimerProps> = ({
   return (
     <div className="zovo-card text-center">
       {/* Timer Circle */}
-      <div className="relative w-40 h-40 mx-auto mb-4">
-        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+      <div className="relative w-40 h-40 mx-auto mb-4" role="img" aria-label={mode === 'indefinite' && status !== 'idle' ? getStatusText() : `${formatTime(remainingSeconds)} ${getStatusText()}`}>
+        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100" aria-hidden="true">
           {/* Background circle */}
           <circle
             cx="50"
@@ -112,7 +112,7 @@ const Timer: React.FC<TimerProps> = ({
 
       {/* Pomodoro count */}
       {mode === 'pomodoro' && (
-        <div className="flex justify-center gap-1 mb-4">
+        <div className="flex justify-center gap-1 mb-4" role="group" aria-label={`${pomodoroCount % 4} of 4 pomodoros in current cycle`}>
           {[...Array(4)].map((_, i) => (
             <div
               key={i}
@@ -121,6 +121,7 @@ const Timer: React.FC<TimerProps> = ({
                   ? 'bg-focus-green'
                   : 'bg-zovo-bg-tertiary'
               }`}
+              aria-hidden="true"
             />
           ))}
           <span className="ml-2 text-xs text-zovo-text-muted">
@@ -143,6 +144,7 @@ const Timer: React.FC<TimerProps> = ({
               height="20"
               viewBox="0 0 24 24"
               fill="currentColor"
+              aria-hidden="true"
             >
               <path d="M8 5v14l11-7z" />
             </svg>
@@ -156,12 +158,14 @@ const Timer: React.FC<TimerProps> = ({
               onClick={onPause}
               className="zovo-btn zovo-btn-secondary"
               title={t('btnPause')}
+              aria-label={t('btnPause')}
             >
               <svg
                 width="20"
                 height="20"
                 viewBox="0 0 24 24"
                 fill="currentColor"
+                aria-hidden="true"
               >
                 <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
               </svg>
@@ -170,12 +174,14 @@ const Timer: React.FC<TimerProps> = ({
               onClick={onStop}
               className="zovo-btn zovo-btn-secondary text-zovo-error"
               title={t('btnStop')}
+              aria-label={t('btnStop')}
             >
               <svg
                 width="20"
                 height="20"
                 viewBox="0 0 24 24"
                 fill="currentColor"
+                aria-hidden="true"
               >
                 <path d="M6 6h12v12H6z" />
               </svg>
@@ -195,6 +201,7 @@ const Timer: React.FC<TimerProps> = ({
                 height="20"
                 viewBox="0 0 24 24"
                 fill="currentColor"
+                aria-hidden="true"
               >
                 <path d="M8 5v14l11-7z" />
               </svg>
@@ -204,12 +211,14 @@ const Timer: React.FC<TimerProps> = ({
               onClick={onStop}
               className="zovo-btn zovo-btn-secondary text-zovo-error"
               title={t('btnStop')}
+              aria-label={t('btnStop')}
             >
               <svg
                 width="20"
                 height="20"
                 viewBox="0 0 24 24"
                 fill="currentColor"
+                aria-hidden="true"
               >
                 <path d="M6 6h12v12H6z" />
               </svg>

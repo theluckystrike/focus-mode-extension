@@ -60,14 +60,18 @@ const BlockedPage: React.FC = () => {
 
     // Update timer every second
     const interval = setInterval(async () => {
-      const timerRes = await messaging.send<void, TimerState>('GET_TIMER_STATE');
-      if (timerRes.success && timerRes.data) {
-        setTimerState(timerRes.data);
+      try {
+        const timerRes = await messaging.send<void, TimerState>('GET_TIMER_STATE');
+        if (timerRes.success && timerRes.data) {
+          setTimerState(timerRes.data);
 
-        // If focus mode ended, redirect back
-        if (timerRes.data.status === 'idle' && blockedUrl && isSafeUrl(blockedUrl)) {
-          window.location.href = blockedUrl;
+          // If focus mode ended, redirect back
+          if (timerRes.data.status === 'idle' && blockedUrl && isSafeUrl(blockedUrl)) {
+            window.location.href = blockedUrl;
+          }
         }
+      } catch {
+        // Extension context may be invalidated, ignore
       }
     }, 1000);
 
@@ -196,7 +200,7 @@ const BlockedPage: React.FC = () => {
 
       {/* Pomodoro Progress */}
       {timerState && timerState.mode === 'pomodoro' && (
-        <div className="flex gap-2 justify-center mb-8">
+        <div className="flex gap-2 justify-center mb-8" role="group" aria-label={`${timerState.pomodoroCount % 4} of 4 pomodoros in current cycle`}>
           {[...Array(4)].map((_, i) => (
             <div
               key={i}
@@ -205,6 +209,7 @@ const BlockedPage: React.FC = () => {
                   ? 'bg-focus-green'
                   : 'bg-zovo-bg-tertiary'
               }`}
+              aria-hidden="true"
             />
           ))}
         </div>
@@ -254,6 +259,7 @@ const BlockedPage: React.FC = () => {
                   }
                 }}
                 placeholder={t('plhEnterPassword')}
+                aria-label={t('plhEnterPassword')}
                 autoFocus
                 className="mb-2 w-full rounded-lg border border-zovo-border bg-zovo-bg-primary px-3 py-2 text-sm text-zovo-text-primary placeholder-zovo-text-muted outline-none focus:border-zovo-violet focus:ring-1 focus:ring-zovo-violet"
               />

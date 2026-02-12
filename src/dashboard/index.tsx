@@ -238,7 +238,7 @@ const WeeklyChart: React.FC<WeeklyChartProps> = ({ dailyStats }) => {
   return (
     <div className="bg-zovo-bg-secondary border border-zovo-border rounded-xl p-6">
       <h3 className="text-lg font-semibold text-zovo-text-primary mb-6">{t('dashWeeklyActivity')}</h3>
-      <div className="flex items-end justify-between gap-3" style={{ height: '160px' }}>
+      <div className="flex items-end justify-between gap-3 zovo-chart-height">
         {chartData.map((day) => {
           const barHeight = day.focusTime > 0 ? Math.max((day.focusTime / maxFocusTime) * 140, 8) : 4;
           const isToday = day.date === getTodayString();
@@ -269,14 +269,14 @@ const WeeklyChart: React.FC<WeeklyChartProps> = ({ dailyStats }) => {
 
               {/* Bar */}
               <div
-                className={`w-full rounded-t-md transition-all duration-200 cursor-pointer ${
+                className={`w-full rounded-t-md transition-all duration-200 cursor-pointer zovo-chart-bar ${
                   day.focusTime > 0
                     ? isHovered
                       ? 'bg-zovo-violet'
                       : 'bg-zovo-violet/70'
                     : 'bg-zovo-bg-tertiary'
                 }`}
-                style={{ height: `${barHeight}px`, maxWidth: '48px' }}
+                style={{ height: `${barHeight}px` }}
               />
 
               {/* Label */}
@@ -374,14 +374,7 @@ const UpgradeCTA: React.FC<UpgradeCTAProps> = ({ tier, featurePercent }) => {
   };
 
   return (
-    <div
-      className="relative overflow-hidden rounded-xl p-8 text-center"
-      style={{
-        background:
-          'linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(124, 58, 237, 0.05) 100%)',
-        border: '1px solid rgba(124, 58, 237, 0.25)',
-      }}
-    >
+    <div className="relative overflow-hidden rounded-xl p-8 text-center zovo-cta-gradient">
       <h3 className="text-xl font-bold text-zovo-text-primary mb-2">
         {t('dashGetMore')}
       </h3>
@@ -417,6 +410,10 @@ const DashboardPage: React.FC = () => {
           messaging.send<undefined, { tier: string }>('GET_TIER'),
           new Promise<{ dailyHistory?: DailyStats[]; installedAt?: number }>((resolve) => {
             chrome.storage.local.get(['dailyHistory', 'installedAt'], (result) => {
+              if (chrome.runtime.lastError) {
+                resolve({});
+                return;
+              }
               resolve(result as { dailyHistory?: DailyStats[]; installedAt?: number });
             });
           }),

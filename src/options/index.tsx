@@ -161,22 +161,27 @@ const Options: React.FC = () => {
       return;
     }
 
-    const hash = await hashPassword(newPassword);
-    await saveSettings({
-      passwordProtection: {
-        ...settings.passwordProtection,
-        enabled: true,
-        passwordHash: hash,
-      },
-    });
+    try {
+      const hash = await hashPassword(newPassword);
+      await saveSettings({
+        passwordProtection: {
+          ...settings.passwordProtection,
+          enabled: true,
+          passwordHash: hash,
+        },
+      });
 
-    setNewPassword('');
-    setConfirmPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch {
+      setMessage({ type: 'error', text: t('errFailedSaveSettings') });
+      setTimeout(() => setMessage(null), 3000);
+    }
   };
 
   const loadLicenseStatus = async () => {
     try {
-      const tierRes = await messaging.send<void, { tier: string }>('GET_TIER' as any);
+      const tierRes = await messaging.send<void, { tier: string }>('GET_TIER');
       if (tierRes.success && tierRes.data) {
         setCurrentTier(tierRes.data.tier);
       }
@@ -196,7 +201,7 @@ const Options: React.FC = () => {
 
     try {
       const res = await messaging.send<{ licenseKey: string }, { success: boolean; data?: { tier: string; email: string | null }; error?: string }>(
-        'STORE_LICENSE' as any,
+        'STORE_LICENSE',
         { licenseKey: licenseKey.trim() }
       );
 
@@ -219,7 +224,7 @@ const Options: React.FC = () => {
 
   const handleRemoveLicense = async () => {
     try {
-      await messaging.send('REMOVE_LICENSE' as any);
+      await messaging.send('REMOVE_LICENSE');
       setCurrentTier('free');
       setLicenseEmail(null);
       setLicenseStatus('idle');
@@ -309,8 +314,9 @@ const Options: React.FC = () => {
             onClick={() => chrome.tabs.create({ url: 'help.html' })}
             className="ml-auto w-8 h-8 flex items-center justify-center rounded-full border border-zovo-border text-zovo-text-muted hover:text-zovo-violet hover:border-zovo-violet transition-colors"
             title={t('optTipsTricks')}
+            aria-label={t('optTipsTricks')}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <circle cx="12" cy="12" r="10" />
               <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
               <line x1="12" y1="17" x2="12.01" y2="17" />
@@ -534,6 +540,8 @@ const Options: React.FC = () => {
                           onClick={() => toggleCategoryExpand(category.id)}
                           className="text-zovo-text-muted hover:text-zovo-text-primary transition-colors p-1"
                           title={expandedCategories.has(category.id) ? t('optHideSites') : t('optShowSites')}
+                          aria-label={expandedCategories.has(category.id) ? t('optHideSites') : t('optShowSites')}
+                          aria-expanded={expandedCategories.has(category.id)}
                         >
                           <svg
                             width="16"
@@ -543,6 +551,7 @@ const Options: React.FC = () => {
                             stroke="currentColor"
                             strokeWidth="2"
                             className={`transition-transform ${expandedCategories.has(category.id) ? 'rotate-180' : ''}`}
+                            aria-hidden="true"
                           >
                             <path d="M6 9l6 6 6-6" />
                           </svg>
@@ -578,6 +587,7 @@ const Options: React.FC = () => {
                     value={newBlockPattern}
                     onChange={(e) => setNewBlockPattern(e.target.value)}
                     placeholder={isRegex ? 'e.g., ^https?://(www\\.)?facebook\\.com' : 'e.g., facebook.com or *.reddit.com'}
+                    aria-label={t('optCustomBlocklist')}
                     className="zovo-input flex-1"
                     onKeyDown={(e) => e.key === 'Enter' && handleAddToBlocklist()}
                   />
@@ -636,6 +646,7 @@ const Options: React.FC = () => {
                     value={newWhitelistPattern}
                     onChange={(e) => setNewWhitelistPattern(e.target.value)}
                     placeholder="e.g., docs.google.com"
+                    aria-label={t('optWhitelist')}
                     className="zovo-input flex-1"
                     onKeyDown={(e) => e.key === 'Enter' && handleAddToWhitelist()}
                   />
@@ -964,6 +975,7 @@ const Options: React.FC = () => {
                           setRemovePasswordError(null);
                         }}
                         placeholder={t('plhEnterCurrentPassword')}
+                        aria-label={t('plhEnterCurrentPassword')}
                         className="zovo-input w-64"
                       />
                       <button
@@ -1105,6 +1117,7 @@ const Options: React.FC = () => {
                         setLicenseStatus('idle');
                       }}
                       placeholder="ZOVO-XXXX-XXXX-XXXX-XXXX"
+                      aria-label={t('optActivateLicense')}
                       className="zovo-input flex-1 font-mono tracking-wider"
                       onKeyDown={(e) => e.key === 'Enter' && handleActivateLicense()}
                     />

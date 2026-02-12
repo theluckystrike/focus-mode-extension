@@ -93,37 +93,41 @@ let focusState: FocusState = {
 
 /** Handle extension installation */
 chrome.runtime.onInstalled.addListener(async (details) => {
-  if (details.reason === 'install') {
-    console.debug('Focus Mode Pro installed');
+  try {
+    if (details.reason === 'install') {
+      console.debug('Focus Mode Pro installed');
 
-    // Set installation timestamp
-    await storage.setInstalledAt();
+      // Set installation timestamp
+      await storage.setInstalledAt();
 
-    // Initialize storage with defaults
-    await storage.getSettings();
-    await storage.getStats();
+      // Initialize storage with defaults
+      await storage.getSettings();
+      await storage.getStats();
 
-    // Track installation
-    await analytics.track('extension_installed', {
-      version: chrome.runtime.getManifest().version,
-    });
+      // Track installation
+      await analytics.track('extension_installed', {
+        version: chrome.runtime.getManifest().version,
+      });
 
-    // Open welcome page on first install
-    const { welcomeSeen } = await chrome.storage.local.get('welcomeSeen');
-    if (!welcomeSeen) {
-      chrome.tabs.create({ url: chrome.runtime.getURL('welcome.html') });
+      // Open welcome page on first install
+      const { welcomeSeen } = await chrome.storage.local.get('welcomeSeen');
+      if (!welcomeSeen) {
+        chrome.tabs.create({ url: chrome.runtime.getURL('welcome.html') });
+      }
+
+    } else if (details.reason === 'update') {
+      const previousVersion = details.previousVersion;
+      const currentVersion = chrome.runtime.getManifest().version;
+      console.debug(`Focus Mode Pro updated from ${previousVersion} to ${currentVersion}`);
+
+      // Track update
+      await analytics.track('extension_updated', {
+        previousVersion,
+        currentVersion,
+      });
     }
-
-  } else if (details.reason === 'update') {
-    const previousVersion = details.previousVersion;
-    const currentVersion = chrome.runtime.getManifest().version;
-    console.debug(`Focus Mode Pro updated from ${previousVersion} to ${currentVersion}`);
-
-    // Track update
-    await analytics.track('extension_updated', {
-      previousVersion,
-      currentVersion,
-    });
+  } catch (error) {
+    console.error('Error in onInstalled handler:', error);
   }
 });
 
@@ -462,8 +466,8 @@ function updateBadge(): void {
   });
 }
 
-// Update badge every minute
-setInterval(updateBadge, 60000);
+// Update badge every minute via alarm (setInterval is unreliable in service workers)
+chrome.alarms.create('badgeUpdate', { periodInMinutes: 1 });
 
 /**
  * Persist volatile in-memory state to storage so it survives SW restarts
@@ -559,9 +563,13 @@ async function handleNavigation(tabId: number, url: string): Promise<void> {
       rule: result.matchedRule ?? '',
     });
 
-    await chrome.tabs.update(tabId, {
-      url: `${blockedUrl}?${params.toString()}`,
-    });
+    try {
+      await chrome.tabs.update(tabId, {
+        url: `${blockedUrl}?${params.toString()}`,
+      });
+    } catch {
+      // Tab may have been closed before we could redirect
+    }
 
     await analytics.track('site_blocked', {
       reason: result.reason,
@@ -577,18 +585,26 @@ async function handleNavigation(tabId: number, url: string): Promise<void> {
 // ============================================================================
 
 chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
-  // Only check main frame
-  if (details.frameId !== 0) return;
+  try {
+    // Only check main frame
+    if (details.frameId !== 0) return;
 
-  await handleNavigation(details.tabId, details.url);
+    await handleNavigation(details.tabId, details.url);
+  } catch (error) {
+    console.error('Error in onBeforeNavigate:', error);
+  }
 });
 
 chrome.webNavigation.onCommitted.addListener(async (details) => {
-  // Only check main frame and handle redirects
-  if (details.frameId !== 0) return;
-  if (details.transitionType === 'auto_subframe') return;
+  try {
+    // Only check main frame and handle redirects
+    if (details.frameId !== 0) return;
+    if (details.transitionType === 'auto_subframe') return;
 
-  await handleNavigation(details.tabId, details.url);
+    await handleNavigation(details.tabId, details.url);
+  } catch (error) {
+    console.error('Error in onCommitted:', error);
+  }
 });
 
 // ============================================================================
@@ -596,8 +612,12 @@ chrome.webNavigation.onCommitted.addListener(async (details) => {
 // ============================================================================
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'loading' && tab.url) {
-    await handleNavigation(tabId, tab.url);
+  try {
+    if (changeInfo.status === 'loading' && tab.url) {
+      await handleNavigation(tabId, tab.url);
+    }
+  } catch (error) {
+    console.error('Error in onUpdated:', error);
   }
 });
 
@@ -606,49 +626,57 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 // ============================================================================
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
-  if (alarm.name === 'focusTimer') {
-    const settings = await getCachedSettings();
+  try {
+    if (alarm.name === 'focusTimer') {
+      const settings = await getCachedSettings();
 
-    // Focus session complete
-    if (focusState.mode === 'pomodoro') {
-      await stopFocus(true);
-      if (settings.pomodoro.autoStartBreaks) {
-        await startBreak();
+      // Focus session complete
+      if (focusState.mode === 'pomodoro') {
+        await stopFocus(true);
+        if (settings.pomodoro.autoStartBreaks) {
+          await startBreak();
+        }
+      } else {
+        await stopFocus(true);
       }
-    } else {
-      await stopFocus(true);
     }
-  }
 
-  if (alarm.name === 'breakTimer') {
-    await endBreak();
-  }
-
-  if (alarm.name === 'breakReminder') {
-    const settings = await getCachedSettings();
-    if (settings.breakReminders.showNotification && focusState.status === 'focusing') {
-      chrome.notifications.create({
-        type: 'basic',
-        iconUrl: chrome.runtime.getURL('icons/icon-128.png'),
-        title: t('notifBreakReminder'),
-        message: t('notifBreakReminderMsg'),
-      });
+    if (alarm.name === 'breakTimer') {
+      await endBreak();
     }
-  }
 
-  if (alarm.name === 'licenseCheck') {
-    const key = await getLicenseKey();
-    if (key) {
-      await verifyLicense(key, true);
+    if (alarm.name === 'breakReminder') {
+      const settings = await getCachedSettings();
+      if (settings.breakReminders.showNotification && focusState.status === 'focusing') {
+        chrome.notifications.create({
+          type: 'basic',
+          iconUrl: chrome.runtime.getURL('icons/icon-128.png'),
+          title: t('notifBreakReminder'),
+          message: t('notifBreakReminderMsg'),
+        });
+      }
     }
-  }
 
-  if (alarm.name === 'analyticsFlush') {
-    await flushAnalyticsQueue();
-  }
+    if (alarm.name === 'licenseCheck') {
+      const key = await getLicenseKey();
+      if (key) {
+        await verifyLicense(key, true);
+      }
+    }
 
-  if (alarm.name === 'scheduleCheck') {
-    await checkSchedule();
+    if (alarm.name === 'analyticsFlush') {
+      await flushAnalyticsQueue();
+    }
+
+    if (alarm.name === 'scheduleCheck') {
+      await checkSchedule();
+    }
+
+    if (alarm.name === 'badgeUpdate') {
+      updateBadge();
+    }
+  } catch (error) {
+    console.error(`Error in alarm handler (${alarm.name}):`, error);
   }
 });
 
@@ -700,13 +728,17 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
 // ============================================================================
 
 chrome.commands.onCommand.addListener(async (command) => {
-  if (command === 'toggle-focus') {
-    if (focusState.status === 'idle') {
-      const settings = await getCachedSettings();
-      await startFocus(settings.focusMode.timerMode);
-    } else {
-      await stopFocus(false);
+  try {
+    if (command === 'toggle-focus') {
+      if (focusState.status === 'idle') {
+        const settings = await getCachedSettings();
+        await startFocus(settings.focusMode.timerMode);
+      } else {
+        await stopFocus(false);
+      }
     }
+  } catch (error) {
+    console.error('Error in command handler:', error);
   }
 });
 

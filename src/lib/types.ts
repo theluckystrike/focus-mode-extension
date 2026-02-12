@@ -183,7 +183,6 @@ export type MessageAction =
   | 'GET_SETTINGS'
   | 'UPDATE_SETTINGS'
   | 'GET_STATS'
-  | 'TRACK_ACTION'
   | 'PING'
   | 'START_FOCUS'
   | 'STOP_FOCUS'

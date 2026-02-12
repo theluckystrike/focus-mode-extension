@@ -75,6 +75,7 @@ const ModeSelector: React.FC<ModeSelectorProps> = ({
             step="5"
             value={duration}
             onChange={(e) => setDuration(Number(e.target.value))}
+            aria-label={t('lblDuration')}
             className="w-full h-2 bg-zovo-bg-tertiary rounded-lg appearance-none cursor-pointer accent-zovo-violet"
           />
           <div className="flex justify-between text-xs text-zovo-text-muted">
@@ -89,7 +90,7 @@ const ModeSelector: React.FC<ModeSelectorProps> = ({
         onClick={() => onStartFocus(selectedMode, selectedMode === 'custom' ? duration : undefined)}
         className="zovo-btn zovo-btn-primary zovo-btn-block py-3"
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M8 5v14l11-7z" />
         </svg>
         {t('btnStartSession', [modes.find(m => m.id === selectedMode)?.label ?? ''])}

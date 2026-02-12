@@ -480,3 +480,28 @@ input[type="range"]::-moz-range-thumb {
 .gap-4 { gap: var(--zovo-space-4); }
 
 .hidden { display: none !important; }
+
+/* =========================
+   GRADIENT BACKGROUNDS
+   ========================= */
+
+.zovo-hero-gradient {
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124, 58, 237, 0.25) 0%, rgba(124, 58, 237, 0.08) 40%, transparent 70%);
+}
+
+.zovo-hero-gradient-overlay {
+  background: linear-gradient(180deg, rgba(124, 58, 237, 0.06) 0%, transparent 60%);
+}
+
+.zovo-cta-gradient {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(124, 58, 237, 0.05) 100%);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+}
+
+.zovo-chart-height {
+  height: 160px;
+}
+
+.zovo-chart-bar {
+  max-width: 48px;
+}
