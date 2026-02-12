@@ -5,6 +5,7 @@ import Timer from './components/Timer';
 import QuickStats from './components/QuickStats';
 import ModeSelector from './components/ModeSelector';
 import { messaging } from '../lib/messaging';
+import { t } from '../lib/i18n';
 import type { Settings, TimerState, UsageStats, TimerMode } from '../lib/types';
 
 const App: React.FC = () => {
@@ -49,7 +50,7 @@ const App: React.FC = () => {
         // Stay on free tier
       }
     } catch (e) {
-      setError('Failed to connect to extension');
+      setError(t('errConnectionFailed'));
     } finally {
       setLoading(false);
     }
@@ -78,7 +79,7 @@ const App: React.FC = () => {
     if (mode === 'custom' || mode === 'indefinite') {
       if (tier === 'free') {
         chrome.tabs.create({
-          url: chrome.runtime.getURL('upgrade.html?feature=' + (mode === 'custom' ? 'custom_timer' : 'indefinite_mode') + '&reason=Custom%20focus%20modes%20require%20Pro')
+          url: chrome.runtime.getURL('upgrade.html?feature=' + (mode === 'custom' ? 'custom_timer' : 'indefinite_mode') + '&reason=' + encodeURIComponent(t('errCustomModeRequiresPro')))
         });
         return;
       }
@@ -90,7 +91,7 @@ const App: React.FC = () => {
         const gateResult = await messaging.send<{ featureId: string }, { allowed: boolean; reason: string | null }>('CHECK_FEATURE_GATE', { featureId: 'focus_sessions' });
         if (gateResult.success && gateResult.data && !gateResult.data.allowed) {
           chrome.tabs.create({
-            url: chrome.runtime.getURL('upgrade.html?feature=focus_sessions&reason=' + encodeURIComponent(gateResult.data.reason || 'Daily session limit reached'))
+            url: chrome.runtime.getURL('upgrade.html?feature=focus_sessions&reason=' + encodeURIComponent(gateResult.data.reason || t('errDailySessionLimit')))
           });
           return;
         }
@@ -154,7 +155,7 @@ const App: React.FC = () => {
 
   const handlePasswordSubmit = async () => {
     if (!passwordInput.trim()) {
-      setPasswordError('Please enter your password');
+      setPasswordError(t('errEnterPassword'));
       return;
     }
 
@@ -175,7 +176,7 @@ const App: React.FC = () => {
       }
       setPasswordAction(null);
     } else {
-      setPasswordError('Incorrect password');
+      setPasswordError(t('errIncorrectPassword'));
     }
   };
 
@@ -210,9 +211,9 @@ const App: React.FC = () => {
   if (loading) {
     return (
       <div className="zovo-popup">
-        <Header title="Focus Mode" onSettingsClick={handleSettingsClick} tier={tier} />
+        <Header title={t('appName')} onSettingsClick={handleSettingsClick} tier={tier} />
         <main className="flex-1 flex items-center justify-center p-4">
-          <div className="text-zovo-text-secondary">Loading...</div>
+          <div className="text-zovo-text-secondary">{t('msgLoading')}</div>
         </main>
         <Footer tier={tier} />
       </div>
@@ -222,9 +223,9 @@ const App: React.FC = () => {
   if (error) {
     return (
       <div className="zovo-popup">
-        <Header title="Focus Mode" onSettingsClick={handleSettingsClick} tier={tier} />
+        <Header title={t('appName')} onSettingsClick={handleSettingsClick} tier={tier} />
         <main className="flex-1 flex flex-col items-center justify-center p-4">
-          <div className="text-zovo-error mb-2">Error</div>
+          <div className="text-zovo-error mb-2">{t('msgError')}</div>
           <div className="text-zovo-text-secondary text-sm">{error}</div>
         </main>
         <Footer tier={tier} />
@@ -238,9 +239,9 @@ const App: React.FC = () => {
   return (
     <div className="zovo-popup">
       <Header
-        title="Focus Mode"
+        title={t('appName')}
         onSettingsClick={handleSettingsClick}
-        badge={isActive ? 'ACTIVE' : undefined}
+        badge={isActive ? t('lblActive') : undefined}
         tier={tier}
       />
 
@@ -286,7 +287,7 @@ const App: React.FC = () => {
               <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
               <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
             </svg>
-            Settings
+            {t('btnSettings')}
           </button>
           <button
             onClick={() => chrome.tabs.create({ url: 'options.html#stats' })}
@@ -302,19 +303,19 @@ const App: React.FC = () => {
             >
               <path d="M18 20V10M12 20V4M6 20v-6" />
             </svg>
-            Statistics
+            {t('btnStatistics')}
           </button>
         </div>
 
         {/* Upgrade Banner for Free Users */}
         {tier === 'free' && (
           <div className="mt-3 flex items-center justify-between rounded-lg border border-zovo-border bg-gradient-to-r from-violet-950/30 to-purple-950/20 px-3 py-2.5">
-            <span className="text-xs text-zovo-text-secondary">Unlock all features</span>
+            <span className="text-xs text-zovo-text-secondary">{t('msgUnlockAllFeatures')}</span>
             <button
               onClick={() => chrome.tabs.create({ url: chrome.runtime.getURL('upgrade.html') })}
               className="text-xs font-semibold text-zovo-violet hover:text-violet-300 transition-colors"
             >
-              Upgrade to Pro
+              {t('btnUpgradePro')}
             </button>
           </div>
         )}
@@ -327,10 +328,10 @@ const App: React.FC = () => {
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
           <div className="mx-4 w-full max-w-sm rounded-xl border border-zovo-border bg-zovo-bg-secondary p-5 shadow-xl">
             <h3 className="mb-1 text-lg font-semibold text-zovo-text-primary">
-              Password Required
+              {t('ttlPasswordRequired')}
             </h3>
             <p className="mb-4 text-sm text-zovo-text-secondary">
-              Enter your password to {passwordAction === 'stop' ? 'stop' : 'pause'} the focus session.
+              {passwordAction === 'stop' ? t('msgPasswordToStop') : t('msgPasswordToPause')}
             </p>
 
             <input
@@ -344,7 +345,7 @@ const App: React.FC = () => {
                 if (e.key === 'Enter') handlePasswordSubmit();
                 if (e.key === 'Escape') handlePasswordCancel();
               }}
-              placeholder="Enter password"
+              placeholder={t('plhEnterPassword')}
               autoFocus
               className="mb-2 w-full rounded-lg border border-zovo-border bg-zovo-bg-primary px-3 py-2 text-sm text-zovo-text-primary placeholder-zovo-text-muted outline-none focus:border-zovo-violet focus:ring-1 focus:ring-zovo-violet"
             />
@@ -358,13 +359,13 @@ const App: React.FC = () => {
                 onClick={handlePasswordCancel}
                 className="zovo-btn zovo-btn-secondary flex-1 text-sm"
               >
-                Cancel
+                {t('btnCancel')}
               </button>
               <button
                 onClick={handlePasswordSubmit}
                 className="zovo-btn zovo-btn-primary flex-1 text-sm"
               >
-                Confirm
+                {t('btnConfirm')}
               </button>
             </div>
           </div>

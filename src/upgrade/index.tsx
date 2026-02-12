@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { openUpgradePage } from '../lib/payments';
+import { t } from '../lib/i18n';
 import '../popup/styles.css';
 
 // ============================================================================
@@ -22,20 +23,20 @@ interface LimitInfo {
 // Feature Comparison Data
 // ============================================================================
 
-const comparisonData: ComparisonRow[] = [
-  { feature: 'Focus sessions per day', free: 'limited', freeLimit: '5/day' },
-  { feature: 'Pomodoro timer', free: 'unlimited' },
-  { feature: 'Custom timer', free: 'limited', freeLimit: '3/day' },
-  { feature: 'Category blocking presets', free: 'unlimited' },
-  { feature: 'Custom block rules', free: 'limited', freeLimit: '10 rules' },
-  { feature: 'Regex block patterns', free: 'pro-only' },
-  { feature: 'Whitelist rules', free: 'limited', freeLimit: '5 rules' },
-  { feature: 'Schedule mode', free: 'pro-only' },
-  { feature: 'Password protection', free: 'pro-only' },
-  { feature: 'Detailed analytics & reports', free: 'pro-only' },
-  { feature: 'Break reminders', free: 'unlimited' },
-  { feature: 'Motivational quotes', free: 'unlimited' },
-  { feature: 'Priority support', free: 'pro-only' },
+const getComparisonData = (): ComparisonRow[] => [
+  { feature: t('upgFeatSessions'), free: 'limited', freeLimit: t('upgLimit5Day') },
+  { feature: t('upgFeatPomodoro'), free: 'unlimited' },
+  { feature: t('upgFeatCustomTimer'), free: 'limited', freeLimit: t('upgLimit3Day') },
+  { feature: t('upgFeatCategoryPresets'), free: 'unlimited' },
+  { feature: t('upgFeatCustomRules'), free: 'limited', freeLimit: t('upgLimit10Rules') },
+  { feature: t('upgFeatRegex'), free: 'pro-only' },
+  { feature: t('upgFeatWhitelist'), free: 'limited', freeLimit: t('upgLimit5Rules') },
+  { feature: t('upgFeatSchedule'), free: 'pro-only' },
+  { feature: t('upgFeatPassword'), free: 'pro-only' },
+  { feature: t('upgFeatAnalytics'), free: 'pro-only' },
+  { feature: t('upgFeatBreakReminders'), free: 'unlimited' },
+  { feature: t('upgFeatQuotes'), free: 'unlimited' },
+  { feature: t('upgFeatPrioritySupport'), free: 'pro-only' },
 ];
 
 // ============================================================================
@@ -45,32 +46,32 @@ const comparisonData: ComparisonRow[] = [
 function getLimitReasonLabel(feature: string, reason: string): string {
   const labels: Record<string, Record<string, string>> = {
     sessions: {
-      daily_limit: 'You have reached the daily limit of 5 free focus sessions.',
+      daily_limit: t('upgLimitSessions'),
     },
     custom_timer: {
-      daily_limit: 'You have reached the daily limit of 3 free custom timers.',
+      daily_limit: t('upgLimitCustomTimer'),
     },
     block_rules: {
-      max_reached: 'You have reached the maximum of 10 free custom block rules.',
+      max_reached: t('upgLimitBlockRules'),
     },
     whitelist_rules: {
-      max_reached: 'You have reached the maximum of 5 free whitelist rules.',
+      max_reached: t('upgLimitWhitelistRules'),
     },
     regex: {
-      pro_only: 'Regex block patterns are a Pro feature.',
+      pro_only: t('upgLimitRegex'),
     },
     schedule: {
-      pro_only: 'Schedule mode is a Pro feature.',
+      pro_only: t('upgLimitSchedule'),
     },
     password: {
-      pro_only: 'Password protection is a Pro feature.',
+      pro_only: t('upgLimitPassword'),
     },
     analytics: {
-      pro_only: 'Detailed analytics are a Pro feature.',
+      pro_only: t('upgLimitAnalytics'),
     },
   };
 
-  return labels[feature]?.[reason] || `You have reached the limit for this feature. Upgrade to Pro for unlimited access.`;
+  return labels[feature]?.[reason] || t('upgLimitGeneric');
 }
 
 // ============================================================================
@@ -128,7 +129,7 @@ const LimitBanner: React.FC<{ limitInfo: LimitInfo }> = ({ limitInfo }) => {
         <div>
           <p className="text-amber-200 font-medium text-sm">{message}</p>
           <p className="text-amber-300/70 text-xs mt-1">
-            Upgrade to Pro to remove all limits and unlock every feature.
+            {t('upgRemoveLimits')}
           </p>
         </div>
       </div>
@@ -140,17 +141,19 @@ const LimitBanner: React.FC<{ limitInfo: LimitInfo }> = ({ limitInfo }) => {
 // Feature Comparison Table Component
 // ============================================================================
 
-const ComparisonTable: React.FC = () => (
+const ComparisonTable: React.FC = () => {
+  const comparisonData = getComparisonData();
+  return (
   <div className="bg-zovo-bg-secondary border border-zovo-border rounded-xl overflow-hidden">
     <table className="w-full">
       <thead>
         <tr className="border-b border-zovo-border">
-          <th className="text-left px-6 py-4 text-sm font-semibold text-zovo-text-primary">Feature</th>
-          <th className="text-center px-4 py-4 text-sm font-semibold text-zovo-text-secondary w-32">Free</th>
+          <th className="text-left px-6 py-4 text-sm font-semibold text-zovo-text-primary">{t('upgFeature')}</th>
+          <th className="text-center px-4 py-4 text-sm font-semibold text-zovo-text-secondary w-32">{t('upgFree')}</th>
           <th className="text-center px-4 py-4 text-sm font-semibold text-zovo-violet w-32">
             <span className="inline-flex items-center gap-1.5">
               <StarIcon />
-              Pro
+              {t('lblPro')}
             </span>
           </th>
         </tr>
@@ -170,7 +173,7 @@ const ComparisonTable: React.FC = () => (
               )}
               {row.free === 'limited' && (
                 <span className="text-xs text-zovo-warning font-medium">
-                  {row.freeLimit || 'Limited'}
+                  {row.freeLimit || t('upgLimited')}
                 </span>
               )}
               {row.free === 'pro-only' && (
@@ -182,7 +185,7 @@ const ComparisonTable: React.FC = () => (
             <td className="text-center px-4 py-3.5">
               <span className="inline-flex items-center justify-center gap-1.5 text-focus-green">
                 <CheckIcon />
-                <span className="text-xs font-medium">Unlimited</span>
+                <span className="text-xs font-medium">{t('upgUnlimited')}</span>
               </span>
             </td>
           </tr>
@@ -190,7 +193,8 @@ const ComparisonTable: React.FC = () => (
       </tbody>
     </table>
   </div>
-);
+  );
+};
 
 // ============================================================================
 // Pricing Card Component
@@ -262,7 +266,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
           : 'bg-zovo-bg-tertiary hover:bg-zovo-bg-elevated text-zovo-text-primary border border-zovo-border'
       }`}
     >
-      {featured ? 'Get Annual Plan' : 'Get Monthly Plan'}
+      {featured ? t('btnGetAnnualPlan') : t('btnGetMonthlyPlan')}
     </button>
   </div>
 );
@@ -334,14 +338,14 @@ const UpgradePage: React.FC = () => {
           <div className="flex items-center justify-center gap-3 mb-5">
             <Logo size={48} />
             <div className="flex items-center gap-2.5">
-              <h1 className="text-2xl font-bold tracking-tight">Focus Mode Pro</h1>
+              <h1 className="text-2xl font-bold tracking-tight">{t('appNameFull')}</h1>
               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-zovo-violet/20 text-zovo-violet text-xs font-bold uppercase tracking-wide border border-zovo-violet/30">
-                Pro
+                {t('lblPro')}
               </span>
             </div>
           </div>
           <p className="text-lg text-zovo-text-secondary max-w-xl mx-auto leading-relaxed">
-            Unlock the full power of Focus Mode Pro
+            {t('upgUnlockPower')}
           </p>
         </div>
       </section>
@@ -356,9 +360,9 @@ const UpgradePage: React.FC = () => {
             FEATURE COMPARISON TABLE
             ================================================================ */}
         <section className="mb-12">
-          <h2 className="text-xl font-bold text-center mb-2">Free vs Pro</h2>
+          <h2 className="text-xl font-bold text-center mb-2">{t('upgFreeVsPro')}</h2>
           <p className="text-zovo-text-secondary text-center mb-6 text-sm">
-            See what you get when you upgrade to Pro.
+            {t('upgSeeWhatYouGet')}
           </p>
           <ComparisonTable />
         </section>
@@ -367,36 +371,36 @@ const UpgradePage: React.FC = () => {
             PRICING CARDS
             ================================================================ */}
         <section className="mb-12">
-          <h2 className="text-xl font-bold text-center mb-2">Choose your plan</h2>
+          <h2 className="text-xl font-bold text-center mb-2">{t('upgChoosePlan')}</h2>
           <p className="text-zovo-text-secondary text-center mb-8 text-sm">
-            Cancel anytime. No questions asked.
+            {t('upgCancelAnytime')}
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
             <PricingCard
-              title="Monthly"
+              title={t('upgMonthly')}
               price="$4.99"
-              period="/mo"
+              period={t('upgPerMonth')}
               features={[
-                'All Pro features',
-                'Unlimited usage',
-                'Priority support',
-                'Cancel anytime',
+                t('upgAllProFeatures'),
+                t('upgUnlimitedUsage'),
+                t('upgPrioritySupport'),
+                t('upgCancelAnytimeShort'),
               ]}
               featured={false}
               onUpgrade={handleMonthlyUpgrade}
             />
             <PricingCard
-              title="Annual"
+              title={t('upgAnnual')}
               price="$3.99"
-              period="/mo"
-              badge="Best Value"
-              savings="Save 20% — 2 months free"
+              period={t('upgPerMonth')}
+              badge={t('upgBestValue')}
+              savings={t('upgSavings')}
               features={[
-                'All Pro features',
-                'Unlimited usage',
-                'Priority support',
-                '2 months free',
+                t('upgAllProFeatures'),
+                t('upgUnlimitedUsage'),
+                t('upgPrioritySupport'),
+                t('upgTwoMonthsFree'),
               ]}
               featured={true}
               onUpgrade={handleAnnualUpgrade}
@@ -410,10 +414,10 @@ const UpgradePage: React.FC = () => {
         <section className="mb-12">
           <div className="bg-zovo-bg-secondary border border-zovo-border rounded-xl p-8 text-center">
             <p className="text-lg text-zovo-text-secondary italic leading-relaxed">
-              &ldquo;Focus Mode Pro saves me hours every week.&rdquo;
+              &ldquo;{t('upgTestimonial')}&rdquo;
             </p>
             <p className="text-sm text-zovo-text-muted mt-3">
-              &mdash; A happy Pro user
+              &mdash; {t('upgTestimonialAuthor')}
             </p>
           </div>
         </section>
@@ -423,12 +427,12 @@ const UpgradePage: React.FC = () => {
             ================================================================ */}
         <footer className="text-center space-y-3">
           <p className="text-sm text-zovo-text-secondary">
-            Already have a license?{' '}
+            {t('upgAlreadyHaveLicense')}{' '}
             <button
               onClick={handleOpenAccount}
               className="text-zovo-violet hover:underline font-medium"
             >
-              Activate it here
+              {t('upgActivateHere')}
             </button>
           </p>
           <p>
@@ -436,7 +440,7 @@ const UpgradePage: React.FC = () => {
               onClick={handleBack}
               className="text-sm text-zovo-text-muted hover:text-zovo-text-secondary transition-colors"
             >
-              Back to Focus Mode
+              {t('upgBackToFocus')}
             </button>
           </p>
         </footer>

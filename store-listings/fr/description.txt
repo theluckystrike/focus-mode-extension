@@ -1,0 +1,46 @@
+Focus Mode Pro - Concentration optimale et blocage élégant des distractions
+
+FONCTIONNALITES PRINCIPALES :
+• Bloquez les sites distrayants avec des filtres intelligents et des catégories prédéfinies
+• Minuteur Pomodoro intégré avec intervalles de travail et de pause personnalisables
+• Suivez votre temps de concentration, vos sessions et vos séries quotidiennes
+• Programmez des sessions de concentration automatiques pour une routine régulière
+• Protection par mot de passe pour empêcher l'arrêt prématuré des sessions
+• Déverrouillage d'urgence avec délai de sécurité pour les besoins réels
+
+POURQUOI CHOISIR FOCUS MODE PRO ?
+• Confidentialité avant tout : toutes vos données restent sur votre appareil
+• Aucun compte requis pour la version gratuite
+• Fonctionne hors connexion
+• Mises à jour régulières avec de nouvelles fonctionnalités
+• Rapide et léger — consommation minimale de ressources
+
+COMMENT DEMARRER :
+1. Installez Focus Mode Pro depuis le Chrome Web Store
+2. Cliquez sur l'icône dans la barre d'outils pour ouvrir le panneau
+3. Choisissez le mode Pomodoro, Personnalisé ou Indéfini
+4. Appuyez sur Démarrer la concentration — les sites distrayants sont bloqués automatiquement !
+
+RACCOURCI CLAVIER :
+• Alt+Shift+F — Activez ou désactivez le mode concentration depuis n'importe quel onglet
+
+FONCTIONNALITES PRO :
+• Règles de blocage personnalisées et listes blanches illimitées
+• Correspondance avancée par expressions régulières
+• Analyses détaillées et rapports complets
+• Mode planification pour des heures de concentration automatiques
+• Protection par mot de passe
+• Support prioritaire
+
+TARIFS :
+• Gratuit : 8 sessions par jour, blocage de base, minuteur Pomodoro
+• Pro Mensuel : 4,99 $/mois — toutes les fonctionnalités, utilisation illimitée
+• Pro Annuel : 3,99 $/mois — économisez 20 %, 2 mois offerts
+
+CONFIDENTIALITE :
+Focus Mode Pro fonctionne entièrement sur votre appareil. Aucune donnée de navigation n'est collectée ni envoyée vers des serveurs externes. La vérification de licence se connecte à l'API Zovo uniquement lors de l'activation d'une licence Pro.
+
+Vous appréciez Focus Mode Pro ? Laissez-nous un avis 5 étoiles sur le Chrome Web Store. Votre retour nous aide à améliorer cette extension et permet à d'autres utilisateurs de la découvrir.
+
+Site web : https://zovo.one/tools/focus-mode-blocker
+Support : support@zovo.one

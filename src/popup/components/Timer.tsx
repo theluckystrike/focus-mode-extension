@@ -1,4 +1,5 @@
 import React from 'react';
+import { t } from '../../lib/i18n';
 import type { TimerState } from '../../lib/types';
 import { formatTime } from '../../lib/types';
 
@@ -32,13 +33,13 @@ const Timer: React.FC<TimerProps> = ({
   const getStatusText = () => {
     switch (status) {
       case 'focusing':
-        return mode === 'indefinite' ? 'Focusing...' : 'Stay Focused';
+        return mode === 'indefinite' ? t('stsFocusing') : t('stsStayFocused');
       case 'break':
-        return 'Take a Break';
+        return t('stsTakeBreak');
       case 'paused':
-        return 'Paused';
+        return t('stsPaused');
       default:
-        return 'Ready to Focus';
+        return t('stsReadyToFocus');
     }
   };
 
@@ -103,7 +104,7 @@ const Timer: React.FC<TimerProps> = ({
         {/* Timer text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className="text-3xl font-bold text-zovo-text-primary">
-            {mode === 'indefinite' && status !== 'idle' ? 'ON' : formatTime(remainingSeconds)}
+            {mode === 'indefinite' && status !== 'idle' ? t('lblOn') : formatTime(remainingSeconds)}
           </span>
           <span className={`text-sm ${getStatusColor()}`}>{getStatusText()}</span>
         </div>
@@ -124,8 +125,8 @@ const Timer: React.FC<TimerProps> = ({
           ))}
           <span className="ml-2 text-xs text-zovo-text-muted">
             {status === 'focusing' || status === 'paused' || status === 'break'
-              ? `${pomodoroCount > 0 ? pomodoroCount + ' done, ' : ''}1 active`
-              : `${pomodoroCount} completed`}
+              ? `${pomodoroCount > 0 ? pomodoroCount + ' ' + t('lblDone') + ', ' : ''}1 ${t('lblActiveLC')}`
+              : `${pomodoroCount} ${t('lblCompleted')}`}
           </span>
         </div>
       )}
@@ -145,7 +146,7 @@ const Timer: React.FC<TimerProps> = ({
             >
               <path d="M8 5v14l11-7z" />
             </svg>
-            Start Focus
+            {t('btnStartFocus')}
           </button>
         )}
 
@@ -154,7 +155,7 @@ const Timer: React.FC<TimerProps> = ({
             <button
               onClick={onPause}
               className="zovo-btn zovo-btn-secondary"
-              title="Pause"
+              title={t('btnPause')}
             >
               <svg
                 width="20"
@@ -168,7 +169,7 @@ const Timer: React.FC<TimerProps> = ({
             <button
               onClick={onStop}
               className="zovo-btn zovo-btn-secondary text-zovo-error"
-              title="Stop"
+              title={t('btnStop')}
             >
               <svg
                 width="20"
@@ -187,7 +188,7 @@ const Timer: React.FC<TimerProps> = ({
             <button
               onClick={onResume}
               className="zovo-btn zovo-btn-primary"
-              title="Resume"
+              title={t('btnResume')}
             >
               <svg
                 width="20"
@@ -197,12 +198,12 @@ const Timer: React.FC<TimerProps> = ({
               >
                 <path d="M8 5v14l11-7z" />
               </svg>
-              Resume
+              {t('btnResume')}
             </button>
             <button
               onClick={onStop}
               className="zovo-btn zovo-btn-secondary text-zovo-error"
-              title="Stop"
+              title={t('btnStop')}
             >
               <svg
                 width="20"
@@ -222,7 +223,7 @@ const Timer: React.FC<TimerProps> = ({
               onClick={onSkipBreak}
               className="zovo-btn zovo-btn-primary"
             >
-              Skip Break
+              {t('btnSkipBreak')}
             </button>
           </>
         )}

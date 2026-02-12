@@ -1,4 +1,5 @@
 import React from 'react';
+import { t } from '../../lib/i18n';
 
 interface HeaderProps {
   title: string;
@@ -33,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({ title, onSettingsClick, badge, tier }) 
         {/* Pro Badge */}
         {tier && tier !== 'free' && (
           <span className="text-[10px] font-semibold px-2 py-0.5 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-full uppercase tracking-wide">
-            PRO
+            {t('lblPro')}
           </span>
         )}
       </div>
@@ -43,8 +44,8 @@ const Header: React.FC<HeaderProps> = ({ title, onSettingsClick, badge, tier }) 
         <button
           onClick={onSettingsClick}
           className="zovo-icon-btn"
-          aria-label="Settings"
-          title="Settings"
+          aria-label={t('btnSettings')}
+          title={t('btnSettings')}
         >
           <svg
             width="18"

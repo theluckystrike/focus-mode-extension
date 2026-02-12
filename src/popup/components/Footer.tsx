@@ -1,4 +1,5 @@
 import React from 'react';
+import { t } from '../../lib/i18n';
 
 interface FooterProps {
   version?: string;
@@ -14,7 +15,7 @@ const Footer: React.FC<FooterProps> = ({ version, tier }) => {
         rel="noopener noreferrer"
         className="zovo-footer-link"
       >
-        <span>Built by</span>
+        <span>{t('lblBuiltBy')}</span>
         <strong className="text-zovo-text-secondary">Zovo</strong>
         {version && (
           <>
@@ -25,7 +26,7 @@ const Footer: React.FC<FooterProps> = ({ version, tier }) => {
         {tier && tier !== 'free' && (
           <>
             <span className="text-zovo-text-muted mx-1">|</span>
-            <span className="text-violet-400 font-semibold">PRO</span>
+            <span className="text-violet-400 font-semibold">{t('lblPro')}</span>
           </>
         )}
       </a>

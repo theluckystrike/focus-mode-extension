@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { t } from '../../lib/i18n';
 import type { TimerMode, PomodoroConfig } from '../../lib/types';
 
 interface ModeSelectorProps {
@@ -20,24 +21,24 @@ const ModeSelector: React.FC<ModeSelectorProps> = ({
   const modes: { id: TimerMode; label: string; description: string }[] = [
     {
       id: 'pomodoro',
-      label: 'Pomodoro',
-      description: `${pomodoroSettings.focusDuration}min focus, ${pomodoroSettings.shortBreakDuration}min break`,
+      label: t('lblModePomodoro'),
+      description: t('descModePomodoro', [String(pomodoroSettings.focusDuration), String(pomodoroSettings.shortBreakDuration)]),
     },
     {
       id: 'custom',
-      label: 'Custom',
-      description: 'Set your own duration',
+      label: t('lblModeCustom'),
+      description: t('descModeCustom'),
     },
     {
       id: 'indefinite',
-      label: 'Until I Stop',
-      description: 'No time limit',
+      label: t('lblModeIndefinite'),
+      description: t('descModeIndefinite'),
     },
   ];
 
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-medium text-zovo-text-secondary">Focus Mode</h3>
+      <h3 className="text-sm font-medium text-zovo-text-secondary">{t('lblModeFocus')}</h3>
 
       <div className="grid grid-cols-3 gap-2">
         {modes.map((mode) => (
@@ -64,8 +65,8 @@ const ModeSelector: React.FC<ModeSelectorProps> = ({
       {selectedMode === 'custom' && (
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span className="text-zovo-text-secondary">Duration</span>
-            <span className="text-zovo-text-primary font-medium">{duration} min</span>
+            <span className="text-zovo-text-secondary">{t('lblDuration')}</span>
+            <span className="text-zovo-text-primary font-medium">{t('optMinutes', [String(duration)])}</span>
           </div>
           <input
             type="range"
@@ -77,8 +78,8 @@ const ModeSelector: React.FC<ModeSelectorProps> = ({
             className="w-full h-2 bg-zovo-bg-tertiary rounded-lg appearance-none cursor-pointer accent-zovo-violet"
           />
           <div className="flex justify-between text-xs text-zovo-text-muted">
-            <span>5 min</span>
-            <span>3 hours</span>
+            <span>{t('lblMinShort', ['5'])}</span>
+            <span>{t('lblHoursShort', ['3'])}</span>
           </div>
         </div>
       )}
@@ -91,7 +92,7 @@ const ModeSelector: React.FC<ModeSelectorProps> = ({
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
           <path d="M8 5v14l11-7z" />
         </svg>
-        Start {modes.find(m => m.id === selectedMode)?.label} Session
+        {t('btnStartSession', [modes.find(m => m.id === selectedMode)?.label ?? ''])}
       </button>
     </div>
   );

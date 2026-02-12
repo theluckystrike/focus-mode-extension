@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import '../popup/styles.css';
+import { t } from '../lib/i18n';
 import type { UsageStats, DailyStats } from '../lib/types';
 import { messaging } from '../lib/messaging';
 
@@ -29,7 +30,7 @@ function formatFocusTime(minutes: number): string {
 
 function formatDate(timestamp: number): string {
   const date = new Date(timestamp);
-  return date.toLocaleDateString('en-US', {
+  return date.toLocaleDateString(undefined, {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
@@ -38,12 +39,12 @@ function formatDate(timestamp: number): string {
 
 function getDayLabel(dateStr: string): string {
   const date = new Date(dateStr + 'T00:00:00');
-  return date.toLocaleDateString('en-US', { weekday: 'short' });
+  return date.toLocaleDateString(undefined, { weekday: 'short' });
 }
 
 function getShortDate(dateStr: string): string {
   const date = new Date(dateStr + 'T00:00:00');
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
 
 function getTodayString(): string {
@@ -226,9 +227,9 @@ const WeeklyChart: React.FC<WeeklyChartProps> = ({ dailyStats }) => {
   if (!hasData) {
     return (
       <div className="bg-zovo-bg-secondary border border-zovo-border rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-zovo-text-primary mb-4">Weekly Activity</h3>
+        <h3 className="text-lg font-semibold text-zovo-text-primary mb-4">{t('dashWeeklyActivity')}</h3>
         <div className="flex items-center justify-center h-40 text-zovo-text-muted text-sm">
-          No data yet. Start a focus session to see your activity here.
+          {t('dashNoDataYet')}
         </div>
       </div>
     );
@@ -236,7 +237,7 @@ const WeeklyChart: React.FC<WeeklyChartProps> = ({ dailyStats }) => {
 
   return (
     <div className="bg-zovo-bg-secondary border border-zovo-border rounded-xl p-6">
-      <h3 className="text-lg font-semibold text-zovo-text-primary mb-6">Weekly Activity</h3>
+      <h3 className="text-lg font-semibold text-zovo-text-primary mb-6">{t('dashWeeklyActivity')}</h3>
       <div className="flex items-end justify-between gap-3" style={{ height: '160px' }}>
         {chartData.map((day) => {
           const barHeight = day.focusTime > 0 ? Math.max((day.focusTime / maxFocusTime) * 140, 8) : 4;
@@ -255,13 +256,13 @@ const WeeklyChart: React.FC<WeeklyChartProps> = ({ dailyStats }) => {
                 <div className="absolute bottom-full mb-2 bg-zovo-bg-tertiary border border-zovo-border rounded-lg px-3 py-2 text-xs whitespace-nowrap z-10 shadow-lg">
                   <div className="text-zovo-text-primary font-semibold">{day.shortDate}</div>
                   <div className="text-zovo-text-secondary mt-1">
-                    {formatFocusTime(day.focusTime)} focused
+                    {t('dashFocused', [formatFocusTime(day.focusTime)])}
                   </div>
                   <div className="text-zovo-text-secondary">
-                    {day.sessions} session{day.sessions !== 1 ? 's' : ''}
+                    {t('dashSessionCount', [String(day.sessions)])}
                   </div>
                   <div className="text-zovo-text-secondary">
-                    {day.sitesBlocked} site{day.sitesBlocked !== 1 ? 's' : ''} blocked
+                    {t('dashSitesBlockedCount', [String(day.sitesBlocked)])}
                   </div>
                 </div>
               )}
@@ -295,7 +296,7 @@ const WeeklyChart: React.FC<WeeklyChartProps> = ({ dailyStats }) => {
       <div className="flex items-center gap-4 mt-4 pt-4 border-t border-zovo-border">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-sm bg-zovo-violet/70" />
-          <span className="text-xs text-zovo-text-muted">Focus time (minutes)</span>
+          <span className="text-xs text-zovo-text-muted">{t('dashFocusTimeMinutes')}</span>
         </div>
       </div>
     </div>
@@ -312,28 +313,28 @@ const FocusStatsBreakdown: React.FC<FocusStatsBreakdownProps> = ({ stats }) => {
   const items = [
     {
       icon: <FlameIcon />,
-      label: 'Current Streak',
-      value: `${stats.currentStreak} day${stats.currentStreak !== 1 ? 's' : ''}`,
+      label: t('dashCurrentStreak'),
+      value: t('dashDays', [String(stats.currentStreak)]),
       color: 'text-zovo-warning',
       bgColor: 'bg-zovo-warning/15',
     },
     {
       icon: <TrophyIcon />,
-      label: 'Longest Streak',
-      value: `${stats.longestStreak} day${stats.longestStreak !== 1 ? 's' : ''}`,
+      label: t('dashLongestStreak'),
+      value: t('dashDays', [String(stats.longestStreak)]),
       color: 'text-zovo-violet',
       bgColor: 'bg-zovo-violet/15',
     },
     {
       icon: <TimerIcon />,
-      label: 'Pomodoros Completed',
+      label: t('dashPomodorosCompleted'),
       value: `${stats.totalPomodorosCompleted}`,
       color: 'text-zovo-success',
       bgColor: 'bg-zovo-success/15',
     },
     {
       icon: <ClockIcon />,
-      label: 'Avg Session Duration',
+      label: t('dashAvgSessionDuration'),
       value: formatFocusTime(avgDuration),
       color: 'text-zovo-info',
       bgColor: 'bg-zovo-info/15',
@@ -342,7 +343,7 @@ const FocusStatsBreakdown: React.FC<FocusStatsBreakdownProps> = ({ stats }) => {
 
   return (
     <div className="bg-zovo-bg-secondary border border-zovo-border rounded-xl p-6">
-      <h3 className="text-lg font-semibold text-zovo-text-primary mb-4">Focus Stats</h3>
+      <h3 className="text-lg font-semibold text-zovo-text-primary mb-4">{t('dashFocusStats')}</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {items.map((item) => (
           <div key={item.label} className="flex items-center gap-3 p-3 bg-zovo-bg-primary rounded-lg">
@@ -382,17 +383,16 @@ const UpgradeCTA: React.FC<UpgradeCTAProps> = ({ tier, featurePercent }) => {
       }}
     >
       <h3 className="text-xl font-bold text-zovo-text-primary mb-2">
-        Get More from Focus Mode Pro
+        {t('dashGetMore')}
       </h3>
       <p className="text-sm text-zovo-text-secondary mb-6 max-w-lg mx-auto">
-        You&apos;re using {featurePercent}% of available features. Unlock everything with Pro,
-        including advanced stats, unlimited block rules, and scheduled focus sessions.
+        {t('dashGetMoreDesc', [String(featurePercent)])}
       </p>
       <button
         onClick={handleUpgrade}
         className="inline-flex items-center gap-2 px-8 py-3 bg-zovo-violet hover:bg-zovo-violet-hover text-white font-semibold rounded-xl transition-colors shadow-zovo-glow"
       >
-        Upgrade to Pro
+        {t('btnUpgradePro')}
         <ArrowUpRightIcon />
       </button>
     </div>
@@ -460,7 +460,7 @@ const DashboardPage: React.FC = () => {
           featureGateAvailable,
         });
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to load dashboard data';
+        const message = err instanceof Error ? err.message : t('dashFailedLoad');
         setError(message);
       } finally {
         setLoading(false);
@@ -502,7 +502,7 @@ const DashboardPage: React.FC = () => {
       <div className="min-h-screen bg-zovo-black flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <SpinnerIcon />
-          <p className="text-zovo-text-secondary text-sm">Loading dashboard...</p>
+          <p className="text-zovo-text-secondary text-sm">{t('dashLoading')}</p>
         </div>
       </div>
     );
@@ -513,7 +513,7 @@ const DashboardPage: React.FC = () => {
     return (
       <div className="min-h-screen bg-zovo-black flex items-center justify-center">
         <div className="text-center">
-          <p className="text-zovo-error text-lg font-semibold mb-2">Something went wrong</p>
+          <p className="text-zovo-error text-lg font-semibold mb-2">{t('dashError')}</p>
           <p className="text-zovo-text-secondary text-sm">{error}</p>
         </div>
       </div>
@@ -540,7 +540,7 @@ const DashboardPage: React.FC = () => {
               <Logo size={40} />
               <div>
                 <div className="flex items-center gap-3">
-                  <h1 className="text-xl font-bold text-zovo-text-primary">Focus Mode Pro</h1>
+                  <h1 className="text-xl font-bold text-zovo-text-primary">{t('appNameFull')}</h1>
                   <span
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                       tier === 'pro'
@@ -553,7 +553,7 @@ const DashboardPage: React.FC = () => {
                 </div>
                 {installedAt && (
                   <p className="text-sm text-zovo-text-muted mt-0.5">
-                    Member since {formatDate(installedAt)}
+                    {t('dashMemberSince', [formatDate(installedAt)])}
                   </p>
                 )}
               </div>
@@ -564,14 +564,14 @@ const DashboardPage: React.FC = () => {
                 className="inline-flex items-center gap-2 px-4 py-2 bg-zovo-bg-tertiary border border-zovo-border text-zovo-text-secondary text-sm rounded-lg hover:bg-zovo-bg-elevated hover:text-zovo-text-primary transition-colors"
               >
                 <DownloadIcon />
-                Export
+                {t('btnExport')}
               </button>
               <button
                 onClick={handleOpenSettings}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-zovo-bg-tertiary border border-zovo-border text-zovo-text-secondary text-sm rounded-lg hover:bg-zovo-bg-elevated hover:text-zovo-text-primary transition-colors"
               >
                 <SettingsIcon />
-                Settings
+                {t('btnSettings')}
               </button>
             </div>
           </div>
@@ -584,32 +584,32 @@ const DashboardPage: React.FC = () => {
       <main className="max-w-5xl mx-auto px-6 py-8">
         {/* Value Summary Cards */}
         <section className="mb-8">
-          <h2 className="text-lg font-semibold text-zovo-text-primary mb-4">Your Value Summary</h2>
+          <h2 className="text-lg font-semibold text-zovo-text-primary mb-4">{t('dashValueSummary')}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard
               icon={<ClockIcon />}
-              label="Time Saved"
+              label={t('dashTimeSaved')}
               value={formatFocusTime(stats.totalFocusTime)}
-              subtext="Total focus time"
+              subtext={t('optTotalFocusTime')}
               accent
             />
             <StatCard
               icon={<ZapIcon />}
-              label="Sessions Today"
+              label={t('dashSessionsToday')}
               value={String(sessionsToday)}
-              subtext={todayStats ? `${formatFocusTime(todayStats.totalFocusTime)} focused` : 'No sessions yet'}
+              subtext={todayStats ? t('dashFocused', [formatFocusTime(todayStats.totalFocusTime)]) : t('dashNoSessionsYet')}
             />
             <StatCard
               icon={<TargetIcon />}
-              label="Total Sessions"
+              label={t('optTotalSessions')}
               value={String(stats.totalSessions)}
-              subtext={stats.totalSessions > 0 ? `Avg ${formatFocusTime(calculateAverageSessionDuration(stats))} each` : 'Get started!'}
+              subtext={stats.totalSessions > 0 ? t('dashAvgEach', [formatFocusTime(calculateAverageSessionDuration(stats))]) : t('dashGetStarted')}
             />
             <StatCard
               icon={<ShieldIcon />}
-              label="Sites Blocked"
+              label={t('optSitesBlocked')}
               value={String(stats.totalSitesBlocked)}
-              subtext="Distractions prevented"
+              subtext={t('dashDistractionsPrevented')}
             />
           </div>
         </section>
@@ -642,18 +642,18 @@ const DashboardPage: React.FC = () => {
                 className="inline-flex items-center gap-1.5 text-sm text-zovo-text-muted hover:text-zovo-violet transition-colors"
               >
                 <DownloadIcon />
-                Export Stats
+                {t('dashExportStats')}
               </button>
               <button
                 onClick={handleOpenSettings}
                 className="inline-flex items-center gap-1.5 text-sm text-zovo-text-muted hover:text-zovo-violet transition-colors"
               >
                 <SettingsIcon />
-                Back to Settings
+                {t('btnBackToSettings')}
               </button>
             </div>
             <p className="text-xs text-zovo-text-muted">
-              Focus Mode Pro v1.0.0
+              {t('appNameFull')} v1.0.0
             </p>
           </div>
         </div>

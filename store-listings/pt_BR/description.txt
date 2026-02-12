@@ -1,0 +1,46 @@
+Focus Mode Pro - Sua produtividade no máximo com bloqueio inteligente de distrações
+
+PRINCIPAIS RECURSOS:
+• Bloqueie sites que distraem com padrões inteligentes e categorias prontas para usar
+• Timer Pomodoro integrado com intervalos de trabalho e descanso personalizáveis
+• Acompanhe seu tempo de foco, sessões concluídas e sequências diárias
+• Agende sessões de foco automáticas para manter uma rotina consistente
+• Proteção por senha para evitar encerrar sessões antes da hora
+• Desbloqueio de emergência com tempo de espera para necessidades reais
+
+POR QUE ESCOLHER O FOCUS MODE PRO?
+• Privacidade em primeiro lugar: todos os seus dados ficam no seu dispositivo
+• Não precisa criar conta para usar a versão gratuita
+• Funciona offline — sem depender de internet
+• Atualizações frequentes com novos recursos
+• Rápido e leve — consumo mínimo de recursos
+
+COMO COMEÇAR:
+1. Instale o Focus Mode Pro na Chrome Web Store
+2. Clique no ícone na barra de ferramentas para abrir o painel
+3. Escolha o modo Pomodoro, Personalizado ou Indefinido
+4. Aperte Iniciar Foco — os sites que distraem são bloqueados na hora!
+
+ATALHO DE TECLADO:
+• Alt+Shift+F — Ative ou desative o modo foco de qualquer aba
+
+RECURSOS PRO:
+• Regras de bloqueio personalizadas e listas de permissão ilimitadas
+• Correspondência avançada com expressões regulares (regex)
+• Análises detalhadas e relatórios completos
+• Modo de agendamento para horas de foco automáticas
+• Proteção por senha
+• Suporte prioritário
+
+PREÇOS:
+• Grátis: 8 sessões por dia, bloqueio básico, timer Pomodoro
+• Pro Mensal: $4.99/mês — todos os recursos, uso ilimitado
+• Pro Anual: $3.99/mês — economize 20%, 2 meses grátis
+
+PRIVACIDADE:
+O Focus Mode Pro funciona inteiramente no seu dispositivo. Nenhum dado de navegação é coletado ou enviado para servidores externos. A verificação de licença se conecta à API da Zovo apenas ao ativar uma licença Pro.
+
+Curtiu o Focus Mode Pro? Deixe uma avaliação de 5 estrelas e ajude mais pessoas a descobrirem essa ferramenta incrível! Sua opinião faz toda a diferença para nós.
+
+Site: https://zovo.one/tools/focus-mode-blocker
+Suporte: support@zovo.one

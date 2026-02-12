@@ -1,5 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { t } from '../lib/i18n';
 import '../popup/styles.css';
 
 // ============================================================================
@@ -142,16 +143,16 @@ const WelcomePage: React.FC = () => {
             <Logo size={72} />
           </div>
           <h1 className="text-4xl font-bold mb-4 tracking-tight">
-            Focus Mode Pro is ready to go
+            {t('welReady')}
           </h1>
           <p className="text-lg text-zovo-text-secondary max-w-2xl mx-auto mb-8 leading-relaxed">
-            Block distracting websites and stay productive with built-in Pomodoro timers, stats tracking, and more.
+            {t('welSubtitle')}
           </p>
           <button
             onClick={handleGetStarted}
             className="inline-flex items-center gap-2 px-8 py-3 bg-zovo-violet hover:bg-zovo-violet-hover text-white font-semibold rounded-xl transition-colors shadow-zovo-glow"
           >
-            Get Started
+            {t('btnGetStarted')}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
@@ -163,26 +164,26 @@ const WelcomePage: React.FC = () => {
           FEATURES SECTION
           ================================================================ */}
       <section id="features" className="max-w-4xl mx-auto px-8 pb-16">
-        <h2 className="text-2xl font-bold text-center mb-2">Everything you need to stay focused</h2>
+        <h2 className="text-2xl font-bold text-center mb-2">{t('welFeaturesTitle')}</h2>
         <p className="text-zovo-text-secondary text-center mb-10">
-          Powerful tools designed to eliminate distractions and build better habits.
+          {t('welFeaturesSubtitle')}
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <FeatureCard
             icon={<ShieldIcon />}
-            title="Smart Blocking"
-            description="Block any website with patterns, categories, or regex. Whitelist work sites to keep them accessible."
+            title={t('welFeatureBlocking')}
+            description={t('welFeatureBlockingDesc')}
           />
           <FeatureCard
             icon={<ClockIcon />}
-            title="Pomodoro Timer"
-            description="Work in focused 25-minute intervals with automatic breaks. Customize timings to match your rhythm."
+            title={t('welFeaturePomodoro')}
+            description={t('welFeaturePomodoroDesc')}
           />
           <FeatureCard
             icon={<ChartIcon />}
-            title="Track Progress"
-            description="Monitor focus time, sessions completed, sites blocked, and build productive streaks."
+            title={t('welFeatureProgress')}
+            description={t('welFeatureProgressDesc')}
           />
         </div>
       </section>
@@ -191,27 +192,27 @@ const WelcomePage: React.FC = () => {
           HOW IT WORKS SECTION
           ================================================================ */}
       <section className="max-w-4xl mx-auto px-8 pb-16">
-        <h2 className="text-2xl font-bold text-center mb-2">How it works</h2>
+        <h2 className="text-2xl font-bold text-center mb-2">{t('welHowTitle')}</h2>
         <p className="text-zovo-text-secondary text-center mb-10">
-          Get up and running in seconds. No complicated setup required.
+          {t('welHowSubtitle')}
         </p>
 
         <div className="bg-zovo-bg-secondary border border-zovo-border rounded-xl p-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Step
               number={1}
-              title="Click the icon"
-              description="Click the Focus Mode Pro icon in your toolbar to open the popup."
+              title={t('welStep1Title')}
+              description={t('welStep1Desc')}
             />
             <Step
               number={2}
-              title="Choose your mode"
-              description="Select Pomodoro, Custom timer, or Indefinite focus mode."
+              title={t('welStep2Title')}
+              description={t('welStep2Desc')}
             />
             <Step
               number={3}
-              title="Start focusing"
-              description="Hit Start Focus and distracting sites will be blocked automatically."
+              title={t('welStep3Title')}
+              description={t('welStep3Desc')}
             />
           </div>
         </div>
@@ -227,7 +228,7 @@ const WelcomePage: React.FC = () => {
               <KeyboardIcon />
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-2">Keyboard Shortcuts</h3>
+              <h3 className="text-lg font-semibold mb-2">{t('welKeyboardShortcuts')}</h3>
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1.5">
                   <kbd className="inline-flex items-center justify-center px-2.5 py-1 bg-zovo-bg-tertiary border border-zovo-border-light rounded-lg text-xs font-mono text-zovo-text-secondary">Alt</kbd>
@@ -236,7 +237,7 @@ const WelcomePage: React.FC = () => {
                   <span className="text-zovo-text-muted text-xs">+</span>
                   <kbd className="inline-flex items-center justify-center px-2.5 py-1 bg-zovo-bg-tertiary border border-zovo-border-light rounded-lg text-xs font-mono text-zovo-text-secondary">F</kbd>
                 </div>
-                <span className="text-sm text-zovo-text-secondary">Toggle focus mode on or off from any tab</span>
+                <span className="text-sm text-zovo-text-secondary">{t('welShortcutDesc')}</span>
               </div>
             </div>
           </div>
@@ -253,14 +254,13 @@ const WelcomePage: React.FC = () => {
               <LockIcon />
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-2">Your privacy matters</h3>
+              <h3 className="text-lg font-semibold mb-2">{t('welPrivacyTitle')}</h3>
               <p className="text-sm text-zovo-text-secondary leading-relaxed">
-                Focus Mode Pro works primarily on your device. No browsing data is collected or sent to external servers.
-                Optional license verification connects to the Zovo API only when activating a Pro license.
+                {t('welPrivacyDesc')}
               </p>
               <div className="flex items-center gap-2 mt-3 text-zovo-success">
                 <CheckCircleIcon />
-                <span className="text-sm font-medium">Privacy-first by design</span>
+                <span className="text-sm font-medium">{t('welPrivacyFirst')}</span>
               </div>
             </div>
           </div>
@@ -278,15 +278,15 @@ const WelcomePage: React.FC = () => {
             border: '1px solid rgba(124, 58, 237, 0.25)',
           }}
         >
-          <h2 className="text-2xl font-bold mb-3">Ready to focus?</h2>
+          <h2 className="text-2xl font-bold mb-3">{t('welCtaTitle')}</h2>
           <p className="text-zovo-text-secondary mb-6">
-            Your productivity journey starts now. Block distractions and build better habits.
+            {t('welCtaDesc')}
           </p>
           <button
             onClick={handleStartUsing}
             className="inline-flex items-center gap-2 px-8 py-3 bg-zovo-violet hover:bg-zovo-violet-hover text-white font-semibold rounded-xl transition-colors shadow-zovo-glow"
           >
-            Start Using Focus Mode Pro
+            {t('welStartUsing')}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
@@ -300,14 +300,14 @@ const WelcomePage: React.FC = () => {
       <footer className="max-w-4xl mx-auto px-8 pb-10">
         <div className="text-center text-sm text-zovo-text-muted">
           <p>
-            Focus Mode Pro v1.0.0
+            {t('appNameFull')} v1.0.0
             {' '} | {' '}
             <a href="mailto:support@zovo.one" className="text-zovo-violet hover:underline">
-              Support
+              {t('optSupport')}
             </a>
             {' '} | {' '}
             <a href="https://zovo.one/privacy" target="_blank" rel="noopener noreferrer" className="text-zovo-violet hover:underline">
-              Privacy Policy
+              {t('welPrivacyPolicy')}
             </a>
           </p>
         </div>

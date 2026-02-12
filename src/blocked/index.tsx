@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import { messaging } from '../lib/messaging';
+import { t } from '../lib/i18n';
 import { formatTime } from '../lib/types';
 import type { TimerState, Settings } from '../lib/types';
 import '../popup/styles.css';
@@ -106,14 +107,14 @@ const BlockedPage: React.FC = () => {
 
     if (response.success && response.data) {
       if (response.data.allowed) {
-        setUnlockStatus('Unlocking... Redirecting...');
+        setUnlockStatus(t('blkUnlocking'));
         setTimeout(() => {
           if (blockedUrl && isSafeUrl(blockedUrl)) {
             window.location.href = blockedUrl;
           }
         }, 1000);
       } else {
-        setUnlockStatus(response.data.reason ?? 'Unable to unlock');
+        setUnlockStatus(response.data.reason ?? t('errUnableToUnlock'));
         setShowUnlockConfirm(false);
         setShowPasswordPrompt(false);
       }
@@ -122,7 +123,7 @@ const BlockedPage: React.FC = () => {
 
   const handleUnlockPasswordSubmit = async () => {
     if (!passwordInput.trim()) {
-      setPasswordError('Please enter your password');
+      setPasswordError(t('errEnterPassword'));
       return;
     }
 
@@ -137,7 +138,7 @@ const BlockedPage: React.FC = () => {
       setPasswordError(null);
       await executeEmergencyUnlock();
     } else {
-      setPasswordError('Incorrect password');
+      setPasswordError(t('errIncorrectPassword'));
     }
   };
 
@@ -151,7 +152,7 @@ const BlockedPage: React.FC = () => {
 
   const getRemainingTime = (): string => {
     if (!timerState) return '--:--';
-    if (timerState.mode === 'indefinite') return 'Until you stop';
+    if (timerState.mode === 'indefinite') return t('blkUntilYouStop');
     return formatTime(timerState.remainingSeconds);
   };
 
@@ -168,11 +169,11 @@ const BlockedPage: React.FC = () => {
 
       {/* Main Message */}
       <h1 className="text-4xl font-bold text-zovo-text-primary mb-4">
-        Stay Focused
+        {t('stsStayFocused')}
       </h1>
 
       <p className="text-xl text-zovo-text-secondary mb-2">
-        This site is blocked during your focus session
+        {t('blkSiteBlocked')}
       </p>
 
       {blockedUrl && (
@@ -188,7 +189,7 @@ const BlockedPage: React.FC = () => {
             {getRemainingTime()}
           </div>
           <p className="text-sm text-zovo-text-muted">
-            {timerState.status === 'focusing' ? 'remaining in focus session' : 'break time'}
+            {timerState.status === 'focusing' ? t('blkRemainingFocus') : t('blkBreakTime')}
           </p>
         </div>
       )}
@@ -227,15 +228,15 @@ const BlockedPage: React.FC = () => {
               onClick={handleEmergencyUnlock}
               className="text-sm text-zovo-text-muted hover:text-zovo-text-secondary transition-colors"
             >
-              Need access? Emergency unlock
+              {t('blkEmergencyUnlock')}
             </button>
           ) : showPasswordPrompt ? (
             <div className="p-5 bg-zovo-bg-secondary rounded-xl border border-zovo-border max-w-md">
               <h3 className="text-lg font-semibold text-zovo-text-primary mb-1">
-                Password Required
+                {t('ttlPasswordRequired')}
               </h3>
               <p className="text-sm text-zovo-text-secondary mb-4">
-                Enter your password to unlock this page.
+                {t('blkEnterPasswordUnlock')}
               </p>
 
               <input
@@ -252,7 +253,7 @@ const BlockedPage: React.FC = () => {
                     setShowUnlockConfirm(false);
                   }
                 }}
-                placeholder="Enter password"
+                placeholder={t('plhEnterPassword')}
                 autoFocus
                 className="mb-2 w-full rounded-lg border border-zovo-border bg-zovo-bg-primary px-3 py-2 text-sm text-zovo-text-primary placeholder-zovo-text-muted outline-none focus:border-zovo-violet focus:ring-1 focus:ring-zovo-violet"
               />
@@ -269,34 +270,33 @@ const BlockedPage: React.FC = () => {
                   }}
                   className="zovo-btn zovo-btn-secondary text-sm"
                 >
-                  Cancel
+                  {t('btnCancel')}
                 </button>
                 <button
                   onClick={handleUnlockPasswordSubmit}
                   className="zovo-btn zovo-btn-primary text-sm"
                 >
-                  Unlock
+                  {t('btnUnlock')}
                 </button>
               </div>
             </div>
           ) : (
             <div className="p-4 bg-zovo-bg-secondary rounded-lg border border-zovo-border max-w-md">
               <p className="text-sm text-zovo-text-secondary mb-4">
-                Are you sure? This will end your focus session.
-                Emergency unlock has a {settings.blockedPage.emergencyCooldownMinutes} minute cooldown.
+                {t('blkConfirmUnlock', [String(settings.blockedPage.emergencyCooldownMinutes)])}
               </p>
               <div className="flex gap-2 justify-center">
                 <button
                   onClick={() => setShowUnlockConfirm(false)}
                   className="zovo-btn zovo-btn-secondary text-sm"
                 >
-                  Cancel
+                  {t('btnCancel')}
                 </button>
                 <button
                   onClick={handleEmergencyUnlock}
                   className="zovo-btn zovo-btn-danger text-sm"
                 >
-                  Yes, Unlock
+                  {t('btnYesUnlock')}
                 </button>
               </div>
             </div>
@@ -315,7 +315,7 @@ const BlockedPage: React.FC = () => {
           rel="noopener noreferrer"
           className="text-sm text-zovo-text-muted hover:text-zovo-violet transition-colors"
         >
-          Focus Mode Pro by Zovo
+          {t('appNameFull')} {t('lblByZovo')}
         </a>
       </footer>
     </div>

@@ -6,6 +6,7 @@
 import { storage } from '../lib/storage';
 import { messaging } from '../lib/messaging';
 import { analytics } from '../lib/analytics';
+import { t } from '../lib/i18n';
 import {
   verifyLicense,
   getLicenseKey,
@@ -391,8 +392,8 @@ async function startBreak(): Promise<void> {
     chrome.notifications.create({
       type: 'basic',
       iconUrl: chrome.runtime.getURL('icons/icon-128.png'),
-      title: 'Focus Session Complete!',
-      message: `Great work! Take a ${isLongBreak ? 'long' : 'short'} break.`,
+      title: t('notifSessionComplete'),
+      message: isLongBreak ? t('notifTakeLongBreak') : t('notifTakeShortBreak'),
     });
   }
 
@@ -412,8 +413,8 @@ async function endBreak(startNewFocus = false): Promise<void> {
     chrome.notifications.create({
       type: 'basic',
       iconUrl: chrome.runtime.getURL('icons/icon-128.png'),
-      title: 'Break Over!',
-      message: 'Ready to focus again?',
+      title: t('notifBreakOver'),
+      message: t('notifReadyToFocus'),
     });
   }
 
@@ -629,8 +630,8 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
       chrome.notifications.create({
         type: 'basic',
         iconUrl: chrome.runtime.getURL('icons/icon-128.png'),
-        title: 'Time for a Quick Break',
-        message: 'Stand up, stretch, and rest your eyes for a moment.',
+        title: t('notifBreakReminder'),
+        message: t('notifBreakReminderMsg'),
       });
     }
   }
@@ -807,7 +808,7 @@ messaging.createListener({
     const settings = await getCachedSettings();
 
     if (!settings.blockedPage.allowEmergencyUnlock) {
-      return { allowed: false, reason: 'Emergency unlock disabled' };
+      return { allowed: false, reason: t('errEmergencyDisabled') };
     }
 
     // Check GLOBAL cooldown (persisted, survives new tabs + SW restart)
@@ -816,7 +817,7 @@ messaging.createListener({
 
     if (lastUnlock && Date.now() - lastUnlock < cooldownMs) {
       const remainingMinutes = Math.ceil((cooldownMs - (Date.now() - lastUnlock)) / 60000);
-      return { allowed: false, reason: `Cooldown: ${remainingMinutes} minutes remaining` };
+      return { allowed: false, reason: t('errCooldownRemaining', [String(remainingMinutes)]) };
     }
 
     // Set global cooldown in storage

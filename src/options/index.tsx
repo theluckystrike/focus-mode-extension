@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import { messaging } from '../lib/messaging';
+import { t } from '../lib/i18n';
 import { hashPassword, formatMinutes, getTodayString } from '../lib/types';
 import type { Settings, UsageStats, BlockRule, WhitelistRule, CategoryPreset } from '../lib/types';
 import '../popup/styles.css';
@@ -70,12 +71,12 @@ const Options: React.FC = () => {
       const response = await messaging.send('UPDATE_SETTINGS', newSettings);
       if (response.success) {
         setSettings(newSettings);
-        setMessage({ type: 'success', text: 'Settings saved!' });
+        setMessage({ type: 'success', text: t('msgSettingsSaved') });
       } else {
-        setMessage({ type: 'error', text: response.error || 'Failed to save settings' });
+        setMessage({ type: 'error', text: response.error || t('errFailedSaveSettings') });
       }
     } catch (e) {
-      setMessage({ type: 'error', text: 'Failed to save settings' });
+      setMessage({ type: 'error', text: t('errFailedSaveSettings') });
     } finally {
       setSaving(false);
       setTimeout(() => setMessage(null), 3000);
@@ -94,7 +95,7 @@ const Options: React.FC = () => {
       await loadData();
       setNewBlockPattern('');
       setIsRegex(false);
-      setMessage({ type: 'success', text: 'Site added to blocklist' });
+      setMessage({ type: 'success', text: t('msgSiteAddedBlocklist') });
       setTimeout(() => setMessage(null), 3000);
     }
   };
@@ -115,7 +116,7 @@ const Options: React.FC = () => {
     if (response.success) {
       await loadData();
       setNewWhitelistPattern('');
-      setMessage({ type: 'success', text: 'Site added to whitelist' });
+      setMessage({ type: 'success', text: t('msgSiteAddedWhitelist') });
       setTimeout(() => setMessage(null), 3000);
     }
   };
@@ -150,12 +151,12 @@ const Options: React.FC = () => {
   const handleSetPassword = async () => {
     if (!settings) return;
     if (newPassword !== confirmPassword) {
-      setMessage({ type: 'error', text: 'Passwords do not match' });
+      setMessage({ type: 'error', text: t('errPasswordsNoMatch') });
       setTimeout(() => setMessage(null), 3000);
       return;
     }
     if (newPassword.length < 4) {
-      setMessage({ type: 'error', text: 'Password must be at least 4 characters' });
+      setMessage({ type: 'error', text: t('errPasswordMinLength') });
       setTimeout(() => setMessage(null), 3000);
       return;
     }
@@ -186,7 +187,7 @@ const Options: React.FC = () => {
 
   const handleActivateLicense = async () => {
     if (!licenseKey.trim()) {
-      setLicenseError('Please enter a license key');
+      setLicenseError(t('errEnterLicenseKey'));
       return;
     }
 
@@ -204,15 +205,15 @@ const Options: React.FC = () => {
         setCurrentTier(res.data.data?.tier || 'pro');
         setLicenseEmail(res.data.data?.email || null);
         setLicenseKey('');
-        setMessage({ type: 'success', text: 'License activated successfully!' });
+        setMessage({ type: 'success', text: t('msgLicenseActivated') });
         setTimeout(() => setMessage(null), 3000);
       } else {
         setLicenseStatus('error');
-        setLicenseError(res.data?.error || 'Failed to verify license key');
+        setLicenseError(res.data?.error || t('errFailedVerifyLicense'));
       }
     } catch {
       setLicenseStatus('error');
-      setLicenseError('Failed to connect. Please try again.');
+      setLicenseError(t('errFailedConnect'));
     }
   };
 
@@ -223,10 +224,10 @@ const Options: React.FC = () => {
       setLicenseEmail(null);
       setLicenseStatus('idle');
       setLicenseKey('');
-      setMessage({ type: 'success', text: 'License removed' });
+      setMessage({ type: 'success', text: t('msgLicenseRemoved') });
       setTimeout(() => setMessage(null), 3000);
     } catch {
-      setMessage({ type: 'error', text: 'Failed to remove license' });
+      setMessage({ type: 'error', text: t('errFailedRemoveLicense') });
       setTimeout(() => setMessage(null), 3000);
     }
   };
@@ -245,7 +246,7 @@ const Options: React.FC = () => {
     if (!settings) return;
 
     if (!removePasswordInput.trim()) {
-      setRemovePasswordError('Enter your current password');
+      setRemovePasswordError(t('errEnterCurrentPassword'));
       return;
     }
 
@@ -255,7 +256,7 @@ const Options: React.FC = () => {
     );
 
     if (!response.success || !response.data?.valid) {
-      setRemovePasswordError('Incorrect password');
+      setRemovePasswordError(t('errIncorrectPassword'));
       return;
     }
 
@@ -274,7 +275,7 @@ const Options: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-zovo-black text-zovo-text-primary flex items-center justify-center">
-        <div className="text-zovo-text-secondary">Loading...</div>
+        <div className="text-zovo-text-secondary">{t('msgLoading')}</div>
       </div>
     );
   }
@@ -282,7 +283,7 @@ const Options: React.FC = () => {
   if (!settings || !stats) {
     return (
       <div className="min-h-screen bg-zovo-black text-zovo-text-primary flex items-center justify-center">
-        <div className="text-zovo-error">Failed to load settings</div>
+        <div className="text-zovo-error">{t('errFailedLoadSettings')}</div>
       </div>
     );
   }
@@ -301,13 +302,13 @@ const Options: React.FC = () => {
             <circle cx="20" cy="20" r="3" fill="white" />
           </svg>
           <div>
-            <h1 className="text-2xl font-semibold">Focus Mode Pro</h1>
-            <p className="text-zovo-text-secondary">Settings & Configuration</p>
+            <h1 className="text-2xl font-semibold">{t('appNameFull')}</h1>
+            <p className="text-zovo-text-secondary">{t('optSettingsConfig')}</p>
           </div>
           <button
             onClick={() => chrome.tabs.create({ url: 'help.html' })}
             className="ml-auto w-8 h-8 flex items-center justify-center rounded-full border border-zovo-border text-zovo-text-muted hover:text-zovo-violet hover:border-zovo-violet transition-colors"
-            title="Tips & Tricks"
+            title={t('optTipsTricks')}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="12" cy="12" r="10" />
@@ -319,19 +320,29 @@ const Options: React.FC = () => {
 
         {/* Tab Navigation */}
         <div className="flex gap-2 mb-8 border-b border-zovo-border">
-          {(['general', 'blocking', 'schedule', 'stats', 'advanced', 'account'] as Tab[]).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 text-sm font-medium capitalize transition-colors ${
-                activeTab === tab
-                  ? 'text-zovo-violet border-b-2 border-zovo-violet -mb-px'
-                  : 'text-zovo-text-secondary hover:text-zovo-text-primary'
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
+          {(['general', 'blocking', 'schedule', 'stats', 'advanced', 'account'] as Tab[]).map((tab) => {
+            const tabLabels: Record<Tab, string> = {
+              general: t('tabGeneral'),
+              blocking: t('tabBlocking'),
+              schedule: t('tabSchedule'),
+              stats: t('tabStats'),
+              advanced: t('tabAdvanced'),
+              account: t('tabAccount'),
+            };
+            return (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  activeTab === tab
+                    ? 'text-zovo-violet border-b-2 border-zovo-violet -mb-px'
+                    : 'text-zovo-text-secondary hover:text-zovo-text-primary'
+                }`}
+              >
+                {tabLabels[tab]}
+              </button>
+            );
+          })}
         </div>
 
         {/* Content */}
@@ -341,10 +352,10 @@ const Options: React.FC = () => {
             <>
               {/* Pomodoro Settings */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">Pomodoro Timer</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('optPomodoroTimer')}</h2>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Focus Duration</label>
+                    <label className="block text-sm font-medium mb-2">{t('optFocusDuration')}</label>
                     <select
                       value={settings.pomodoro.focusDuration}
                       onChange={(e) => saveSettings({
@@ -353,12 +364,12 @@ const Options: React.FC = () => {
                       className="zovo-input"
                     >
                       {[15, 20, 25, 30, 45, 60].map((min) => (
-                        <option key={min} value={min}>{min} minutes</option>
+                        <option key={min} value={min}>{t('optMinutes', [String(min)])}</option>
                       ))}
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Short Break</label>
+                    <label className="block text-sm font-medium mb-2">{t('optShortBreak')}</label>
                     <select
                       value={settings.pomodoro.shortBreakDuration}
                       onChange={(e) => saveSettings({
@@ -367,12 +378,12 @@ const Options: React.FC = () => {
                       className="zovo-input"
                     >
                       {[3, 5, 10, 15].map((min) => (
-                        <option key={min} value={min}>{min} minutes</option>
+                        <option key={min} value={min}>{t('optMinutes', [String(min)])}</option>
                       ))}
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Long Break</label>
+                    <label className="block text-sm font-medium mb-2">{t('optLongBreak')}</label>
                     <select
                       value={settings.pomodoro.longBreakDuration}
                       onChange={(e) => saveSettings({
@@ -381,12 +392,12 @@ const Options: React.FC = () => {
                       className="zovo-input"
                     >
                       {[15, 20, 30, 45].map((min) => (
-                        <option key={min} value={min}>{min} minutes</option>
+                        <option key={min} value={min}>{t('optMinutes', [String(min)])}</option>
                       ))}
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Long Break After</label>
+                    <label className="block text-sm font-medium mb-2">{t('optLongBreakAfter')}</label>
                     <select
                       value={settings.pomodoro.sessionsUntilLongBreak}
                       onChange={(e) => saveSettings({
@@ -395,7 +406,7 @@ const Options: React.FC = () => {
                       className="zovo-input"
                     >
                       {[2, 3, 4, 5, 6].map((num) => (
-                        <option key={num} value={num}>{num} sessions</option>
+                        <option key={num} value={num}>{t('optSessions', [String(num)])}</option>
                       ))}
                     </select>
                   </div>
@@ -410,7 +421,7 @@ const Options: React.FC = () => {
                       })}
                       className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
                     />
-                    <span className="text-sm">Auto-start breaks after focus sessions</span>
+                    <span className="text-sm">{t('optAutoStartBreaks')}</span>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input
@@ -421,14 +432,14 @@ const Options: React.FC = () => {
                       })}
                       className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
                     />
-                    <span className="text-sm">Auto-start focus after breaks</span>
+                    <span className="text-sm">{t('optAutoStartFocus')}</span>
                   </label>
                 </div>
               </div>
 
               {/* Break Reminders */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">Break Reminders</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('optBreakReminders')}</h2>
                 <label className="flex items-center gap-3 cursor-pointer mb-4">
                   <input
                     type="checkbox"
@@ -438,11 +449,11 @@ const Options: React.FC = () => {
                     })}
                     className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
                   />
-                  <span className="text-sm">Enable break reminders during focus</span>
+                  <span className="text-sm">{t('optEnableBreakReminders')}</span>
                 </label>
                 {settings.breakReminders.enabled && (
                   <div>
-                    <label className="block text-sm font-medium mb-2">Remind every</label>
+                    <label className="block text-sm font-medium mb-2">{t('optRemindEvery')}</label>
                     <select
                       value={settings.breakReminders.intervalMinutes}
                       onChange={(e) => saveSettings({
@@ -451,7 +462,7 @@ const Options: React.FC = () => {
                       className="zovo-input w-48"
                     >
                       {[15, 20, 30, 45, 60].map((min) => (
-                        <option key={min} value={min}>{min} minutes</option>
+                        <option key={min} value={min}>{t('optMinutes', [String(min)])}</option>
                       ))}
                     </select>
                   </div>
@@ -460,7 +471,7 @@ const Options: React.FC = () => {
 
               {/* Notifications */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">Notifications</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('optNotifications')}</h2>
                 <div className="space-y-3">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input
@@ -471,7 +482,7 @@ const Options: React.FC = () => {
                       })}
                       className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
                     />
-                    <span className="text-sm">Notify when focus session completes</span>
+                    <span className="text-sm">{t('optNotifySessionComplete')}</span>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input
@@ -482,7 +493,7 @@ const Options: React.FC = () => {
                       })}
                       className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
                     />
-                    <span className="text-sm">Notify when break ends</span>
+                    <span className="text-sm">{t('optNotifyBreakEnd')}</span>
                   </label>
                 </div>
               </div>
@@ -494,9 +505,9 @@ const Options: React.FC = () => {
             <>
               {/* Category Presets */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">Block Categories</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('optBlockCategories')}</h2>
                 <p className="text-sm text-zovo-text-secondary mb-4">
-                  Enable categories to block groups of common distracting sites.
+                  {t('optBlockCategoriesDesc')}
                 </p>
                 <div className="space-y-3">
                   {settings.categories.map((category) => (
@@ -516,13 +527,13 @@ const Options: React.FC = () => {
                         <div className="flex-1">
                           <div className="text-sm font-medium">{category.name}</div>
                           <div className="text-xs text-zovo-text-muted">
-                            {category.patterns.length} sites
+                            {t('optSitesCount', [String(category.patterns.length)])}
                           </div>
                         </div>
                         <button
                           onClick={() => toggleCategoryExpand(category.id)}
                           className="text-zovo-text-muted hover:text-zovo-text-primary transition-colors p-1"
-                          title={expandedCategories.has(category.id) ? 'Hide sites' : 'Show sites'}
+                          title={expandedCategories.has(category.id) ? t('optHideSites') : t('optShowSites')}
                         >
                           <svg
                             width="16"
@@ -560,7 +571,7 @@ const Options: React.FC = () => {
 
               {/* Custom Blocklist */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">Custom Blocklist</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('optCustomBlocklist')}</h2>
                 <div className="flex gap-2 mb-4 items-center">
                   <input
                     type="text"
@@ -577,13 +588,13 @@ const Options: React.FC = () => {
                       onChange={(e) => setIsRegex(e.target.checked)}
                       className="w-3 h-3 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
                     />
-                    Regex
+                    {t('optRegex')}
                   </label>
                   <button
                     onClick={handleAddToBlocklist}
                     className="zovo-btn zovo-btn-primary"
                   >
-                    Add
+                    {t('btnAdd')}
                   </button>
                 </div>
                 {settings.blocklist.length > 0 ? (
@@ -596,28 +607,28 @@ const Options: React.FC = () => {
                         <span className="text-sm flex items-center gap-2">
                           {rule.pattern}
                           {rule.isRegex && (
-                            <span className="text-xs text-zovo-text-muted border border-zovo-border rounded px-1">regex</span>
+                            <span className="text-xs text-zovo-text-muted border border-zovo-border rounded px-1">{t('optRegex')}</span>
                           )}
                         </span>
                         <button
                           onClick={() => handleRemoveFromBlocklist(rule.id)}
                           className="text-zovo-error text-sm hover:underline"
                         >
-                          Remove
+                          {t('btnRemove')}
                         </button>
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-sm text-zovo-text-muted">No custom blocked sites yet.</p>
+                  <p className="text-sm text-zovo-text-muted">{t('optNoBlockedSites')}</p>
                 )}
               </div>
 
               {/* Whitelist */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">Whitelist (Always Allowed)</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('optWhitelist')}</h2>
                 <p className="text-sm text-zovo-text-secondary mb-4">
-                  These sites will never be blocked, even during focus mode.
+                  {t('optWhitelistDesc')}
                 </p>
                 <div className="flex gap-2 mb-4">
                   <input
@@ -632,7 +643,7 @@ const Options: React.FC = () => {
                     onClick={handleAddToWhitelist}
                     className="zovo-btn zovo-btn-primary"
                   >
-                    Add
+                    {t('btnAdd')}
                   </button>
                 </div>
                 {settings.whitelist.length > 0 ? (
@@ -647,13 +658,13 @@ const Options: React.FC = () => {
                           onClick={() => handleRemoveFromWhitelist(rule.id)}
                           className="text-zovo-error text-sm hover:underline"
                         >
-                          Remove
+                          {t('btnRemove')}
                         </button>
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-sm text-zovo-text-muted">No whitelisted sites yet.</p>
+                  <p className="text-sm text-zovo-text-muted">{t('optNoWhitelistedSites')}</p>
                 )}
               </div>
             </>
@@ -662,7 +673,7 @@ const Options: React.FC = () => {
           {/* Schedule Tab */}
           {activeTab === 'schedule' && (
             <div className="zovo-card">
-              <h2 className="text-lg font-semibold mb-4">Auto-Enable Schedule</h2>
+              <h2 className="text-lg font-semibold mb-4">{t('optAutoEnableSchedule')}</h2>
               <label className="flex items-center gap-3 cursor-pointer mb-6">
                 <input
                   type="checkbox"
@@ -672,15 +683,15 @@ const Options: React.FC = () => {
                   })}
                   className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
                 />
-                <span className="text-sm">Automatically start focus mode on schedule</span>
+                <span className="text-sm">{t('optAutoStartSchedule')}</span>
               </label>
 
               {settings.schedule.enabled && (
                 <>
                   <div className="mb-6">
-                    <label className="block text-sm font-medium mb-3">Active Days</label>
+                    <label className="block text-sm font-medium mb-3">{t('optActiveDays')}</label>
                     <div className="flex gap-2">
-                      {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, index) => (
+                      {[t('daySun'), t('dayMon'), t('dayTue'), t('dayWed'), t('dayThu'), t('dayFri'), t('daySat')].map((day, index) => (
                         <button
                           key={day}
                           onClick={() => {
@@ -705,7 +716,7 @@ const Options: React.FC = () => {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium mb-2">Start Time</label>
+                      <label className="block text-sm font-medium mb-2">{t('optStartTime')}</label>
                       <input
                         type="time"
                         value={settings.schedule.startTime}
@@ -716,7 +727,7 @@ const Options: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">End Time</label>
+                      <label className="block text-sm font-medium mb-2">{t('optEndTime')}</label>
                       <input
                         type="time"
                         value={settings.schedule.endTime}
@@ -737,94 +748,94 @@ const Options: React.FC = () => {
             <>
               {/* Today's Summary */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">Today's Summary</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('optTodaySummary')}</h2>
                 <div className="grid grid-cols-4 gap-4">
                   <div className="text-center p-4 bg-zovo-bg-tertiary rounded-lg">
                     <div className="text-2xl font-bold text-focus-green">
                       {formatMinutes(todayStats?.totalFocusTime ?? 0)}
                     </div>
-                    <div className="text-sm text-zovo-text-muted">Focus Time</div>
+                    <div className="text-sm text-zovo-text-muted">{t('optFocusTime')}</div>
                   </div>
                   <div className="text-center p-4 bg-zovo-bg-tertiary rounded-lg">
                     <div className="text-2xl font-bold text-zovo-violet">
                       {todayStats?.sessionsCompleted ?? 0}
                     </div>
-                    <div className="text-sm text-zovo-text-muted">Sessions</div>
+                    <div className="text-sm text-zovo-text-muted">{t('lblSessions')}</div>
                   </div>
                   <div className="text-center p-4 bg-zovo-bg-tertiary rounded-lg">
                     <div className="text-2xl font-bold text-zovo-error">
                       {todayStats?.sitesBlocked ?? 0}
                     </div>
-                    <div className="text-sm text-zovo-text-muted">Sites Blocked</div>
+                    <div className="text-sm text-zovo-text-muted">{t('optSitesBlocked')}</div>
                   </div>
                   <div className="text-center p-4 bg-zovo-bg-tertiary rounded-lg">
                     <div className="text-2xl font-bold text-zovo-warning">
                       {todayStats?.pomodorosCompleted ?? 0}
                     </div>
-                    <div className="text-sm text-zovo-text-muted">Pomodoros</div>
+                    <div className="text-sm text-zovo-text-muted">{t('optPomodoros')}</div>
                   </div>
                 </div>
               </div>
 
               {/* All-Time Stats */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">All-Time Statistics</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('optAllTimeStats')}</h2>
                 <div className="grid grid-cols-3 gap-4">
                   <div className="text-center p-4 bg-zovo-bg-tertiary rounded-lg">
                     <div className="text-2xl font-bold text-focus-green">
                       {formatMinutes(stats.totalFocusTime)}
                     </div>
-                    <div className="text-sm text-zovo-text-muted">Total Focus Time</div>
+                    <div className="text-sm text-zovo-text-muted">{t('optTotalFocusTime')}</div>
                   </div>
                   <div className="text-center p-4 bg-zovo-bg-tertiary rounded-lg">
                     <div className="text-2xl font-bold text-zovo-violet">
                       {stats.totalSessions}
                     </div>
-                    <div className="text-sm text-zovo-text-muted">Total Sessions</div>
+                    <div className="text-sm text-zovo-text-muted">{t('optTotalSessions')}</div>
                   </div>
                   <div className="text-center p-4 bg-zovo-bg-tertiary rounded-lg">
                     <div className="text-2xl font-bold text-zovo-error">
                       {stats.totalSitesBlocked}
                     </div>
-                    <div className="text-sm text-zovo-text-muted">Sites Blocked</div>
+                    <div className="text-sm text-zovo-text-muted">{t('optSitesBlocked')}</div>
                   </div>
                 </div>
               </div>
 
               {/* Streaks */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">Streaks</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('optStreaks')}</h2>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center p-4 bg-zovo-bg-tertiary rounded-lg">
                     <div className="text-3xl font-bold text-zovo-warning">
                       {stats.currentStreak}
                     </div>
-                    <div className="text-sm text-zovo-text-muted">Current Streak (days)</div>
+                    <div className="text-sm text-zovo-text-muted">{t('optCurrentStreak')}</div>
                   </div>
                   <div className="text-center p-4 bg-zovo-bg-tertiary rounded-lg">
                     <div className="text-3xl font-bold text-zovo-violet">
                       {stats.longestStreak}
                     </div>
-                    <div className="text-sm text-zovo-text-muted">Longest Streak (days)</div>
+                    <div className="text-sm text-zovo-text-muted">{t('optLongestStreak')}</div>
                   </div>
                 </div>
               </div>
 
               {/* Recent Sessions */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">Recent Sessions</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('optRecentSessions')}</h2>
                 <div className="space-y-2">
                   {/* Active session */}
                   {settings.focusMode.enabled && settings.focusMode.status !== 'idle' && (
                     <div className="flex items-center justify-between p-3 bg-zovo-bg-tertiary rounded border border-zovo-violet/30">
                       <div>
-                        <div className="text-sm font-medium">Current session</div>
+                        <div className="text-sm font-medium">{t('optCurrentSession')}</div>
                         <div className="text-xs text-zovo-text-muted">
-                          {settings.focusMode.timerMode} mode - in progress
+                          {settings.focusMode.timerMode} {t('optModeInProgress')}
                         </div>
                       </div>
                       <span className="text-xs px-2 py-1 rounded bg-focus-green/20 text-focus-green animate-pulse">
-                        Active
+                        {t('lblActive')}
                       </span>
                     </div>
                   )}
@@ -837,14 +848,14 @@ const Options: React.FC = () => {
                       >
                         <div>
                           <div className="text-sm font-medium">
-                            {new Date(session.startTime).toLocaleDateString()} at{' '}
+                            {new Date(session.startTime).toLocaleDateString()}{' '}
                             {new Date(session.startTime).toLocaleTimeString([], {
                               hour: '2-digit',
                               minute: '2-digit',
                             })}
                           </div>
                           <div className="text-xs text-zovo-text-muted">
-                            {session.mode} mode - {session.actualDuration ?? 0} min
+                            {session.mode} {t('optModeDuration', [String(session.actualDuration ?? 0)])}
                           </div>
                         </div>
                         <span
@@ -854,13 +865,13 @@ const Options: React.FC = () => {
                               : 'bg-zovo-error/20 text-zovo-error'
                           }`}
                         >
-                          {session.completed ? 'Completed' : 'Stopped'}
+                          {session.completed ? t('lblCompleted') : t('lblStopped')}
                         </span>
                       </div>
                     ))
                   ) : (
                     !(settings.focusMode.enabled && settings.focusMode.status !== 'idle') && (
-                      <p className="text-sm text-zovo-text-muted">No sessions recorded yet. Start a focus session to see your history here.</p>
+                      <p className="text-sm text-zovo-text-muted">{t('optNoSessions')}</p>
                     )
                   )}
                 </div>
@@ -873,7 +884,7 @@ const Options: React.FC = () => {
             <>
               {/* Blocked Page Settings */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">Blocked Page</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('optBlockedPage')}</h2>
                 <div className="space-y-3">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input
@@ -884,7 +895,7 @@ const Options: React.FC = () => {
                       })}
                       className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
                     />
-                    <span className="text-sm">Show remaining time on blocked page</span>
+                    <span className="text-sm">{t('optShowRemainingTime')}</span>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input
@@ -895,7 +906,7 @@ const Options: React.FC = () => {
                       })}
                       className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
                     />
-                    <span className="text-sm">Show motivational quote on blocked page</span>
+                    <span className="text-sm">{t('optShowQuote')}</span>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input
@@ -906,12 +917,12 @@ const Options: React.FC = () => {
                       })}
                       className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
                     />
-                    <span className="text-sm">Allow emergency unlock (with cooldown)</span>
+                    <span className="text-sm">{t('optAllowEmergencyUnlock')}</span>
                   </label>
                 </div>
                 {settings.blockedPage.allowEmergencyUnlock && (
                   <div className="mt-4">
-                    <label className="block text-sm font-medium mb-2">Emergency Unlock Cooldown</label>
+                    <label className="block text-sm font-medium mb-2">{t('optEmergencyCooldown')}</label>
                     <select
                       value={settings.blockedPage.emergencyCooldownMinutes}
                       onChange={(e) => saveSettings({
@@ -920,7 +931,7 @@ const Options: React.FC = () => {
                       className="zovo-input w-48"
                     >
                       {[5, 10, 15, 30, 60].map((min) => (
-                        <option key={min} value={min}>{min} minutes</option>
+                        <option key={min} value={min}>{t('optMinutes', [String(min)])}</option>
                       ))}
                     </select>
                   </div>
@@ -929,20 +940,20 @@ const Options: React.FC = () => {
 
               {/* Password Protection */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">Password Protection</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('optPasswordProtection')}</h2>
                 <p className="text-sm text-zovo-text-secondary mb-4">
-                  Require a password to stop focus mode or change settings during focus.
+                  {t('optPasswordProtectionDesc')}
                 </p>
                 {settings.passwordProtection.enabled ? (
                   <div>
                     {settings.passwordProtection.passwordHash && !settings.passwordProtection.passwordHash.includes(':') ? (
                       <div>
                         <p className="text-sm text-zovo-warning mb-4">
-                          Your password uses an outdated format. Please remove it and set a new one.
+                          {t('optPasswordOutdated')}
                         </p>
                       </div>
                     ) : (
-                      <p className="text-sm text-focus-green mb-4">Password protection is enabled.</p>
+                      <p className="text-sm text-focus-green mb-4">{t('optPasswordEnabled')}</p>
                     )}
                     <div className="flex gap-2 items-center">
                       <input
@@ -952,7 +963,7 @@ const Options: React.FC = () => {
                           setRemovePasswordInput(e.target.value);
                           setRemovePasswordError(null);
                         }}
-                        placeholder="Enter current password"
+                        placeholder={t('plhEnterCurrentPassword')}
                         className="zovo-input w-64"
                       />
                       <button
@@ -960,7 +971,7 @@ const Options: React.FC = () => {
                         className="zovo-btn zovo-btn-secondary text-zovo-error"
                         disabled={!removePasswordInput.trim()}
                       >
-                        Remove Password
+                        {t('btnRemovePassword')}
                       </button>
                     </div>
                     {removePasswordError && (
@@ -970,23 +981,23 @@ const Options: React.FC = () => {
                 ) : (
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium mb-2">New Password</label>
+                      <label className="block text-sm font-medium mb-2">{t('optNewPassword')}</label>
                       <input
                         type="password"
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                         className="zovo-input w-64"
-                        placeholder="Enter password"
+                        placeholder={t('plhEnterPassword')}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">Confirm Password</label>
+                      <label className="block text-sm font-medium mb-2">{t('optConfirmPassword')}</label>
                       <input
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         className="zovo-input w-64"
-                        placeholder="Confirm password"
+                        placeholder={t('plhConfirmPassword')}
                       />
                     </div>
                     <button
@@ -994,7 +1005,7 @@ const Options: React.FC = () => {
                       className="zovo-btn zovo-btn-primary"
                       disabled={!newPassword || !confirmPassword}
                     >
-                      Set Password
+                      {t('btnSetPassword')}
                     </button>
                   </div>
                 )}
@@ -1002,25 +1013,25 @@ const Options: React.FC = () => {
 
               {/* About */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">About</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('optAbout')}</h2>
                 <p className="text-zovo-text-secondary text-sm">
-                  Focus Mode Pro is part of the Zovo family of privacy-first Chrome extensions.
+                  {t('optAboutDesc')}
                 </p>
                 <div className="mt-4 space-y-2 text-sm">
                   <p>
-                    <span className="text-zovo-text-muted">Version:</span>{' '}
+                    <span className="text-zovo-text-muted">{t('optVersion')}:</span>{' '}
                     <span className="text-zovo-text-secondary">
                       {chrome.runtime.getManifest().version}
                     </span>
                   </p>
                   <p>
-                    <span className="text-zovo-text-muted">Keyboard Shortcut:</span>{' '}
+                    <span className="text-zovo-text-muted">{t('optKeyboardShortcut')}:</span>{' '}
                     <code className="bg-zovo-bg-tertiary px-2 py-1 rounded text-xs">
                       Alt+Shift+F
                     </code>
                   </p>
                   <p>
-                    <span className="text-zovo-text-muted">Website:</span>{' '}
+                    <span className="text-zovo-text-muted">{t('optWebsite')}:</span>{' '}
                     <a
                       href="https://zovo.one"
                       target="_blank"
@@ -1031,7 +1042,7 @@ const Options: React.FC = () => {
                     </a>
                   </p>
                   <p>
-                    <span className="text-zovo-text-muted">Support:</span>{' '}
+                    <span className="text-zovo-text-muted">{t('optSupport')}:</span>{' '}
                     <a
                       href="mailto:support@zovo.one"
                       className="text-zovo-violet hover:underline"
@@ -1049,22 +1060,22 @@ const Options: React.FC = () => {
             <>
               {/* Current Status */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">License Status</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('optLicenseStatus')}</h2>
                 <div className="flex items-center gap-3 mb-4">
                   <div className={`w-3 h-3 rounded-full ${currentTier !== 'free' ? 'bg-focus-green' : 'bg-zovo-text-muted'}`} />
                   <span className="text-sm font-medium">
                     {currentTier !== 'free' ? (
                       <span className="text-focus-green">
-                        Pro {currentTier === 'lifetime' ? '(Lifetime)' : currentTier === 'team' ? '(Team)' : ''} - Active
+                        {t('lblPro')} {currentTier === 'lifetime' ? t('optLifetime') : currentTier === 'team' ? t('optTeam') : ''} - {t('lblActive')}
                       </span>
                     ) : (
-                      <span className="text-zovo-text-secondary">Free Plan</span>
+                      <span className="text-zovo-text-secondary">{t('optFreePlan')}</span>
                     )}
                   </span>
                 </div>
                 {licenseEmail && (
                   <p className="text-sm text-zovo-text-muted mb-4">
-                    Licensed to: {licenseEmail}
+                    {t('optLicensedTo', [licenseEmail ?? ''])}
                   </p>
                 )}
                 {currentTier !== 'free' && (
@@ -1072,7 +1083,7 @@ const Options: React.FC = () => {
                     onClick={handleRemoveLicense}
                     className="zovo-btn zovo-btn-secondary text-zovo-error text-sm"
                   >
-                    Remove License
+                    {t('btnRemoveLicense')}
                   </button>
                 )}
               </div>
@@ -1080,9 +1091,9 @@ const Options: React.FC = () => {
               {/* Activate License */}
               {currentTier === 'free' && (
                 <div className="zovo-card">
-                  <h2 className="text-lg font-semibold mb-2">Activate License</h2>
+                  <h2 className="text-lg font-semibold mb-2">{t('optActivateLicense')}</h2>
                   <p className="text-sm text-zovo-text-secondary mb-4">
-                    Enter your license key to unlock Pro features.
+                    {t('optActivateLicenseDesc')}
                   </p>
                   <div className="flex gap-2 mb-2">
                     <input
@@ -1102,29 +1113,29 @@ const Options: React.FC = () => {
                       className="zovo-btn zovo-btn-primary"
                       disabled={licenseStatus === 'verifying'}
                     >
-                      {licenseStatus === 'verifying' ? 'Verifying...' : 'Activate'}
+                      {licenseStatus === 'verifying' ? t('optVerifying') : t('btnActivate')}
                     </button>
                   </div>
                   {licenseError && (
                     <p className="text-sm text-zovo-error mt-1">{licenseError}</p>
                   )}
                   {licenseStatus === 'success' && (
-                    <p className="text-sm text-focus-green mt-1">License activated!</p>
+                    <p className="text-sm text-focus-green mt-1">{t('msgLicenseActivated')}</p>
                   )}
                 </div>
               )}
 
               {/* Pro Features */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">Pro Features</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('optProFeatures')}</h2>
                 <ul className="space-y-3">
                   {[
-                    { name: 'Unlimited custom block rules', free: false },
-                    { name: 'Advanced regex patterns', free: false },
-                    { name: 'Detailed analytics & reports', free: false },
-                    { name: 'Schedule mode', free: false },
-                    { name: 'Password protection', free: false },
-                    { name: 'Priority support', free: false },
+                    { name: t('optFeatureUnlimitedRules'), free: false },
+                    { name: t('optFeatureRegex'), free: false },
+                    { name: t('optFeatureAnalytics'), free: false },
+                    { name: t('optFeatureSchedule'), free: false },
+                    { name: t('optFeaturePassword'), free: false },
+                    { name: t('optFeaturePrioritySupport'), free: false },
                   ].map((feature) => (
                     <li key={feature.name} className="flex items-center gap-3 text-sm">
                       <svg
@@ -1149,7 +1160,7 @@ const Options: React.FC = () => {
                       onClick={() => chrome.tabs.create({ url: 'https://zovo.one/upgrade?ext=focus_mode_blocker&ref=settings' })}
                       className="zovo-btn zovo-btn-primary w-full bg-gradient-to-r from-violet-500 to-purple-600"
                     >
-                      Upgrade to Pro
+                      {t('btnUpgradePro')}
                     </button>
                   </div>
                 )}

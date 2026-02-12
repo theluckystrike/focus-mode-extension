@@ -1,0 +1,46 @@
+Focus Mode Pro - Tu aliado para mantener la concentración y alcanzar tus metas
+
+FUNCIONES PRINCIPALES:
+• Bloquea sitios web que te distraen con patrones inteligentes y categorías predefinidas
+• Temporizador Pomodoro integrado con intervalos de trabajo y descanso personalizables
+• Registra tu tiempo de concentración, sesiones completadas y rachas diarias
+• Programa sesiones de concentración automáticas para rutinas de trabajo consistentes
+• Protección con contraseña para evitar finalizar sesiones antes de tiempo
+• Desbloqueo de emergencia con período de espera para necesidades reales
+
+¿POR QUÉ ELEGIR FOCUS MODE PRO?
+• Privacidad ante todo: todos tus datos permanecen en tu dispositivo
+• No necesitas crear una cuenta para usar la versión gratuita
+• Funciona sin conexión a internet
+• Actualizaciones frecuentes con nuevas funciones
+• Rápido y ligero — consumo mínimo de recursos
+
+CÓMO EMPEZAR:
+1. Instala Focus Mode Pro desde Chrome Web Store
+2. Haz clic en el icono de la barra de herramientas para abrir el panel
+3. Elige el modo Pomodoro, Personalizado o Indefinido
+4. Pulsa Iniciar Concentración — ¡los sitios que te distraen se bloquean automáticamente!
+
+ATAJO DE TECLADO:
+• Alt+Shift+F — Activa o desactiva el modo concentración desde cualquier pestaña
+
+FUNCIONES PRO:
+• Reglas de bloqueo personalizadas y listas blancas ilimitadas
+• Coincidencia avanzada con expresiones regulares
+• Analíticas detalladas e informes
+• Modo de programación para horas de concentración automáticas
+• Protección con contraseña
+• Soporte prioritario
+
+PRECIOS:
+• Gratis: 8 sesiones al día, bloqueo básico, temporizador Pomodoro
+• Pro Mensual: $4.99/mes — todas las funciones, uso ilimitado
+• Pro Anual: $3.99/mes — ahorra un 20%, 2 meses gratis
+
+PRIVACIDAD:
+Focus Mode Pro funciona completamente en tu dispositivo. No se recopilan ni envían datos de navegación a servidores externos. La verificación de licencia se conecta a la API de Zovo únicamente al activar una licencia Pro.
+
+¿Te gusta Focus Mode Pro? ¡Déjanos una reseña de 5 estrellas para ayudar a otros a descubrir esta herramienta gratuita! Tu opinión nos motiva a seguir mejorando.
+
+Sitio web: https://zovo.one/tools/focus-mode-blocker
+Soporte: support@zovo.one

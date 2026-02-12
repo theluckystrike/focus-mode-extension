@@ -21,6 +21,30 @@ if (typeof globalThis.crypto?.subtle === 'undefined') {
   Object.defineProperty(globalThis, 'crypto', { value: webcrypto });
 }
 
+// Load English i18n messages for test mocking
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const i18nMessages: Record<string, { message: string; placeholders?: Record<string, { content: string }> }> =
+  require('../public/_locales/en/messages.json');
+
+function mockGetMessage(key: string, substitutions?: string | string[]): string {
+  const entry = i18nMessages[key];
+  if (!entry) return '';
+  let msg = entry.message;
+  // Handle placeholder substitution ($1, $2, etc. mapped via placeholders object)
+  if (substitutions && entry.placeholders) {
+    const subs = Array.isArray(substitutions) ? substitutions : [substitutions];
+    for (const [, ph] of Object.entries(entry.placeholders)) {
+      const idx = parseInt(ph.content.replace(/\$/g, ''), 10) - 1;
+      if (idx >= 0 && idx < subs.length) {
+        // Replace $PLACEHOLDER_NAME$ in the message with the substitution value
+        const regex = new RegExp(`\\$[A-Z_]+\\$`);
+        msg = msg.replace(regex, subs[idx] ?? '');
+      }
+    }
+  }
+  return msg;
+}
+
 // Mock chrome API
 const mockChrome = {
   runtime: {
@@ -88,6 +112,10 @@ const mockChrome = {
     onCommand: {
       addListener: jest.fn(),
     },
+  },
+  i18n: {
+    getMessage: jest.fn(mockGetMessage),
+    getUILanguage: jest.fn(() => 'en'),
   },
 };
 

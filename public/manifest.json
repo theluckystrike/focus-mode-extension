@@ -1,10 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "Focus Mode Pro - Block Distractions | Zovo",
+  "default_locale": "en",
+  "name": "__MSG_extName__",
   "short_name": "Focus Mode",
   "version": "1.0.0",
   "version_name": "1.0.0",
-  "description": "Block distracting websites and boost productivity with focus timers. Built-in Pomodoro timer. Whitelist your work sites.",
+  "description": "__MSG_extDescription__",
   "author": "Zovo",
   "homepage_url": "https://zovo.one/tools/focus-mode-blocker",
   "minimum_chrome_version": "110",
@@ -23,7 +24,7 @@
 
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Focus Mode Pro",
+    "default_title": "__MSG_extActionTitle__",
     "default_icon": {
       "16": "icons/icon-16.png",
       "32": "icons/icon-32.png",
