@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280">
+  <title>Focus Mode Pro - Use Cases</title>
+  <link rel="stylesheet" href="promo-shared.css">
+  <style>
+    .screenshot {
+      justify-content: center;
+      gap: 0;
+    }
+
+    .use-case-card {
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .use-case-card:hover {
+      border-color: rgba(124, 58, 237, 0.4);
+      box-shadow: 0 8px 30px rgba(124, 58, 237, 0.08);
+    }
+
+    /* Decorative gradient orbs */
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    .bg-orb-1 {
+      width: 300px;
+      height: 300px;
+      background: rgba(124, 58, 237, 0.08);
+      top: 60px;
+      left: 100px;
+    }
+
+    .bg-orb-2 {
+      width: 250px;
+      height: 250px;
+      background: rgba(34, 197, 94, 0.06);
+      bottom: 80px;
+      right: 120px;
+    }
+
+    /* Bottom tagline bar */
+    .bottom-tagline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .tagline-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #71717A;
+    }
+
+    .tagline-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #3F3F46;
+    }
+
+    .tagline-icon {
+      color: #7C3AED;
+    }
+  </style>
+</head>
+<body>
+  <div class="screenshot">
+    <!-- Background orbs -->
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+
+    <h1 class="screenshot-headline" style="margin-bottom: 12px;">Built for People Who Ship</h1>
+    <p class="screenshot-subtext" style="margin-bottom: 48px;">No signup required. Install and start focusing in seconds.</p>
+
+    <div class="use-case-grid">
+      <!-- Remote Workers -->
+      <div class="use-case-card">
+        <div class="use-case-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+            <circle cx="12" cy="10" r="2" fill="none"/>
+            <path d="M8 14c0-2.2 1.8-4 4-4s4 1.8 4 4" fill="none"/>
+          </svg>
+        </div>
+        <h3 class="use-case-title">Remote Workers</h3>
+        <p class="use-case-desc">Block social media during work hours with scheduled focus sessions</p>
+      </div>
+
+      <!-- Students -->
+      <div class="use-case-card">
+        <div class="use-case-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            <line x1="6" y1="8" x2="8" y2="8"/>
+            <line x1="6" y1="12" x2="8" y2="12"/>
+            <line x1="16" y1="8" x2="18" y2="8"/>
+            <line x1="16" y1="12" x2="18" y2="12"/>
+          </svg>
+        </div>
+        <h3 class="use-case-title">Students</h3>
+        <p class="use-case-desc">Stay focused during study sessions with Pomodoro intervals and site blocking</p>
+      </div>
+
+      <!-- Creators & Writers -->
+      <div class="use-case-card">
+        <div class="use-case-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+            <path d="M2 2l7.586 7.586"/>
+            <circle cx="11" cy="11" r="2"/>
+          </svg>
+        </div>
+        <h3 class="use-case-title">Creators &amp; Writers</h3>
+        <p class="use-case-desc">Eliminate distractions and track your productive hours with streak tracking</p>
+      </div>
+    </div>
+
+    <!-- Bottom tagline -->
+    <div class="bottom-tagline">
+      <div class="tagline-item">
+        <svg class="tagline-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        100% Free
+      </div>
+      <div class="tagline-dot"></div>
+      <div class="tagline-item">
+        <svg class="tagline-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        Privacy-First
+      </div>
+      <div class="tagline-dot"></div>
+      <div class="tagline-item">
+        <svg class="tagline-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+        Instant Setup
+      </div>
+    </div>
+  </div>
+</body>
+</html>

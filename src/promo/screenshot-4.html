@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280">
+  <title>Focus Mode Pro - Settings</title>
+  <link rel="stylesheet" href="promo-shared.css">
+  <style>
+    .settings-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-right: 14px;
+    }
+
+    .settings-row-main {
+      display: flex;
+      align-items: center;
+    }
+
+    .settings-icon.violet { background: rgba(124, 58, 237, 0.15); }
+    .settings-icon.green { background: rgba(34, 197, 94, 0.15); }
+    .settings-icon.orange { background: rgba(249, 115, 22, 0.15); }
+    .settings-icon.blue { background: rgba(59, 130, 246, 0.15); }
+    .settings-icon.yellow { background: rgba(234, 179, 8, 0.15); }
+    .settings-icon.red { background: rgba(239, 68, 68, 0.15); }
+
+    .settings-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Decorative gradient glow */
+    .settings-glow {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.06) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="screenshot">
+    <h1 class="screenshot-headline">Customize to Fit Your Workflow</h1>
+    <p class="screenshot-subtext">Fine-tune every detail to match how you work</p>
+
+    <div style="position: relative;">
+      <div class="settings-glow"></div>
+
+      <div class="settings-preview">
+        <div class="settings-header">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#71717A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            <span class="settings-header-title">Settings</span>
+          </div>
+        </div>
+
+        <div class="settings-body">
+          <!-- Auto-start breaks (active) -->
+          <div class="settings-row">
+            <div class="settings-row-main">
+              <div class="settings-icon violet">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="17 1 21 5 17 9"/>
+                  <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                  <polyline points="7 23 3 19 7 15"/>
+                  <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                </svg>
+              </div>
+              <div class="settings-row-info">
+                <span class="settings-row-label">Auto-start breaks</span>
+                <span class="settings-row-desc">Automatically begin break timer after focus ends</span>
+              </div>
+            </div>
+            <div class="toggle-track active"><div class="toggle-thumb"></div></div>
+          </div>
+
+          <!-- Password protection (inactive) -->
+          <div class="settings-row">
+            <div class="settings-row-main">
+              <div class="settings-icon red">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              </div>
+              <div class="settings-row-info">
+                <span class="settings-row-label">Password protection</span>
+                <span class="settings-row-desc">Require password to disable focus mode</span>
+              </div>
+            </div>
+            <div class="toggle-track"><div class="toggle-thumb"></div></div>
+          </div>
+
+          <!-- Break reminders (active) -->
+          <div class="settings-row">
+            <div class="settings-row-main">
+              <div class="settings-icon green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+              </div>
+              <div class="settings-row-info">
+                <span class="settings-row-label">Break reminders</span>
+                <span class="settings-row-desc">Get notified when it's time to take a break</span>
+              </div>
+            </div>
+            <div class="toggle-track active"><div class="toggle-thumb"></div></div>
+          </div>
+
+          <!-- Schedule mode (active) -->
+          <div class="settings-row">
+            <div class="settings-row-main">
+              <div class="settings-icon blue">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </div>
+              <div class="settings-row-info">
+                <span class="settings-row-label">Schedule mode</span>
+                <span class="settings-row-desc">Automatically start focus sessions on schedule</span>
+              </div>
+            </div>
+            <div class="toggle-track active"><div class="toggle-thumb"></div></div>
+          </div>
+
+          <!-- Motivational quotes (active) -->
+          <div class="settings-row">
+            <div class="settings-row-main">
+              <div class="settings-icon yellow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#EAB308" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              </div>
+              <div class="settings-row-info">
+                <span class="settings-row-label">Motivational quotes</span>
+                <span class="settings-row-desc">Show inspiring quotes on blocked pages</span>
+              </div>
+            </div>
+            <div class="toggle-track active"><div class="toggle-thumb"></div></div>
+          </div>
+
+          <!-- Emergency unlock (active) -->
+          <div class="settings-row">
+            <div class="settings-row-main">
+              <div class="settings-icon orange">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                  <line x1="12" y1="9" x2="12" y2="13"/>
+                  <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+              </div>
+              <div class="settings-row-info">
+                <span class="settings-row-label">Emergency unlock</span>
+                <span class="settings-row-desc">Allow bypassing focus mode with a cooldown timer</span>
+              </div>
+            </div>
+            <div class="toggle-track active"><div class="toggle-thumb"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

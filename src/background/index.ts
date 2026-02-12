@@ -93,6 +93,12 @@ chrome.runtime.onInstalled.addListener(async (details) => {
       version: chrome.runtime.getManifest().version,
     });
 
+    // Open welcome page on first install
+    const { welcomeSeen } = await chrome.storage.local.get('welcomeSeen');
+    if (!welcomeSeen) {
+      chrome.tabs.create({ url: chrome.runtime.getURL('welcome.html') });
+    }
+
   } else if (details.reason === 'update') {
     const previousVersion = details.previousVersion;
     const currentVersion = chrome.runtime.getManifest().version;

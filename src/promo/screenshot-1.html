@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280">
+  <title>Focus Mode Pro - Hero Shot</title>
+  <link rel="stylesheet" href="promo-shared.css">
+  <style>
+    /* Timer ring */
+    .timer-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 0 16px;
+    }
+
+    .timer-ring {
+      position: relative;
+      width: 180px;
+      height: 180px;
+    }
+
+    .timer-ring svg {
+      width: 180px;
+      height: 180px;
+      transform: rotate(-90deg);
+    }
+
+    .timer-ring-bg {
+      fill: none;
+      stroke: #27272A;
+      stroke-width: 6;
+    }
+
+    .timer-ring-progress {
+      fill: none;
+      stroke: #7C3AED;
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 502;
+      stroke-dashoffset: 0;
+    }
+
+    .timer-display {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .timer-time {
+      font-size: 42px;
+      font-weight: 700;
+      color: #F5F5F5;
+      letter-spacing: -1px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-label {
+      font-size: 12px;
+      color: #71717A;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+
+    /* Start button */
+    .btn-start {
+      width: 100%;
+      padding: 12px;
+      background: #7C3AED;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: system-ui, sans-serif;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      margin-bottom: 12px;
+    }
+
+    /* Mode selector */
+    .mode-selector {
+      display: flex;
+      background: #1A1A1F;
+      border-radius: 8px;
+      padding: 3px;
+      gap: 2px;
+      margin-bottom: 16px;
+    }
+
+    .mode-option {
+      flex: 1;
+      padding: 7px 12px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: #71717A;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .mode-option.active {
+      background: #27272A;
+      color: #F5F5F5;
+    }
+
+    /* Stats row */
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0 0;
+      border-top: 1px solid #27272A;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .stat-value {
+      font-size: 15px;
+      font-weight: 600;
+      color: #F5F5F5;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: #71717A;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Subtle glow behind popup */
+    .popup-glow {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.08) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="screenshot">
+    <h1 class="screenshot-headline">Block Distractions. Stay Focused.</h1>
+    <p class="screenshot-subtext">The free Pomodoro timer and website blocker that respects your privacy</p>
+
+    <div class="browser-frame">
+      <div class="browser-toolbar">
+        <div class="browser-dots">
+          <div class="browser-dot browser-dot--close"></div>
+          <div class="browser-dot browser-dot--minimize"></div>
+          <div class="browser-dot browser-dot--maximize"></div>
+        </div>
+        <div class="browser-address">
+          <span class="browser-address-lock">&#x1F512;</span>
+          chrome://extensions
+        </div>
+        <div class="browser-extension-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="browser-content">
+        <div class="popup-glow"></div>
+
+        <div class="popup-preview">
+          <!-- Header -->
+          <div class="popup-header">
+            <div class="popup-header-brand">
+              <div class="popup-header-logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+              </div>
+              <span class="popup-header-title">Focus Mode Pro</span>
+            </div>
+            <span class="badge-free">Free</span>
+          </div>
+
+          <!-- Body -->
+          <div class="popup-body">
+            <!-- Timer -->
+            <div class="timer-container">
+              <div class="timer-ring">
+                <svg viewBox="0 0 180 180">
+                  <circle class="timer-ring-bg" cx="90" cy="90" r="80"/>
+                  <circle class="timer-ring-progress" cx="90" cy="90" r="80"/>
+                </svg>
+                <div class="timer-display">
+                  <div class="timer-time">25:00</div>
+                  <div class="timer-label">Focus</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Start Button -->
+            <button class="btn-start">Start Focus</button>
+
+            <!-- Mode Selector -->
+            <div class="mode-selector">
+              <div class="mode-option active">Pomodoro</div>
+              <div class="mode-option">Custom</div>
+              <div class="mode-option">Indefinite</div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-row">
+              <div class="stat-item">
+                <span class="stat-value">2h 15m</span>
+                <span class="stat-label">Focus</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">5</span>
+                <span class="stat-label">Sessions</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">12</span>
+                <span class="stat-label">Blocked</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="popup-footer">
+            <span class="popup-footer-text">Focus Mode Pro v1.0.0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

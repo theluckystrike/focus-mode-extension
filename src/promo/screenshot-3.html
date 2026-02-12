@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280">
+  <title>Focus Mode Pro - Pomodoro Timer</title>
+  <link rel="stylesheet" href="promo-shared.css">
+  <style>
+    .browser-content {
+      padding: 32px 60px;
+      justify-content: center;
+    }
+
+    /* Timer ring - active state */
+    .timer-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 0 16px;
+    }
+
+    .timer-ring {
+      position: relative;
+      width: 180px;
+      height: 180px;
+    }
+
+    .timer-ring svg {
+      width: 180px;
+      height: 180px;
+      transform: rotate(-90deg);
+    }
+
+    .timer-ring-bg {
+      fill: none;
+      stroke: #27272A;
+      stroke-width: 6;
+    }
+
+    .timer-ring-progress {
+      fill: none;
+      stroke: #22C55E;
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 502;
+      /* 75% progress = 25% remaining offset: 502 * 0.25 = 125.5 */
+      stroke-dashoffset: 125.5;
+    }
+
+    .timer-display {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .timer-time {
+      font-size: 42px;
+      font-weight: 700;
+      color: #F5F5F5;
+      letter-spacing: -1px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-label {
+      font-size: 12px;
+      color: #71717A;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+
+    /* Active badge */
+    .active-badge-row {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    /* Action buttons */
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .btn-pause {
+      flex: 1;
+      padding: 10px;
+      background: #27272A;
+      color: #F5F5F5;
+      border: 1px solid #3F3F46;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: system-ui, sans-serif;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-stop {
+      flex: 1;
+      padding: 10px;
+      background: rgba(239, 68, 68, 0.15);
+      color: #EF4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: system-ui, sans-serif;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    /* Blocked count */
+    .blocked-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px;
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.15);
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    .blocked-info-icon {
+      color: #EF4444;
+      flex-shrink: 0;
+    }
+
+    .blocked-info-text {
+      font-size: 13px;
+      color: #A1A1AA;
+    }
+
+    .blocked-info-text strong {
+      color: #F5F5F5;
+      font-weight: 600;
+    }
+
+    /* Session progress dots */
+    .session-progress {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 0 0;
+      border-top: 1px solid #27272A;
+    }
+
+    .session-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #27272A;
+    }
+
+    .session-dot.completed {
+      background: #7C3AED;
+    }
+
+    .session-dot.current {
+      background: #22C55E;
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+    }
+
+    .session-label {
+      font-size: 11px;
+      color: #71717A;
+      margin-left: 8px;
+    }
+
+    /* Subtle green glow for active state */
+    .popup-glow {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(34, 197, 94, 0.06) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="screenshot">
+    <h1 class="screenshot-headline">Stay in the Zone with Pomodoro</h1>
+
+    <div style="position: relative; margin-top: 24px;">
+      <div class="browser-frame">
+        <div class="browser-toolbar">
+          <div class="browser-dots">
+            <div class="browser-dot browser-dot--close"></div>
+            <div class="browser-dot browser-dot--minimize"></div>
+            <div class="browser-dot browser-dot--maximize"></div>
+          </div>
+          <div class="browser-address">
+            <span class="browser-address-lock">&#x1F512;</span>
+            github.com/your-project
+          </div>
+          <div class="browser-extension-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="browser-content">
+          <div class="popup-glow"></div>
+
+          <div class="popup-preview">
+            <!-- Header -->
+            <div class="popup-header">
+              <div class="popup-header-brand">
+                <div class="popup-header-logo" style="background: #22C55E;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                </div>
+                <span class="popup-header-title">Focus Mode Pro</span>
+              </div>
+              <span class="badge-active">Active</span>
+            </div>
+
+            <!-- Body -->
+            <div class="popup-body">
+              <!-- Timer -->
+              <div class="timer-container">
+                <div class="timer-ring">
+                  <svg viewBox="0 0 180 180">
+                    <circle class="timer-ring-bg" cx="90" cy="90" r="80"/>
+                    <circle class="timer-ring-progress" cx="90" cy="90" r="80"/>
+                  </svg>
+                  <div class="timer-display">
+                    <div class="timer-time">18:42</div>
+                    <div class="timer-label">Focusing</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="action-buttons">
+                <button class="btn-pause">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="6" y="4" width="4" height="16" rx="1"/>
+                    <rect x="14" y="4" width="4" height="16" rx="1"/>
+                  </svg>
+                  Pause
+                </button>
+                <button class="btn-stop">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="4" y="4" width="16" height="16" rx="2"/>
+                  </svg>
+                  Stop
+                </button>
+              </div>
+
+              <!-- Blocked Count -->
+              <div class="blocked-info">
+                <svg class="blocked-info-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+                </svg>
+                <span class="blocked-info-text"><strong>3 sites</strong> blocked this session</span>
+              </div>
+
+              <!-- Session Progress -->
+              <div class="session-progress">
+                <div class="session-dot completed"></div>
+                <div class="session-dot completed"></div>
+                <div class="session-dot current"></div>
+                <div class="session-dot"></div>
+                <span class="session-label">Session 3 of 4</span>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="popup-footer">
+              <span class="popup-footer-text">Focus Mode Pro v1.0.0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Callouts -->
+      <div class="callout callout--left" style="top: 160px; left: -200px;">
+        <div class="callout-pill">25/5 minute cycles</div>
+        <div class="callout-line"></div>
+        <div class="callout-dot"></div>
+      </div>
+
+      <div class="callout callout--right" style="top: 260px; right: -220px;">
+        <div class="callout-pill">Customizable durations</div>
+        <div class="callout-line"></div>
+        <div class="callout-dot"></div>
+      </div>
+
+      <div class="callout callout--left" style="bottom: 100px; left: -180px;">
+        <div class="callout-pill">Auto-start breaks</div>
+        <div class="callout-line"></div>
+        <div class="callout-dot"></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

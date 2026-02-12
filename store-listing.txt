@@ -1,0 +1,140 @@
+TITLE
+Focus Mode Pro - Block Distractions | Zovo
+(43 characters)
+
+
+SHORT DESCRIPTION
+Block distracting sites, stay focused with Pomodoro timers, and track your productivity. Free and private.
+(107 characters)
+
+
+CATEGORY
+Productivity
+
+
+TAGS
+focus, pomodoro timer, website blocker, productivity, distraction blocker
+
+
+DETAILED DESCRIPTION
+
+You lose 2 hours a day to distracting websites. That is 30 full days a year spent scrolling instead of working. Focus Mode Pro puts you back in control. Block distracting sites in one click, start a Pomodoro timer, and get more done today.
+
+Focus Mode Pro is a free, privacy-first website blocker and focus timer for Chrome. It combines site blocking, timed focus sessions, and productivity stats in one lightweight extension.
+
+
+WHY FOCUS MODE PRO
+
+1. Block sites by category, not one at a time.
+Pick from 5 built-in categories (Social Media, News, Entertainment, Shopping, Gaming) to block dozens of sites instantly. Add your own custom patterns or use regex for precise control. No tedious list-building required.
+
+2. Timers that match how you actually work.
+Choose a 25/5-minute Pomodoro cycle, set a custom countdown, or run an indefinite focus session. The timer lives in your toolbar so you always know where you stand. Break reminders keep you from burning out.
+
+3. Your data stays on your device.
+Focus Mode Pro stores everything locally in your browser. No account required. No browsing history leaves your machine. The only network requests are optional license verification and anonymous usage analytics.
+
+
+FEATURES
+
+Site Blocking with Categories
+Block entire groups of distracting websites with one toggle. Five built-in categories cover the most common distractions: Social Media (Facebook, Twitter/X, Instagram, TikTok, Reddit), News, Entertainment (YouTube, Netflix, Twitch), Shopping (Amazon, eBay), and Gaming. Each category contains pre-configured domain lists so you start blocking immediately after install.
+
+Custom Block Patterns
+Add any domain to your block list. Use simple text matching for straightforward sites or write regex patterns for advanced filtering. Block subdomains, specific paths, or entire domain families with a single rule.
+
+Pomodoro Timer
+Work in focused 25-minute intervals followed by 5-minute breaks. This proven technique helps you maintain concentration without fatigue. Customize both work and break durations to fit your rhythm. The timer displays in your toolbar so you can check your remaining time without switching tabs.
+
+Custom Timer
+Set any duration for a single focus session. Use this when a task needs 45 minutes, 2 hours, or any non-standard block of time.
+
+Indefinite Focus Mode
+Start a focus session with no time limit. Keep it running until you decide to stop. Useful for deep work sessions where you do not want a timer interrupting your flow.
+
+Auto-Scheduled Focus Hours
+Set recurring focus periods that activate automatically. Define your peak productivity hours and let Focus Mode Pro turn on blocking without any manual action. Walk away from configuration and let the schedule handle it.
+
+Break Reminders
+Get notified when it is time to step away from the screen. Regular breaks prevent mental fatigue and help you sustain focus across a full workday. Reminders appear as browser notifications so they reach you even when you are deep in another tab.
+
+Productivity Stats
+Track your daily focus time, total sessions completed, number of blocked site attempts, and current streak. See concrete evidence of your progress. Use the data to find your most productive patterns and build better habits over time.
+
+Emergency Unlock
+Access a blocked site when you genuinely need it. The emergency unlock includes a cooldown period to prevent casual overuse. This keeps the blocker strict enough to work while avoiding the frustration of being completely locked out during a real need.
+
+Password Protection
+Set a password to prevent yourself (or others) from disabling Focus Mode Pro during a session. This adds a layer of commitment that makes it harder to give in to a momentary impulse.
+
+Motivational Quotes on Blocked Pages
+When you try to visit a blocked site, you see a motivational quote instead of the page content. This brief interruption gives you a moment to reconsider and redirect your attention back to your task.
+
+Dark Theme with Violet Accent
+The interface uses a dark color scheme with violet highlights. It looks clean, reduces eye strain, and stays out of your way.
+
+Optional Pro Upgrade
+Unlock additional features by entering a Zovo Pro license key. The free version includes full site blocking, all three timer modes, stats tracking, and scheduling. No feature walls block core functionality.
+
+
+PERFECT FOR
+
+Remote workers who need boundaries between productive work and habitual browsing. When your office is also where you watch YouTube, Focus Mode Pro creates a clear separation. Block entertainment sites during work hours and let the auto-schedule handle the discipline for you.
+
+Students preparing for exams or writing papers who lose study time to social media. Turn on a 25-minute Pomodoro session, block Social Media and Entertainment categories, and get through your reading list. The stats page shows you exactly how many hours you studied this week.
+
+Anyone building better digital habits who wants to reduce screen time on specific sites. Use the indefinite timer to block shopping or news sites all day. Check your blocked-attempt count at the end of the week to see how often you reached for a distraction without thinking.
+
+
+HOW IT WORKS
+
+Step 1: Install and pick your distractions.
+Click the Focus Mode Pro icon in your toolbar. Select the site categories you want to block, or add custom domains. Setup takes under 60 seconds.
+
+Step 2: Start a focus session.
+Choose Pomodoro, custom timer, or indefinite mode. Press start. All selected sites are blocked immediately. A timer appears in your toolbar.
+
+Step 3: Work without interruption.
+Blocked sites show a motivational quote instead of content. Your stats update in real time. When your session ends, you get a notification and sites unblock automatically.
+
+
+KEYBOARD SHORTCUTS
+
+Alt+Shift+F - Toggle Focus Mode on or off instantly from any tab. No need to open the popup or click the icon.
+
+
+PRIVACY AND DATA
+
+Focus Mode Pro respects your privacy. Here is exactly what happens with your data:
+
+- All block lists, timer settings, stats, and preferences are stored locally in your browser using Chrome storage. Nothing is uploaded to a server.
+- No browsing history, blocked site logs, or personal information is transmitted anywhere.
+- The extension makes network requests only in two cases: (1) license key verification for Pro users, sent to Zovo servers, and (2) anonymous, aggregated usage analytics that contain no personally identifiable information.
+- No account creation is required. No email address is collected.
+- You can review the full privacy policy at https://zovo.one/privacy/focus-mode-blocker
+
+
+PERMISSIONS EXPLAINED
+
+Focus Mode Pro requests the following permissions. Each one is required for a specific feature:
+
+- storage: Saves your settings, block lists, timer state, and productivity stats locally in your browser. Without this, the extension could not remember your configuration between sessions.
+
+- tabs: Detects which website you are visiting so it can check against your block list. Also used to redirect blocked tabs to the blocked page. Without this, site blocking would not function.
+
+- webNavigation: Monitors page navigation events to catch redirects and new page loads that might bypass the block list. This ensures blocked sites stay blocked even when they redirect through other domains.
+
+- alarms: Powers the Pomodoro timer, custom timer, break reminders, and auto-scheduled focus hours. Chrome alarms run reliably in the background even when the popup is closed.
+
+- notifications: Sends break reminders, session-complete alerts, and scheduled focus session notifications. You stay informed without needing to watch the timer.
+
+- host_permissions (all URLs): Required to intercept and block page loads on any website you add to your block list. The extension needs access to all URLs because your custom block list can include any domain. It does not read or modify page content beyond displaying the blocked page.
+
+
+SUPPORT
+
+Website: https://zovo.one/tools/focus-mode-blocker
+Email: support@zovo.one
+Feedback and feature requests are welcome.
+
+Built by Zovo.
