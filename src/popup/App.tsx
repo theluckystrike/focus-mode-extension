@@ -74,6 +74,34 @@ const App: React.FC = () => {
   };
 
   const handleStartFocus = async (mode: TimerMode, duration?: number) => {
+    // Feature gate: custom and indefinite modes are Pro-only
+    if (mode === 'custom' || mode === 'indefinite') {
+      if (tier === 'free') {
+        chrome.tabs.create({
+          url: chrome.runtime.getURL('upgrade.html?feature=' + (mode === 'custom' ? 'custom_timer' : 'indefinite_mode') + '&reason=Custom%20focus%20modes%20require%20Pro')
+        });
+        return;
+      }
+    }
+
+    // Record focus session usage for free tier tracking
+    if (tier === 'free') {
+      try {
+        const gateResult = await messaging.send<{ featureId: string }, { allowed: boolean; reason: string | null }>('CHECK_FEATURE_GATE', { featureId: 'focus_sessions' });
+        if (gateResult.success && gateResult.data && !gateResult.data.allowed) {
+          chrome.tabs.create({
+            url: chrome.runtime.getURL('upgrade.html?feature=focus_sessions&reason=' + encodeURIComponent(gateResult.data.reason || 'Daily session limit reached'))
+          });
+          return;
+        }
+        // Record the usage
+        await messaging.send('RECORD_FEATURE_USAGE', { featureId: 'focus_sessions' });
+      } catch {
+        // Don't block on gate check failure
+      }
+    }
+
+    // Original logic continues...
     const response = await messaging.send<{ mode: TimerMode; duration?: number }, TimerState>(
       'START_FOCUS',
       { mode, duration }
@@ -277,6 +305,19 @@ const App: React.FC = () => {
             Statistics
           </button>
         </div>
+
+        {/* Upgrade Banner for Free Users */}
+        {tier === 'free' && (
+          <div className="mt-3 flex items-center justify-between rounded-lg border border-zovo-border bg-gradient-to-r from-violet-950/30 to-purple-950/20 px-3 py-2.5">
+            <span className="text-xs text-zovo-text-secondary">Unlock all features</span>
+            <button
+              onClick={() => chrome.tabs.create({ url: chrome.runtime.getURL('upgrade.html') })}
+              className="text-xs font-semibold text-zovo-violet hover:text-violet-300 transition-colors"
+            >
+              Upgrade to Pro
+            </button>
+          </div>
+        )}
       </main>
 
       <Footer version={chrome.runtime.getManifest().version} tier={tier} />

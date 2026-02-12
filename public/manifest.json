@@ -68,7 +68,7 @@
 
   "web_accessible_resources": [
     {
-      "resources": ["blocked.html", "blocked.js", "help.html", "help.js", "welcome.html", "welcome.js", "styles.css", "vendor.js", "icons/*"],
+      "resources": ["blocked.html", "blocked.js", "help.html", "help.js", "welcome.html", "welcome.js", "upgrade.html", "upgrade.js", "dashboard.html", "dashboard.js", "styles.css", "vendor.js", "icons/*"],
       "matches": ["<all_urls>"]
     }
   ]

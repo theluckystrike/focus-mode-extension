@@ -18,6 +18,7 @@ import {
   flushAnalyticsQueue,
   trackEvent,
 } from '../lib/payments';
+import { featureManager, usageTracker } from '../features';
 import {
   Settings,
   FocusStatus,
@@ -31,6 +32,19 @@ import {
   hashPassword,
   verifyPassword,
 } from '../lib/types';
+
+async function recordDailyHistory(): Promise<void> {
+  const today = new Date().toISOString().split('T')[0];
+  const result = await chrome.storage.local.get('dailyHistory');
+  const history: Record<string, number> = result.dailyHistory || {};
+  history[today] = (history[today] || 0) + 1;
+  // Keep only last 30 days
+  const keys = Object.keys(history).sort();
+  if (keys.length > 30) {
+    keys.slice(0, keys.length - 30).forEach(k => delete history[k]);
+  }
+  await chrome.storage.local.set({ dailyHistory: history });
+}
 
 // Settings cache to avoid redundant chrome.storage.local reads
 let settingsCache: Settings | null = null;
@@ -866,6 +880,41 @@ messaging.createListener({
     return { hasFeature: has };
   },
 
+  CHECK_FEATURE_GATE: async (payload: unknown) => {
+    const { featureId } = payload as { featureId: string };
+    await featureManager.refreshTier();
+    const access = featureManager.checkFeature(featureId);
+    if (!access.available) {
+      return { allowed: false, reason: access.reason, remaining: null };
+    }
+    const tier = featureManager.getCurrentTier();
+    const limitCheck = await usageTracker.checkLimit(featureId, tier);
+    return limitCheck;
+  },
+
+  RECORD_FEATURE_USAGE: async (payload: unknown) => {
+    const { featureId } = payload as { featureId: string };
+    const tier = featureManager.getCurrentTier();
+    const result = await usageTracker.recordUsage(featureId, tier);
+    // Also record daily history for dashboard
+    if (result.allowed) {
+      await recordDailyHistory();
+    }
+    return result;
+  },
+
+  GET_FEATURE_USAGE: async (payload: unknown) => {
+    const { featureId } = payload as { featureId: string };
+    return usageTracker.getUsage(featureId);
+  },
+
+  GET_ALL_FEATURE_USAGE: async () => {
+    return {
+      usage: usageTracker.getAllUsage(),
+      totalActions: usageTracker.getTotalActions(),
+    };
+  },
+
   PING: async () => {
     return 'pong';
   },
@@ -877,6 +926,10 @@ messaging.createListener({
 
 // Restore state from storage on startup
 async function initializeState(): Promise<void> {
+  // Initialize feature management
+  await featureManager.init();
+  await usageTracker.init();
+
   settingsCache = await storage.getSettings();
   const settings = settingsCache;
 

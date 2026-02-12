@@ -206,7 +206,11 @@ export type MessageAction =
   | 'REMOVE_LICENSE'
   | 'CHECK_PRO_STATUS'
   | 'GET_TIER'
-  | 'CHECK_FEATURE';
+  | 'CHECK_FEATURE'
+  | 'CHECK_FEATURE_GATE'
+  | 'RECORD_FEATURE_USAGE'
+  | 'GET_FEATURE_USAGE'
+  | 'GET_ALL_FEATURE_USAGE';
 
 /** Base message structure */
 export interface Message<T = unknown> {

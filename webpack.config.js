@@ -16,6 +16,8 @@ module.exports = (env, argv) => {
       blocked: './src/blocked/index.tsx',
       help: './src/help/index.tsx',
       welcome: './src/welcome/index.tsx',
+      upgrade: './src/upgrade/index.tsx',
+      dashboard: './src/dashboard/index.tsx',
     },
     output: {
       path: path.resolve(__dirname, 'dist'),
@@ -97,6 +99,18 @@ module.exports = (env, argv) => {
         chunks: ['vendor', 'styles', 'welcome'],
         chunksSortMode: 'manual',
       }),
+      new HtmlWebpackPlugin({
+        template: './src/upgrade/index.html',
+        filename: 'upgrade.html',
+        chunks: ['vendor', 'styles', 'upgrade'],
+        chunksSortMode: 'manual',
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/dashboard/index.html',
+        filename: 'dashboard.html',
+        chunks: ['vendor', 'styles', 'dashboard'],
+        chunksSortMode: 'manual',
+      }),
     ],
     optimization: {
       minimize: isProduction,
@@ -125,7 +139,7 @@ module.exports = (env, argv) => {
             name: 'styles',
             type: 'css/mini-extract',
             chunks: (chunk) => {
-              return chunk.name === 'popup' || chunk.name === 'options' || chunk.name === 'blocked' || chunk.name === 'help' || chunk.name === 'welcome';
+              return chunk.name === 'popup' || chunk.name === 'options' || chunk.name === 'blocked' || chunk.name === 'help' || chunk.name === 'welcome' || chunk.name === 'upgrade' || chunk.name === 'dashboard';
             },
             enforce: true,
           },
@@ -133,7 +147,7 @@ module.exports = (env, argv) => {
             test: /[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/,
             name: 'vendor',
             chunks: (chunk) => {
-              return chunk.name === 'popup' || chunk.name === 'options' || chunk.name === 'blocked' || chunk.name === 'help' || chunk.name === 'welcome';
+              return chunk.name === 'popup' || chunk.name === 'options' || chunk.name === 'blocked' || chunk.name === 'help' || chunk.name === 'welcome' || chunk.name === 'upgrade' || chunk.name === 'dashboard';
             },
             priority: 10,
             reuseExistingChunk: true,
