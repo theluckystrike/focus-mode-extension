@@ -121,7 +121,7 @@ const LimitBanner: React.FC<{ limitInfo: LimitInfo }> = ({ limitInfo }) => {
   const message = getLimitReasonLabel(limitInfo.feature, limitInfo.reason);
 
   return (
-    <div className="bg-amber-900/30 border border-amber-600/50 rounded-xl p-4 mb-8">
+    <div className="bg-amber-900/30 border border-amber-600/50 rounded-xl p-4 mb-8 zovo-slide-up">
       <div className="flex items-start gap-3">
         <span className="text-amber-400 shrink-0 mt-0.5">
           <AlertIcon />
@@ -162,7 +162,8 @@ const ComparisonTable: React.FC = () => {
         {comparisonData.map((row, index) => (
           <tr
             key={row.feature}
-            className={index < comparisonData.length - 1 ? 'border-b border-zovo-border/50' : ''}
+            className={`zovo-slide-up transition-colors hover:bg-zovo-bg-tertiary/30 ${index < comparisonData.length - 1 ? 'border-b border-zovo-border/50' : ''}`}
+            style={{ animationDelay: `${index * 40}ms`, animationFillMode: 'both' }}
           >
             <td className="px-6 py-3.5 text-sm text-zovo-text-primary">{row.feature}</td>
             <td className="text-center px-4 py-3.5">
@@ -222,10 +223,10 @@ const PricingCard: React.FC<PricingCardProps> = ({
   onUpgrade,
 }) => (
   <div
-    className={`relative rounded-xl p-6 border transition-all ${
+    className={`relative rounded-xl p-6 border transition-all duration-200 hover:-translate-y-0.5 ${
       featured
         ? 'border-zovo-violet bg-zovo-bg-secondary shadow-zovo-glow'
-        : 'border-zovo-border bg-zovo-bg-secondary hover:border-zovo-border-light'
+        : 'border-zovo-border bg-zovo-bg-secondary hover:border-zovo-border-light hover:shadow-[0_4px_20px_rgba(0,0,0,0.3)]'
     }`}
   >
     {badge && (
@@ -248,8 +249,12 @@ const PricingCard: React.FC<PricingCardProps> = ({
     </div>
 
     <ul className="space-y-3 mb-6">
-      {features.map((feature) => (
-        <li key={feature} className="flex items-center gap-2.5 text-sm text-zovo-text-secondary">
+      {features.map((feature, index) => (
+        <li
+          key={feature}
+          className="flex items-center gap-2.5 text-sm text-zovo-text-secondary zovo-slide-up"
+          style={{ animationDelay: `${index * 60 + 100}ms`, animationFillMode: 'both' }}
+        >
           <span className="text-focus-green shrink-0">
             <CheckIcon />
           </span>
@@ -260,9 +265,9 @@ const PricingCard: React.FC<PricingCardProps> = ({
 
     <button
       onClick={onUpgrade}
-      className={`w-full py-3 rounded-xl font-semibold text-sm transition-colors ${
+      className={`w-full py-3 rounded-xl font-semibold text-sm transition-all duration-200 active:scale-[0.98] ${
         featured
-          ? 'bg-zovo-violet hover:bg-zovo-violet-hover text-white shadow-zovo-glow'
+          ? 'bg-zovo-violet hover:bg-zovo-violet-hover text-white zovo-cta-pulse'
           : 'bg-zovo-bg-tertiary hover:bg-zovo-bg-elevated text-zovo-text-primary border border-zovo-border'
       }`}
     >
@@ -325,7 +330,7 @@ const UpgradePage: React.FC = () => {
         <div className="absolute inset-0 zovo-hero-gradient-overlay" />
 
         <div className="relative max-w-4xl mx-auto px-8 pt-16 pb-10 text-center">
-          <div className="flex items-center justify-center gap-3 mb-5">
+          <div className="flex items-center justify-center gap-3 mb-5 zovo-fade-in">
             <Logo size={48} />
             <div className="flex items-center gap-2.5">
               <h1 className="text-2xl font-bold tracking-tight">{t('appNameFull')}</h1>
@@ -334,7 +339,7 @@ const UpgradePage: React.FC = () => {
               </span>
             </div>
           </div>
-          <p className="text-lg text-zovo-text-secondary max-w-xl mx-auto leading-relaxed">
+          <p className="text-lg text-zovo-text-secondary max-w-xl mx-auto leading-relaxed zovo-slide-up" style={{ animationDelay: '100ms', animationFillMode: 'both' }}>
             {t('upgUnlockPower')}
           </p>
         </div>
@@ -402,7 +407,7 @@ const UpgradePage: React.FC = () => {
             SOCIAL PROOF
             ================================================================ */}
         <section className="mb-12">
-          <div className="bg-zovo-bg-secondary border border-zovo-border rounded-xl p-8 text-center">
+          <div className="bg-zovo-bg-secondary border border-zovo-border rounded-xl p-8 text-center transition-all duration-200 hover:border-zovo-border-light">
             <p className="text-lg text-zovo-text-secondary italic leading-relaxed">
               &ldquo;{t('upgTestimonial')}&rdquo;
             </p>
@@ -420,7 +425,7 @@ const UpgradePage: React.FC = () => {
             {t('upgAlreadyHaveLicense')}{' '}
             <button
               onClick={handleOpenAccount}
-              className="text-zovo-violet hover:underline font-medium"
+              className="text-zovo-violet hover:underline font-medium transition-colors"
             >
               {t('upgActivateHere')}
             </button>

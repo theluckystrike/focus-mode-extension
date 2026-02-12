@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { t } from '../lib/i18n';
 import '../popup/styles.css';
@@ -66,10 +66,14 @@ interface FeatureCardProps {
   icon: React.ReactNode;
   title: string;
   description: string;
+  delay: number;
 }
 
-const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description }) => (
-  <div className="bg-zovo-bg-secondary border border-zovo-border rounded-xl p-6 hover:border-zovo-violet/40 transition-colors">
+const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, delay }) => (
+  <div
+    className="bg-zovo-bg-secondary border border-zovo-border rounded-xl p-6 transition-all duration-200 hover:border-zovo-violet/40 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(124,58,237,0.15)] zovo-slide-up"
+    style={{ animationDelay: `${delay}ms`, animationFillMode: 'both' }}
+  >
     <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-zovo-violet/15 text-zovo-violet mb-4">
       {icon}
     </div>
@@ -105,6 +109,37 @@ const Step: React.FC<StepProps> = ({ number, title, description }) => (
 // ============================================================================
 
 const WelcomePage: React.FC = () => {
+  const stepsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // IntersectionObserver for "How it works" steps
+    const stepsContainer = stepsRef.current;
+    if (!stepsContainer) return;
+
+    const stepElements = stepsContainer.querySelectorAll('.zovo-reveal');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Add staggered delay based on data attribute
+            const el = entry.target as HTMLElement;
+            const delay = el.dataset.revealDelay || '0';
+            setTimeout(() => {
+              el.classList.add('zovo-visible');
+            }, parseInt(delay, 10));
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    stepElements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   const handleGetStarted = () => {
     const el = document.getElementById('features');
     if (el) {
@@ -132,18 +167,19 @@ const WelcomePage: React.FC = () => {
         <div className="absolute inset-0 zovo-hero-gradient-overlay" />
 
         <div className="relative max-w-4xl mx-auto px-8 pt-20 pb-16 text-center">
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center mb-6 zovo-float">
             <Logo size={72} />
           </div>
-          <h1 className="text-4xl font-bold mb-4 tracking-tight">
+          <h1 className="text-4xl font-bold mb-4 tracking-tight zovo-slide-up" style={{ animationDelay: '100ms', animationFillMode: 'both' }}>
             {t('welReady')}
           </h1>
-          <p className="text-lg text-zovo-text-secondary max-w-2xl mx-auto mb-8 leading-relaxed">
+          <p className="text-lg text-zovo-text-secondary max-w-2xl mx-auto mb-8 leading-relaxed zovo-slide-up" style={{ animationDelay: '200ms', animationFillMode: 'both' }}>
             {t('welSubtitle')}
           </p>
           <button
             onClick={handleGetStarted}
-            className="inline-flex items-center gap-2 px-8 py-3 bg-zovo-violet hover:bg-zovo-violet-hover text-white font-semibold rounded-xl transition-colors shadow-zovo-glow"
+            className="inline-flex items-center gap-2 px-8 py-3 bg-zovo-violet hover:bg-zovo-violet-hover text-white font-semibold rounded-xl transition-all duration-200 shadow-zovo-glow hover:shadow-[0_0_50px_rgba(124,58,237,0.35)] active:scale-[0.98] zovo-slide-up"
+            style={{ animationDelay: '300ms', animationFillMode: 'both' }}
           >
             {t('btnGetStarted')}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -167,16 +203,19 @@ const WelcomePage: React.FC = () => {
             icon={<ShieldIcon />}
             title={t('welFeatureBlocking')}
             description={t('welFeatureBlockingDesc')}
+            delay={0}
           />
           <FeatureCard
             icon={<ClockIcon />}
             title={t('welFeaturePomodoro')}
             description={t('welFeaturePomodoroDesc')}
+            delay={120}
           />
           <FeatureCard
             icon={<ChartIcon />}
             title={t('welFeatureProgress')}
             description={t('welFeatureProgressDesc')}
+            delay={240}
           />
         </div>
       </section>
@@ -184,7 +223,7 @@ const WelcomePage: React.FC = () => {
       {/* ================================================================
           HOW IT WORKS SECTION
           ================================================================ */}
-      <section className="max-w-4xl mx-auto px-8 pb-16">
+      <section className="max-w-4xl mx-auto px-8 pb-16" ref={stepsRef}>
         <h2 className="text-2xl font-bold text-center mb-2">{t('welHowTitle')}</h2>
         <p className="text-zovo-text-secondary text-center mb-10">
           {t('welHowSubtitle')}
@@ -192,21 +231,27 @@ const WelcomePage: React.FC = () => {
 
         <div className="bg-zovo-bg-secondary border border-zovo-border rounded-xl p-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Step
-              number={1}
-              title={t('welStep1Title')}
-              description={t('welStep1Desc')}
-            />
-            <Step
-              number={2}
-              title={t('welStep2Title')}
-              description={t('welStep2Desc')}
-            />
-            <Step
-              number={3}
-              title={t('welStep3Title')}
-              description={t('welStep3Desc')}
-            />
+            <div className="zovo-reveal" data-reveal-delay="0">
+              <Step
+                number={1}
+                title={t('welStep1Title')}
+                description={t('welStep1Desc')}
+              />
+            </div>
+            <div className="zovo-reveal" data-reveal-delay="150">
+              <Step
+                number={2}
+                title={t('welStep2Title')}
+                description={t('welStep2Desc')}
+              />
+            </div>
+            <div className="zovo-reveal" data-reveal-delay="300">
+              <Step
+                number={3}
+                title={t('welStep3Title')}
+                description={t('welStep3Desc')}
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -215,7 +260,7 @@ const WelcomePage: React.FC = () => {
           KEYBOARD SHORTCUTS SECTION
           ================================================================ */}
       <section className="max-w-4xl mx-auto px-8 pb-16">
-        <div className="bg-zovo-bg-secondary border border-zovo-border rounded-xl p-8">
+        <div className="bg-zovo-bg-secondary border border-zovo-border rounded-xl p-8 transition-all duration-200 hover:border-zovo-border-light">
           <div className="flex items-start gap-4">
             <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-zovo-violet/15 text-zovo-violet shrink-0">
               <KeyboardIcon />
@@ -224,11 +269,11 @@ const WelcomePage: React.FC = () => {
               <h3 className="text-lg font-semibold mb-2">{t('welKeyboardShortcuts')}</h3>
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1.5">
-                  <kbd className="inline-flex items-center justify-center px-2.5 py-1 bg-zovo-bg-tertiary border border-zovo-border-light rounded-lg text-xs font-mono text-zovo-text-secondary">Alt</kbd>
+                  <kbd className="inline-flex items-center justify-center px-2.5 py-1 bg-zovo-bg-tertiary border border-zovo-border-light rounded-lg text-xs font-mono text-zovo-text-secondary transition-colors hover:border-zovo-violet/30">Alt</kbd>
                   <span className="text-zovo-text-muted text-xs">+</span>
-                  <kbd className="inline-flex items-center justify-center px-2.5 py-1 bg-zovo-bg-tertiary border border-zovo-border-light rounded-lg text-xs font-mono text-zovo-text-secondary">Shift</kbd>
+                  <kbd className="inline-flex items-center justify-center px-2.5 py-1 bg-zovo-bg-tertiary border border-zovo-border-light rounded-lg text-xs font-mono text-zovo-text-secondary transition-colors hover:border-zovo-violet/30">Shift</kbd>
                   <span className="text-zovo-text-muted text-xs">+</span>
-                  <kbd className="inline-flex items-center justify-center px-2.5 py-1 bg-zovo-bg-tertiary border border-zovo-border-light rounded-lg text-xs font-mono text-zovo-text-secondary">F</kbd>
+                  <kbd className="inline-flex items-center justify-center px-2.5 py-1 bg-zovo-bg-tertiary border border-zovo-border-light rounded-lg text-xs font-mono text-zovo-text-secondary transition-colors hover:border-zovo-violet/30">F</kbd>
                 </div>
                 <span className="text-sm text-zovo-text-secondary">{t('welShortcutDesc')}</span>
               </div>
@@ -241,7 +286,7 @@ const WelcomePage: React.FC = () => {
           PRIVACY SECTION
           ================================================================ */}
       <section className="max-w-4xl mx-auto px-8 pb-16">
-        <div className="bg-zovo-bg-secondary border border-zovo-border rounded-xl p-8">
+        <div className="bg-zovo-bg-secondary border border-zovo-border rounded-xl p-8 transition-all duration-200 hover:border-zovo-border-light">
           <div className="flex items-start gap-4">
             <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-zovo-success/15 text-zovo-success shrink-0">
               <LockIcon />
@@ -271,7 +316,7 @@ const WelcomePage: React.FC = () => {
           </p>
           <button
             onClick={handleStartUsing}
-            className="inline-flex items-center gap-2 px-8 py-3 bg-zovo-violet hover:bg-zovo-violet-hover text-white font-semibold rounded-xl transition-colors shadow-zovo-glow"
+            className="inline-flex items-center gap-2 px-8 py-3 bg-zovo-violet hover:bg-zovo-violet-hover text-white font-semibold rounded-xl transition-all duration-200 shadow-zovo-glow hover:shadow-[0_0_50px_rgba(124,58,237,0.35)] active:scale-[0.98]"
           >
             {t('welStartUsing')}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -289,11 +334,11 @@ const WelcomePage: React.FC = () => {
           <p>
             {t('appNameFull')} v1.0.0
             {' '} | {' '}
-            <a href="mailto:support@zovo.one" className="text-zovo-violet hover:underline">
+            <a href="mailto:support@zovo.one" className="text-zovo-violet hover:underline transition-colors">
               {t('optSupport')}
             </a>
             {' '} | {' '}
-            <a href="https://zovo.one/privacy" target="_blank" rel="noopener noreferrer" className="text-zovo-violet hover:underline">
+            <a href="https://zovo.one/privacy" target="_blank" rel="noopener noreferrer" className="text-zovo-violet hover:underline transition-colors">
               {t('welPrivacyPolicy')}
             </a>
           </p>

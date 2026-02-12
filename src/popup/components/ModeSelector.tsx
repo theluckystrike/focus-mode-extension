@@ -45,9 +45,9 @@ const ModeSelector: React.FC<ModeSelectorProps> = ({
           <button
             key={mode.id}
             onClick={() => setSelectedMode(mode.id)}
-            className={`p-3 rounded-lg border text-center transition-all ${
+            className={`mode-card p-3 rounded-lg border text-center ${
               selectedMode === mode.id
-                ? 'border-zovo-violet bg-zovo-violet/10'
+                ? 'border-zovo-violet bg-zovo-violet/10 mode-card-selected'
                 : 'border-zovo-border bg-zovo-bg-secondary hover:border-zovo-border-light'
             }`}
           >
@@ -77,6 +77,7 @@ const ModeSelector: React.FC<ModeSelectorProps> = ({
             onChange={(e) => setDuration(Number(e.target.value))}
             aria-label={t('lblDuration')}
             className="w-full h-2 bg-zovo-bg-tertiary rounded-lg appearance-none cursor-pointer accent-zovo-violet"
+            style={{ '--slider-progress': `${((duration - 5) / (180 - 5)) * 100}%` } as React.CSSProperties}
           />
           <div className="flex justify-between text-xs text-zovo-text-muted">
             <span>{t('lblMinShort', ['5'])}</span>

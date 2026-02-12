@@ -103,6 +103,68 @@ body {
   background: var(--zovo-bg-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* =========================
+   SCROLLBAR - Dark Theme
+   ========================= */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 58, 237, 0.5);
+}
+
+/* =========================
+   SELECTION HIGHLIGHT
+   ========================= */
+
+::selection {
+  background: rgba(124, 58, 237, 0.35);
+  color: #FAFAF9;
+}
+
+::-moz-selection {
+  background: rgba(124, 58, 237, 0.35);
+  color: #FAFAF9;
+}
+
+/* =========================
+   FOCUS RING - Accessibility
+   ========================= */
+
+:focus-visible {
+  outline: 2px solid var(--zovo-primary);
+  outline-offset: 2px;
+}
+
+/* Remove default outline for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* =========================
+   SMOOTH TRANSITIONS - Global
+   ========================= */
+
+a,
+button,
+.zovo-card,
+.zovo-card-hover {
+  transition: all var(--zovo-transition-fast);
 }
 
 /* =========================
@@ -167,6 +229,10 @@ body {
   cursor: pointer;
   transition: all var(--zovo-transition-fast);
   text-decoration: none;
+}
+
+.zovo-btn:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
 .zovo-btn:disabled {
@@ -504,4 +570,390 @@ input[type="range"]::-moz-range-thumb {
 
 .zovo-chart-bar {
   max-width: 48px;
+}
+
+/* =========================
+   TIMER ANIMATIONS
+   ========================= */
+
+/* Smooth tick transition for timer progress ring */
+.timer-progress-ring {
+  transition: stroke-dashoffset 1s linear;
+}
+
+/* Pulsing glow effect on timer when active */
+@keyframes timer-glow-focusing {
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.3)); }
+  50% { filter: drop-shadow(0 0 14px rgba(34, 197, 94, 0.55)); }
+}
+
+@keyframes timer-glow-break {
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.3)); }
+  50% { filter: drop-shadow(0 0 14px rgba(249, 115, 22, 0.55)); }
+}
+
+@keyframes timer-glow-paused {
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.2)); }
+  50% { filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.4)); }
+}
+
+.timer-glow-focusing {
+  animation: timer-glow-focusing 2s ease-in-out infinite;
+}
+
+.timer-glow-break {
+  animation: timer-glow-break 2s ease-in-out infinite;
+}
+
+.timer-glow-paused {
+  animation: timer-glow-paused 3s ease-in-out infinite;
+}
+
+/* Timer completion celebration flash */
+@keyframes timer-complete-flash {
+  0% { opacity: 0; transform: scale(0.8); }
+  30% { opacity: 0.6; transform: scale(1.05); }
+  60% { opacity: 0.3; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1); }
+}
+
+.timer-complete-flash {
+  animation: timer-complete-flash 0.8s ease-out forwards;
+}
+
+/* Scale bounce when switching modes */
+@keyframes timer-mode-bounce {
+  0% { transform: scale(1); }
+  30% { transform: scale(0.95); }
+  60% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+.timer-mode-bounce {
+  animation: timer-mode-bounce 0.4s ease-out;
+}
+
+/* Tabular nums for stable timer digit rendering */
+.timer-digits {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* =========================
+   GEAR ROTATION HOVER
+   ========================= */
+
+.zovo-icon-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.zovo-icon-btn:hover svg {
+  transform: rotate(90deg);
+}
+
+/* =========================
+   STAT ITEM ANIMATIONS
+   ========================= */
+
+/* Count-up fade for stat values */
+@keyframes stat-fade-in {
+  0% { opacity: 0; transform: translateY(4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.stat-item {
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--zovo-border-light);
+  box-shadow: var(--zovo-shadow-sm);
+}
+
+.stat-value {
+  animation: stat-fade-in 0.4s ease-out;
+}
+
+/* =========================
+   MODE CARD ANIMATIONS
+   ========================= */
+
+.mode-card {
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mode-card:hover {
+  transform: scale(1.02);
+}
+
+.mode-card-selected {
+  box-shadow: 0 0 0 1px var(--zovo-primary), 0 0 12px rgba(124, 58, 237, 0.2);
+}
+
+/* =========================
+   RANGE SLIDER ENHANCED
+   ========================= */
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background: linear-gradient(to right, var(--zovo-primary) 0%, var(--zovo-primary) var(--slider-progress, 50%), var(--zovo-bg-tertiary) var(--slider-progress, 50%), var(--zovo-bg-tertiary) 100%);
+  border-radius: 4px;
+  height: 8px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  margin-top: -6px;
+  box-shadow: 0 0 6px rgba(124, 58, 237, 0.3);
+}
+
+input[type="range"]:active::-webkit-slider-thumb {
+  transform: scale(1.2);
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+}
+
+/* =========================
+   POPUP STATE TRANSITIONS
+   ========================= */
+
+.popup-content-transition {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.popup-content-enter {
+  animation: popup-section-in 0.3s ease-out;
+}
+
+@keyframes popup-section-in {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================
+   ANIMATION UTILITIES
+   ========================= */
+
+.zovo-fade-in {
+  animation: zovo-fadeIn 0.3s ease-out;
+}
+
+.zovo-slide-up {
+  animation: zovo-slideUp 0.3s ease-out;
+}
+
+@keyframes zovo-fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes zovo-slideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Staggered entrance delays */
+.zovo-stagger-1 { animation-delay: 0ms; animation-fill-mode: both; }
+.zovo-stagger-2 { animation-delay: 80ms; animation-fill-mode: both; }
+.zovo-stagger-3 { animation-delay: 160ms; animation-fill-mode: both; }
+.zovo-stagger-4 { animation-delay: 240ms; animation-fill-mode: both; }
+.zovo-stagger-5 { animation-delay: 320ms; animation-fill-mode: both; }
+.zovo-stagger-6 { animation-delay: 400ms; animation-fill-mode: both; }
+
+/* Subtle float animation for logos/icons */
+@keyframes zovo-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+.zovo-float {
+  animation: zovo-float 3s ease-in-out infinite;
+}
+
+/* CTA glow pulse */
+@keyframes zovo-cta-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.25), 0 0 60px rgba(124, 58, 237, 0.1); }
+  50% { box-shadow: 0 0 30px rgba(124, 58, 237, 0.4), 0 0 80px rgba(124, 58, 237, 0.15); }
+}
+
+.zovo-cta-pulse {
+  animation: zovo-cta-pulse 2.5s ease-in-out infinite;
+}
+
+/* Chart bar grow animation */
+@keyframes zovo-bar-grow {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+.zovo-bar-grow {
+  transform-origin: bottom;
+  animation: zovo-bar-grow 0.6s ease-out forwards;
+}
+
+/* Intersection observer reveal */
+.zovo-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.zovo-reveal.zovo-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   BLOCKED PAGE - Motivational & Beautiful Design
+   ========================================================================== */
+
+/* Animated gradient background */
+.blocked-page-bg {
+  background: #0A0A0B;
+  position: relative;
+}
+
+.blocked-page-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(124, 58, 237, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 20% 80%, rgba(91, 33, 182, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+  background-size: 200% 200%;
+  animation: blockedGradientShift 15s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes blockedGradientShift {
+  0% {
+    background-position: 0% 0%;
+    opacity: 0.8;
+  }
+  25% {
+    background-position: 100% 50%;
+    opacity: 1;
+  }
+  50% {
+    background-position: 50% 100%;
+    opacity: 0.9;
+  }
+  75% {
+    background-position: 0% 50%;
+    opacity: 1;
+  }
+  100% {
+    background-position: 0% 0%;
+    opacity: 0.8;
+  }
+}
+
+/* Shield icon subtle glow animation */
+.blocked-shield-icon {
+  animation: blockedSubtleGlow 3s ease-in-out infinite;
+}
+
+@keyframes blockedSubtleGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 12px rgba(124, 58, 237, 0.3))
+            drop-shadow(0 0 40px rgba(124, 58, 237, 0.1));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(124, 58, 237, 0.5))
+            drop-shadow(0 0 60px rgba(124, 58, 237, 0.2));
+  }
+}
+
+/* Timer text glow */
+.blocked-timer-glow {
+  text-shadow: 0 0 30px rgba(124, 58, 237, 0.3);
+}
+
+/* Breathing circle animation */
+.blocked-breathe-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.08) 0%, transparent 70%);
+  animation: blockedBreathe 6s ease-in-out infinite;
+  margin: 0 auto;
+}
+
+.blocked-breathe-circle-inner {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(124, 58, 237, 0.04);
+  animation: blockedBreathe 6s ease-in-out infinite;
+  animation-delay: 0.3s;
+}
+
+@keyframes blockedBreathe {
+  0%, 100% {
+    transform: scale(0.85);
+    opacity: 0.5;
+    border-color: rgba(124, 58, 237, 0.15);
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+    border-color: rgba(124, 58, 237, 0.35);
+  }
+}
+
+/* Go Back button - inviting gradient style */
+.blocked-go-back-btn {
+  background: linear-gradient(135deg, #7C3AED, #6D28D9);
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3),
+              0 0 40px rgba(124, 58, 237, 0.1);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.blocked-go-back-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.blocked-go-back-btn:hover {
+  box-shadow: 0 6px 28px rgba(124, 58, 237, 0.45),
+              0 0 60px rgba(124, 58, 237, 0.15);
+  transform: translateY(-1px);
+}
+
+.blocked-go-back-btn:hover::before {
+  opacity: 1;
+}
+
+.blocked-go-back-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 12px rgba(124, 58, 237, 0.3);
+}
+
+/* Fade in for unlock confirm/password panels */
+.blocked-fade-in {
+  animation: blockedFadeIn 0.3s ease-out;
+}
+
+@keyframes blockedFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

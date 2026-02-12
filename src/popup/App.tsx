@@ -251,28 +251,36 @@ const App: React.FC = () => {
 
       <main className="flex-1 p-4 space-y-4">
         {/* Timer Display */}
-        <Timer
-          timerState={timerState}
-          onStart={() => handleStartFocus(settings?.focusMode.timerMode ?? 'pomodoro')}
-          onStop={handleStopFocus}
-          onPause={handlePauseFocus}
-          onResume={handleResumeFocus}
-          onStartBreak={handleStartBreak}
-          onSkipBreak={handleSkipBreak}
-        />
+        <div className="popup-content-transition popup-content-enter" key={`timer-${status}`}>
+          <Timer
+            timerState={timerState}
+            onStart={() => handleStartFocus(settings?.focusMode.timerMode ?? 'pomodoro')}
+            onStop={handleStopFocus}
+            onPause={handlePauseFocus}
+            onResume={handleResumeFocus}
+            onStartBreak={handleStartBreak}
+            onSkipBreak={handleSkipBreak}
+          />
+        </div>
 
         {/* Mode Selector (only show when idle) */}
         {!isActive && !isPaused && settings && (
-          <ModeSelector
-            currentMode={settings.focusMode.timerMode}
-            customDuration={settings.focusMode.customDuration}
-            pomodoroSettings={settings.pomodoro}
-            onStartFocus={handleStartFocus}
-          />
+          <div className="popup-content-enter">
+            <ModeSelector
+              currentMode={settings.focusMode.timerMode}
+              customDuration={settings.focusMode.customDuration}
+              pomodoroSettings={settings.pomodoro}
+              onStartFocus={handleStartFocus}
+            />
+          </div>
         )}
 
         {/* Quick Stats */}
-        {stats && <QuickStats stats={stats} />}
+        {stats && (
+          <div className="popup-content-enter">
+            <QuickStats stats={stats} />
+          </div>
+        )}
 
         {/* Quick Actions */}
         <div className="flex gap-2">

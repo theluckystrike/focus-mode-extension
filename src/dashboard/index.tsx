@@ -176,13 +176,15 @@ interface StatCardProps {
   value: string;
   subtext?: string;
   accent?: boolean;
+  delay?: number;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ icon, label, value, subtext, accent }) => (
+const StatCard: React.FC<StatCardProps> = ({ icon, label, value, subtext, accent, delay = 0 }) => (
   <div
-    className={`bg-zovo-bg-secondary rounded-xl p-5 border ${
+    className={`bg-zovo-bg-secondary rounded-xl p-5 border transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_4px_16px_rgba(0,0,0,0.3)] zovo-slide-up ${
       accent ? 'border-zovo-violet' : 'border-zovo-border'
     }`}
+    style={{ animationDelay: `${delay}ms`, animationFillMode: 'both' }}
   >
     <div className="flex items-center gap-3 mb-3">
       <div
@@ -239,7 +241,7 @@ const WeeklyChart: React.FC<WeeklyChartProps> = ({ dailyStats }) => {
     <div className="bg-zovo-bg-secondary border border-zovo-border rounded-xl p-6">
       <h3 className="text-lg font-semibold text-zovo-text-primary mb-6">{t('dashWeeklyActivity')}</h3>
       <div className="flex items-end justify-between gap-3 zovo-chart-height">
-        {chartData.map((day) => {
+        {chartData.map((day, dayIndex) => {
           const barHeight = day.focusTime > 0 ? Math.max((day.focusTime / maxFocusTime) * 140, 8) : 4;
           const isToday = day.date === getTodayString();
           const isHovered = hoveredDay === day.date;
@@ -269,14 +271,14 @@ const WeeklyChart: React.FC<WeeklyChartProps> = ({ dailyStats }) => {
 
               {/* Bar */}
               <div
-                className={`w-full rounded-t-md transition-all duration-200 cursor-pointer zovo-chart-bar ${
+                className={`w-full rounded-t-md transition-all duration-200 cursor-pointer zovo-chart-bar zovo-bar-grow ${
                   day.focusTime > 0
                     ? isHovered
                       ? 'bg-zovo-violet'
                       : 'bg-zovo-violet/70'
                     : 'bg-zovo-bg-tertiary'
                 }`}
-                style={{ height: `${barHeight}px` }}
+                style={{ height: `${barHeight}px`, animationDelay: `${dayIndex * 80}ms`, animationFillMode: 'both' }}
               />
 
               {/* Label */}
@@ -345,8 +347,12 @@ const FocusStatsBreakdown: React.FC<FocusStatsBreakdownProps> = ({ stats }) => {
     <div className="bg-zovo-bg-secondary border border-zovo-border rounded-xl p-6">
       <h3 className="text-lg font-semibold text-zovo-text-primary mb-4">{t('dashFocusStats')}</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {items.map((item) => (
-          <div key={item.label} className="flex items-center gap-3 p-3 bg-zovo-bg-primary rounded-lg">
+        {items.map((item, index) => (
+          <div
+            key={item.label}
+            className="flex items-center gap-3 p-3 bg-zovo-bg-primary rounded-lg transition-all duration-200 hover:bg-zovo-bg-tertiary/50 zovo-slide-up"
+            style={{ animationDelay: `${index * 80}ms`, animationFillMode: 'both' }}
+          >
             <div className={`flex items-center justify-center w-10 h-10 rounded-lg ${item.bgColor} ${item.color}`}>
               {item.icon}
             </div>
@@ -383,7 +389,7 @@ const UpgradeCTA: React.FC<UpgradeCTAProps> = ({ tier, featurePercent }) => {
       </p>
       <button
         onClick={handleUpgrade}
-        className="inline-flex items-center gap-2 px-8 py-3 bg-zovo-violet hover:bg-zovo-violet-hover text-white font-semibold rounded-xl transition-colors shadow-zovo-glow"
+        className="inline-flex items-center gap-2 px-8 py-3 bg-zovo-violet hover:bg-zovo-violet-hover text-white font-semibold rounded-xl transition-all duration-200 shadow-zovo-glow zovo-cta-pulse active:scale-[0.98]"
       >
         {t('btnUpgradePro')}
         <ArrowUpRightIcon />
@@ -558,14 +564,14 @@ const DashboardPage: React.FC = () => {
             <div className="flex items-center gap-3">
               <button
                 onClick={handleExportStats}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-zovo-bg-tertiary border border-zovo-border text-zovo-text-secondary text-sm rounded-lg hover:bg-zovo-bg-elevated hover:text-zovo-text-primary transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-zovo-bg-tertiary border border-zovo-border text-zovo-text-secondary text-sm rounded-lg hover:bg-zovo-bg-elevated hover:text-zovo-text-primary transition-all duration-150 active:scale-[0.98]"
               >
                 <DownloadIcon />
                 {t('btnExport')}
               </button>
               <button
                 onClick={handleOpenSettings}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-zovo-bg-tertiary border border-zovo-border text-zovo-text-secondary text-sm rounded-lg hover:bg-zovo-bg-elevated hover:text-zovo-text-primary transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-zovo-bg-tertiary border border-zovo-border text-zovo-text-secondary text-sm rounded-lg hover:bg-zovo-bg-elevated hover:text-zovo-text-primary transition-all duration-150 active:scale-[0.98]"
               >
                 <SettingsIcon />
                 {t('btnSettings')}
@@ -589,24 +595,28 @@ const DashboardPage: React.FC = () => {
               value={formatFocusTime(stats.totalFocusTime)}
               subtext={t('optTotalFocusTime')}
               accent
+              delay={0}
             />
             <StatCard
               icon={<ZapIcon />}
               label={t('dashSessionsToday')}
               value={String(sessionsToday)}
               subtext={todayStats ? t('dashFocused', [formatFocusTime(todayStats.totalFocusTime)]) : t('dashNoSessionsYet')}
+              delay={80}
             />
             <StatCard
               icon={<TargetIcon />}
               label={t('optTotalSessions')}
               value={String(stats.totalSessions)}
               subtext={stats.totalSessions > 0 ? t('dashAvgEach', [formatFocusTime(calculateAverageSessionDuration(stats))]) : t('dashGetStarted')}
+              delay={160}
             />
             <StatCard
               icon={<ShieldIcon />}
               label={t('optSitesBlocked')}
               value={String(stats.totalSitesBlocked)}
               subtext={t('dashDistractionsPrevented')}
+              delay={240}
             />
           </div>
         </section>

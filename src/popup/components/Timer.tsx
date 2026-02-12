@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { t } from '../../lib/i18n';
 import type { TimerState } from '../../lib/types';
 import { formatTime } from '../../lib/types';
@@ -29,6 +29,35 @@ const Timer: React.FC<TimerProps> = ({
   const pomodoroCount = timerState?.pomodoroCount ?? 0;
 
   const progress = totalSeconds > 0 ? ((totalSeconds - remainingSeconds) / totalSeconds) * 100 : 0;
+
+  // Track previous status for mode-switch bounce animation
+  const prevStatusRef = useRef(status);
+  const [modeBounce, setModeBounce] = useState(false);
+  const [showComplete, setShowComplete] = useState(false);
+
+  useEffect(() => {
+    const prevStatus = prevStatusRef.current;
+    prevStatusRef.current = status;
+
+    // Trigger bounce when switching between focusing and break
+    if (
+      (prevStatus === 'focusing' && status === 'break') ||
+      (prevStatus === 'break' && status === 'focusing')
+    ) {
+      setModeBounce(true);
+      const timer = setTimeout(() => setModeBounce(false), 400);
+      return () => clearTimeout(timer);
+    }
+
+    // Trigger completion flash when timer reaches 100% and switches to idle/break
+    if (prevStatus === 'focusing' && (status === 'break' || status === 'idle')) {
+      setShowComplete(true);
+      const timer = setTimeout(() => setShowComplete(false), 800);
+      return () => clearTimeout(timer);
+    }
+
+    return undefined;
+  }, [status]);
 
   const getStatusText = () => {
     switch (status) {
@@ -69,11 +98,32 @@ const Timer: React.FC<TimerProps> = ({
     }
   };
 
+  const getGlowClass = () => {
+    switch (status) {
+      case 'focusing':
+        return 'timer-glow-focusing';
+      case 'break':
+        return 'timer-glow-break';
+      case 'paused':
+        return 'timer-glow-paused';
+      default:
+        return '';
+    }
+  };
+
   return (
     <div className="zovo-card text-center">
       {/* Timer Circle */}
-      <div className="relative w-40 h-40 mx-auto mb-4" role="img" aria-label={mode === 'indefinite' && status !== 'idle' ? getStatusText() : `${formatTime(remainingSeconds)} ${getStatusText()}`}>
-        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100" aria-hidden="true">
+      <div
+        className={`relative w-40 h-40 mx-auto mb-4 ${modeBounce ? 'timer-mode-bounce' : ''}`}
+        role="img"
+        aria-label={mode === 'indefinite' && status !== 'idle' ? getStatusText() : `${formatTime(remainingSeconds)} ${getStatusText()}`}
+      >
+        <svg
+          className={`w-full h-full transform -rotate-90 ${getGlowClass()}`}
+          viewBox="0 0 100 100"
+          aria-hidden="true"
+        >
           {/* Background circle */}
           <circle
             cx="50"
@@ -84,7 +134,7 @@ const Timer: React.FC<TimerProps> = ({
             strokeWidth="6"
             className="text-zovo-bg-tertiary"
           />
-          {/* Progress circle */}
+          {/* Progress circle with smooth tick transition */}
           {status !== 'idle' && mode !== 'indefinite' && (
             <circle
               cx="50"
@@ -96,14 +146,26 @@ const Timer: React.FC<TimerProps> = ({
               strokeLinecap="round"
               strokeDasharray={`${2 * Math.PI * 45}`}
               strokeDashoffset={`${2 * Math.PI * 45 * (1 - progress / 100)}`}
-              className="transition-all duration-1000"
+              className="timer-progress-ring"
+            />
+          )}
+          {/* Completion celebration flash circle */}
+          {showComplete && (
+            <circle
+              cx="50"
+              cy="50"
+              r="45"
+              fill={getRingColor()}
+              fillOpacity="0.3"
+              stroke="none"
+              className="timer-complete-flash"
             />
           )}
         </svg>
 
         {/* Timer text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-3xl font-bold text-zovo-text-primary">
+          <span className="text-3xl font-bold text-zovo-text-primary timer-digits">
             {mode === 'indefinite' && status !== 'idle' ? t('lblOn') : formatTime(remainingSeconds)}
           </span>
           <span className={`text-sm ${getStatusColor()}`}>{getStatusText()}</span>

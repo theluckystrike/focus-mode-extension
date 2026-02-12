@@ -325,7 +325,7 @@ const Options: React.FC = () => {
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex gap-2 mb-8 border-b border-zovo-border">
+        <div className="flex gap-2 mb-6 border-b border-zovo-border">
           {(['general', 'blocking', 'schedule', 'stats', 'advanced', 'account'] as Tab[]).map((tab) => {
             const tabLabels: Record<Tab, string> = {
               general: t('tabGeneral'),
@@ -352,13 +352,13 @@ const Options: React.FC = () => {
         </div>
 
         {/* Content */}
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* General Tab */}
           {activeTab === 'general' && (
             <>
               {/* Pomodoro Settings */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">{t('optPomodoroTimer')}</h2>
+                <h2 className="text-xl font-bold mb-3">{t('optPomodoroTimer')}</h2>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">{t('optFocusDuration')}</label>
@@ -417,26 +417,26 @@ const Options: React.FC = () => {
                     </select>
                   </div>
                 </div>
-                <div className="mt-4 space-y-3">
-                  <label className="flex items-center gap-3 cursor-pointer">
+                <div className="mt-3 pt-3 border-t border-zovo-border space-y-1">
+                  <label className="flex items-center gap-3 cursor-pointer hover:bg-zovo-bg-tertiary/50 transition-colors rounded-lg px-2 py-2">
                     <input
                       type="checkbox"
                       checked={settings.pomodoro.autoStartBreaks}
                       onChange={(e) => saveSettings({
                         pomodoro: { ...settings.pomodoro, autoStartBreaks: e.target.checked }
                       })}
-                      className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
+                      className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet transition-all duration-200"
                     />
                     <span className="text-sm">{t('optAutoStartBreaks')}</span>
                   </label>
-                  <label className="flex items-center gap-3 cursor-pointer">
+                  <label className="flex items-center gap-3 cursor-pointer hover:bg-zovo-bg-tertiary/50 transition-colors rounded-lg px-2 py-2">
                     <input
                       type="checkbox"
                       checked={settings.pomodoro.autoStartFocus}
                       onChange={(e) => saveSettings({
                         pomodoro: { ...settings.pomodoro, autoStartFocus: e.target.checked }
                       })}
-                      className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
+                      className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet transition-all duration-200"
                     />
                     <span className="text-sm">{t('optAutoStartFocus')}</span>
                   </label>
@@ -445,15 +445,15 @@ const Options: React.FC = () => {
 
               {/* Break Reminders */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">{t('optBreakReminders')}</h2>
-                <label className="flex items-center gap-3 cursor-pointer mb-4">
+                <h2 className="text-xl font-bold mb-3">{t('optBreakReminders')}</h2>
+                <label className="flex items-center gap-3 cursor-pointer hover:bg-zovo-bg-tertiary/50 transition-colors rounded-lg px-2 py-2 mb-3">
                   <input
                     type="checkbox"
                     checked={settings.breakReminders.enabled}
                     onChange={(e) => saveSettings({
                       breakReminders: { ...settings.breakReminders, enabled: e.target.checked }
                     })}
-                    className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
+                    className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet transition-all duration-200"
                   />
                   <span className="text-sm">{t('optEnableBreakReminders')}</span>
                 </label>
@@ -477,27 +477,27 @@ const Options: React.FC = () => {
 
               {/* Notifications */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">{t('optNotifications')}</h2>
-                <div className="space-y-3">
-                  <label className="flex items-center gap-3 cursor-pointer">
+                <h2 className="text-xl font-bold mb-3">{t('optNotifications')}</h2>
+                <div className="space-y-1">
+                  <label className="flex items-center gap-3 cursor-pointer hover:bg-zovo-bg-tertiary/50 transition-colors rounded-lg px-2 py-2">
                     <input
                       type="checkbox"
                       checked={settings.notifications.sessionComplete}
                       onChange={(e) => saveSettings({
                         notifications: { ...settings.notifications, sessionComplete: e.target.checked }
                       })}
-                      className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
+                      className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet transition-all duration-200"
                     />
                     <span className="text-sm">{t('optNotifySessionComplete')}</span>
                   </label>
-                  <label className="flex items-center gap-3 cursor-pointer">
+                  <label className="flex items-center gap-3 cursor-pointer hover:bg-zovo-bg-tertiary/50 transition-colors rounded-lg px-2 py-2">
                     <input
                       type="checkbox"
                       checked={settings.notifications.breakComplete}
                       onChange={(e) => saveSettings({
                         notifications: { ...settings.notifications, breakComplete: e.target.checked }
                       })}
-                      className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
+                      className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet transition-all duration-200"
                     />
                     <span className="text-sm">{t('optNotifyBreakEnd')}</span>
                   </label>
@@ -511,26 +511,26 @@ const Options: React.FC = () => {
             <>
               {/* Category Presets */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">{t('optBlockCategories')}</h2>
-                <p className="text-sm text-zovo-text-secondary mb-4">
+                <h2 className="text-xl font-bold mb-3">{t('optBlockCategories')}</h2>
+                <p className="text-sm text-zovo-text-secondary mb-3">
                   {t('optBlockCategoriesDesc')}
                 </p>
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {settings.categories.map((category) => (
-                    <div key={category.id} className={`rounded-lg border transition-all ${
+                    <div key={category.id} className={`rounded-lg border transition-all duration-200 ${
                       category.enabled
                         ? 'border-zovo-violet bg-zovo-violet/10'
-                        : 'border-zovo-border bg-zovo-bg-secondary'
+                        : 'border-zovo-border bg-zovo-bg-secondary hover:border-zovo-border-light'
                     }`}>
                       <div className="flex items-center gap-3 p-3">
                         <input
                           type="checkbox"
                           checked={category.enabled}
                           onChange={() => handleToggleCategory(category.id)}
-                          className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
+                          className="w-5 h-5 shrink-0 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet transition-all duration-200"
                         />
-                        <span className="text-lg">{category.icon}</span>
-                        <div className="flex-1">
+                        <span className="text-lg w-7 text-center shrink-0">{category.icon}</span>
+                        <div className="flex-1 min-w-0">
                           <div className="text-sm font-medium">{category.name}</div>
                           <div className="text-xs text-zovo-text-muted">
                             {t('optSitesCount', [String(category.patterns.length)])}
@@ -538,7 +538,7 @@ const Options: React.FC = () => {
                         </div>
                         <button
                           onClick={() => toggleCategoryExpand(category.id)}
-                          className="text-zovo-text-muted hover:text-zovo-text-primary transition-colors p-1"
+                          className="text-zovo-text-muted hover:text-zovo-text-primary transition-all duration-200 p-1.5 rounded-md hover:bg-zovo-bg-tertiary/50"
                           title={expandedCategories.has(category.id) ? t('optHideSites') : t('optShowSites')}
                           aria-label={expandedCategories.has(category.id) ? t('optHideSites') : t('optShowSites')}
                           aria-expanded={expandedCategories.has(category.id)}
@@ -550,7 +550,7 @@ const Options: React.FC = () => {
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="2"
-                            className={`transition-transform ${expandedCategories.has(category.id) ? 'rotate-180' : ''}`}
+                            className={`transition-transform duration-200 ${expandedCategories.has(category.id) ? 'rotate-180' : ''}`}
                             aria-hidden="true"
                           >
                             <path d="M6 9l6 6 6-6" />
@@ -580,8 +580,8 @@ const Options: React.FC = () => {
 
               {/* Custom Blocklist */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">{t('optCustomBlocklist')}</h2>
-                <div className="flex gap-2 mb-4 items-center">
+                <h2 className="text-xl font-bold mb-3">{t('optCustomBlocklist')}</h2>
+                <div className="flex gap-2 mb-3 items-center">
                   <input
                     type="text"
                     value={newBlockPattern}
@@ -636,11 +636,11 @@ const Options: React.FC = () => {
 
               {/* Whitelist */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">{t('optWhitelist')}</h2>
-                <p className="text-sm text-zovo-text-secondary mb-4">
+                <h2 className="text-xl font-bold mb-3">{t('optWhitelist')}</h2>
+                <p className="text-sm text-zovo-text-secondary mb-3">
                   {t('optWhitelistDesc')}
                 </p>
-                <div className="flex gap-2 mb-4">
+                <div className="flex gap-2 mb-3">
                   <input
                     type="text"
                     value={newWhitelistPattern}
@@ -684,22 +684,22 @@ const Options: React.FC = () => {
           {/* Schedule Tab */}
           {activeTab === 'schedule' && (
             <div className="zovo-card">
-              <h2 className="text-lg font-semibold mb-4">{t('optAutoEnableSchedule')}</h2>
-              <label className="flex items-center gap-3 cursor-pointer mb-6">
+              <h2 className="text-xl font-bold mb-3">{t('optAutoEnableSchedule')}</h2>
+              <label className="flex items-center gap-3 cursor-pointer hover:bg-zovo-bg-tertiary/50 transition-colors rounded-lg px-2 py-2 mb-4">
                 <input
                   type="checkbox"
                   checked={settings.schedule.enabled}
                   onChange={(e) => saveSettings({
                     schedule: { ...settings.schedule, enabled: e.target.checked }
                   })}
-                  className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
+                  className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet transition-all duration-200"
                 />
                 <span className="text-sm">{t('optAutoStartSchedule')}</span>
               </label>
 
               {settings.schedule.enabled && (
                 <>
-                  <div className="mb-6">
+                  <div className="mb-4 pt-3 border-t border-zovo-border">
                     <label className="block text-sm font-medium mb-3">{t('optActiveDays')}</label>
                     <div className="flex gap-2">
                       {[t('daySun'), t('dayMon'), t('dayTue'), t('dayWed'), t('dayThu'), t('dayFri'), t('daySat')].map((day, index) => (
@@ -713,7 +713,7 @@ const Options: React.FC = () => {
                               schedule: { ...settings.schedule, days: newDays }
                             });
                           }}
-                          className={`w-10 h-10 rounded-lg text-sm font-medium transition-all ${
+                          className={`w-10 h-10 rounded-lg text-sm font-medium transition-all duration-200 ${
                             settings.schedule.days.includes(index)
                               ? 'bg-zovo-violet text-white'
                               : 'bg-zovo-bg-tertiary text-zovo-text-secondary hover:bg-zovo-bg-elevated'
@@ -759,7 +759,7 @@ const Options: React.FC = () => {
             <>
               {/* Today's Summary */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">{t('optTodaySummary')}</h2>
+                <h2 className="text-xl font-bold mb-3">{t('optTodaySummary')}</h2>
                 <div className="grid grid-cols-4 gap-4">
                   <div className="text-center p-4 bg-zovo-bg-tertiary rounded-lg">
                     <div className="text-2xl font-bold text-focus-green">
@@ -790,7 +790,7 @@ const Options: React.FC = () => {
 
               {/* All-Time Stats */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">{t('optAllTimeStats')}</h2>
+                <h2 className="text-xl font-bold mb-3">{t('optAllTimeStats')}</h2>
                 <div className="grid grid-cols-3 gap-4">
                   <div className="text-center p-4 bg-zovo-bg-tertiary rounded-lg">
                     <div className="text-2xl font-bold text-focus-green">
@@ -815,7 +815,7 @@ const Options: React.FC = () => {
 
               {/* Streaks */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">{t('optStreaks')}</h2>
+                <h2 className="text-xl font-bold mb-3">{t('optStreaks')}</h2>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center p-4 bg-zovo-bg-tertiary rounded-lg">
                     <div className="text-3xl font-bold text-zovo-warning">
@@ -834,7 +834,7 @@ const Options: React.FC = () => {
 
               {/* Recent Sessions */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">{t('optRecentSessions')}</h2>
+                <h2 className="text-xl font-bold mb-3">{t('optRecentSessions')}</h2>
                 <div className="space-y-2">
                   {/* Active session */}
                   {settings.focusMode.enabled && settings.focusMode.status !== 'idle' && (
@@ -895,44 +895,44 @@ const Options: React.FC = () => {
             <>
               {/* Blocked Page Settings */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">{t('optBlockedPage')}</h2>
-                <div className="space-y-3">
-                  <label className="flex items-center gap-3 cursor-pointer">
+                <h2 className="text-xl font-bold mb-3">{t('optBlockedPage')}</h2>
+                <div className="space-y-1">
+                  <label className="flex items-center gap-3 cursor-pointer hover:bg-zovo-bg-tertiary/50 transition-colors rounded-lg px-2 py-2">
                     <input
                       type="checkbox"
                       checked={settings.blockedPage.showTimer}
                       onChange={(e) => saveSettings({
                         blockedPage: { ...settings.blockedPage, showTimer: e.target.checked }
                       })}
-                      className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
+                      className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet transition-all duration-200"
                     />
                     <span className="text-sm">{t('optShowRemainingTime')}</span>
                   </label>
-                  <label className="flex items-center gap-3 cursor-pointer">
+                  <label className="flex items-center gap-3 cursor-pointer hover:bg-zovo-bg-tertiary/50 transition-colors rounded-lg px-2 py-2">
                     <input
                       type="checkbox"
                       checked={settings.blockedPage.showQuote}
                       onChange={(e) => saveSettings({
                         blockedPage: { ...settings.blockedPage, showQuote: e.target.checked }
                       })}
-                      className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
+                      className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet transition-all duration-200"
                     />
                     <span className="text-sm">{t('optShowQuote')}</span>
                   </label>
-                  <label className="flex items-center gap-3 cursor-pointer">
+                  <label className="flex items-center gap-3 cursor-pointer hover:bg-zovo-bg-tertiary/50 transition-colors rounded-lg px-2 py-2">
                     <input
                       type="checkbox"
                       checked={settings.blockedPage.allowEmergencyUnlock}
                       onChange={(e) => saveSettings({
                         blockedPage: { ...settings.blockedPage, allowEmergencyUnlock: e.target.checked }
                       })}
-                      className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet"
+                      className="w-4 h-4 rounded border-zovo-border bg-zovo-bg-tertiary accent-zovo-violet transition-all duration-200"
                     />
                     <span className="text-sm">{t('optAllowEmergencyUnlock')}</span>
                   </label>
                 </div>
                 {settings.blockedPage.allowEmergencyUnlock && (
-                  <div className="mt-4">
+                  <div className="mt-3 pt-3 border-t border-zovo-border">
                     <label className="block text-sm font-medium mb-2">{t('optEmergencyCooldown')}</label>
                     <select
                       value={settings.blockedPage.emergencyCooldownMinutes}
@@ -951,8 +951,8 @@ const Options: React.FC = () => {
 
               {/* Password Protection */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">{t('optPasswordProtection')}</h2>
-                <p className="text-sm text-zovo-text-secondary mb-4">
+                <h2 className="text-xl font-bold mb-3">{t('optPasswordProtection')}</h2>
+                <p className="text-sm text-zovo-text-secondary mb-3">
                   {t('optPasswordProtectionDesc')}
                 </p>
                 {settings.passwordProtection.enabled ? (
@@ -1025,7 +1025,7 @@ const Options: React.FC = () => {
 
               {/* About */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">{t('optAbout')}</h2>
+                <h2 className="text-xl font-bold mb-3">{t('optAbout')}</h2>
                 <p className="text-zovo-text-secondary text-sm">
                   {t('optAboutDesc')}
                 </p>
@@ -1072,8 +1072,8 @@ const Options: React.FC = () => {
             <>
               {/* Current Status */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">{t('optLicenseStatus')}</h2>
-                <div className="flex items-center gap-3 mb-4">
+                <h2 className="text-xl font-bold mb-3">{t('optLicenseStatus')}</h2>
+                <div className="flex items-center gap-3 mb-3">
                   <div className={`w-3 h-3 rounded-full ${currentTier !== 'free' ? 'bg-focus-green' : 'bg-zovo-text-muted'}`} />
                   <span className="text-sm font-medium">
                     {currentTier !== 'free' ? (
@@ -1086,14 +1086,14 @@ const Options: React.FC = () => {
                   </span>
                 </div>
                 {licenseEmail && (
-                  <p className="text-sm text-zovo-text-muted mb-4">
+                  <p className="text-sm text-zovo-text-muted mb-3">
                     {t('optLicensedTo', [licenseEmail ?? ''])}
                   </p>
                 )}
                 {currentTier !== 'free' && (
                   <button
                     onClick={handleRemoveLicense}
-                    className="zovo-btn zovo-btn-secondary text-zovo-error text-sm"
+                    className="zovo-btn zovo-btn-secondary text-zovo-error text-sm transition-all duration-200"
                   >
                     {t('btnRemoveLicense')}
                   </button>
@@ -1103,8 +1103,8 @@ const Options: React.FC = () => {
               {/* Activate License */}
               {currentTier === 'free' && (
                 <div className="zovo-card">
-                  <h2 className="text-lg font-semibold mb-2">{t('optActivateLicense')}</h2>
-                  <p className="text-sm text-zovo-text-secondary mb-4">
+                  <h2 className="text-xl font-bold mb-2">{t('optActivateLicense')}</h2>
+                  <p className="text-sm text-zovo-text-secondary mb-3">
                     {t('optActivateLicenseDesc')}
                   </p>
                   <div className="flex gap-2 mb-2">
@@ -1140,8 +1140,8 @@ const Options: React.FC = () => {
 
               {/* Pro Features */}
               <div className="zovo-card">
-                <h2 className="text-lg font-semibold mb-4">{t('optProFeatures')}</h2>
-                <ul className="space-y-3">
+                <h2 className="text-xl font-bold mb-3">{t('optProFeatures')}</h2>
+                <ul className="space-y-1">
                   {[
                     { name: t('optFeatureUnlimitedRules'), free: false },
                     { name: t('optFeatureRegex'), free: false },
@@ -1150,7 +1150,7 @@ const Options: React.FC = () => {
                     { name: t('optFeaturePassword'), free: false },
                     { name: t('optFeaturePrioritySupport'), free: false },
                   ].map((feature) => (
-                    <li key={feature.name} className="flex items-center gap-3 text-sm">
+                    <li key={feature.name} className="flex items-center gap-3 text-sm px-2 py-2 rounded-lg hover:bg-zovo-bg-tertiary/50 transition-colors">
                       <svg
                         width="16"
                         height="16"
@@ -1158,6 +1158,7 @@ const Options: React.FC = () => {
                         fill="none"
                         stroke={currentTier !== 'free' ? '#22c55e' : '#6b7280'}
                         strokeWidth="2"
+                        className="shrink-0"
                       >
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
@@ -1168,10 +1169,10 @@ const Options: React.FC = () => {
                   ))}
                 </ul>
                 {currentTier === 'free' && (
-                  <div className="mt-6">
+                  <div className="mt-5 pt-4 border-t border-zovo-border">
                     <button
                       onClick={() => chrome.tabs.create({ url: 'https://zovo.one/upgrade?ext=focus_mode_blocker&ref=settings' })}
-                      className="zovo-btn zovo-btn-primary w-full bg-gradient-to-r from-violet-500 to-purple-600"
+                      className="inline-flex items-center gap-2 px-6 py-2.5 bg-zovo-violet hover:bg-zovo-violet-hover text-white text-sm font-medium rounded-xl transition-all duration-200"
                     >
                       {t('btnUpgradePro')}
                     </button>
